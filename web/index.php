@@ -7,7 +7,6 @@ if (isset($_SESSION['loginsession'])) redirect("pages/menu.php");
 $error = false;
 if (isset($_POST['username'])) {
     $user = new user();
-
     $returnLogin = $user->login($_POST['username'], $_POST['password']);
 
     if ($returnLogin) {
