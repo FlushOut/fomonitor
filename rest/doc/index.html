@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Documentação para o desenvolvedor | REST | Airclic</title>
+<link rel="stylesheet" type="text/css" href="./_css/style.css">
+</head>
+<body>
+
+<img src="./_img/airclicb.jpg" id="logo" />
+<h1>Airclic REST</h1>
+<h2>Documentação de métodos</h2>
+
+<p> Esta é a documentação para o desenvolvedor usuário do REST Airclic.</p>
+<p> Para acessar a documentação de erros, <a href="erros.html">clique aqui</a>.</p>
+<p> O conteúdo abaixo explica os métodos desta API.</p>
+
+<ol>
+	<li>
+		<h3>Login</h3>
+        <blockquote>
+            <p>Fará a autenticação do usuário pela aplicação. O usuário enviará o código de usuário e senha e receberá um retorno em JSON se foi positivo ou negativo.</p>
+            
+            <h4>Parâmetros</h4>
+            <b>coduser:</b> identificação do usuário<br />
+            <b>password:</b> senha de autenticação<br />
+            
+            <h4>Retornos</h4>
+            
+            <h5>Usuário não encontrado</h5>
+            <code>
+            {
+            "status":false,
+            "applications":0
+            }
+            </code>
+            
+            <h5>Usuário encontrado e com apenas uma aplicação</h5>
+            <code>
+            {
+            "status":true,
+            "applications":1,
+            "appcode":9999
+            }
+            </code>
+            
+            <h5>Usuário encontrado e com mais de uma aplicação registrada no usuário</h5>
+            <code>
+            {
+            "status":true,
+            "applications":999
+            }
+            </code>
+            
+            <p>
+                <b>Sendo que:</b><br />
+                status: valor booleano indicando se houve sucesso na realização do login<br />
+                applications: número de aplicações registradas ao usuário<br />
+                appcode: caso o applications seja 1, retorna já o código da aplicação registrada<br />
+            </p>
+		</blockquote>
+        <hr />
+    </li>
+	<li>
+		<h3>Licença de aplicativo</h3>
+        <blockquote>
+            <p>Caso o usuário tenha mais de um aplicativo registrado em sua conta, é necessário que ele informe o número de licença para especificar qual aplicativo ele deseja baixar.</p>
+            
+            <h4>Parâmetros</h4>
+            <b>coduser:</b> identificação do usuário<br />
+            <b>password:</b> senha de autenticação<br />
+            <b>licencekey:</b> senha de autenticação<br />
+            
+            <h4>Retornos</h4>
+            
+            <h5>Arquivo não encontrado</h5>
+            <code>
+            {
+            "status":false
+            }
+            </code>
+            
+            <h5>Arquivo  encontrado</h5>
+            <code>
+            {
+            "status":true
+            }
+            </code>
+            
+            <p>
+                <b>Sendo que:</b><br />
+                status: valor booleano indicando se houve sucesso na realização do login<br />
+            </p>
+		</blockquote>
+        <hr />
+    </li>
+	<li>
+		<h3>Download de aplicativo</h3>
+        <blockquote>
+            <p>Tendo em posse o código da aplicação associado ao usuário, este serviço informa o caminho da aplicação no servidor.</p>
+            
+            <h4>Parâmetros</h4>
+            <b>coduser:</b> identificação do usuário<br />
+            <b>password:</b> senha de autenticação<br />
+            <b>codapp:</b> número de licença da aplicação<br />
+            
+            <h4>Retornos</h4>
+            
+            <h5>Arquivo não encontrado</h5>
+            <code>
+            {
+            "status":false
+            }
+            </code>
+            
+            <h5>Arquivo  encontrado</h5>
+            <code>
+            {
+            "status":true,
+			"path":abc
+            }
+            </code>
+            
+            <p>
+                <b>Sendo que:</b><br />
+                status: valor booleano indicando se houve sucesso na realização do login<br />
+				path: caminho da aplicação no servidor. A string será uma URL, apontando para o arquivo .airclic correspondente.<br />
+            </p>
+		</blockquote>
+        <hr />
+    </li>
+	<li>
+		<h3>Localização</h3>
+        <blockquote>
+            <p>Registro de localização do aparelho enquanto a aplicação estiver aberta.</p>
+            
+            <h4>Parâmetros</h4>
+            <b>coduser:</b> identificação do usuário<br />
+            <b>password:</b> senha de autenticação<br />
+            <b>lat:</b> latitude<br />
+            <b>lon:</b> longitude<br />
+            <b>speed:</b> velocidade em metros por segundo registrada pelo aparelho<br />
+            <b>datetime:</b> descrição da data e hora do registro da localização no formato yyyymmddhhmmss<br />
+            
+            <h4>Retornos</h4>
+            
+            <h5>Registrado com sucesso</h5>
+            <code>
+            {
+            "status":true
+            }
+            </code>
+            
+            <h5>Erro no registro</h5>
+            <code>
+            {
+            "status":false
+            }
+            </code>
+
+		</blockquote>
+        <hr />
+    </li>
+</ol>
+
+</body>
+</html>

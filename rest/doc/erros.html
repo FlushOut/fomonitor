@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Documentação de Erros | REST | Airclic</title>
+<link rel="stylesheet" type="text/css" href="./_css/style.css">
+</head>
+<body>
+<img src="./_img/airclicb.jpg" id="logo" />
+<h1>Airclic REST</h1>
+<h2>Documentação de erros</h2>
+<p> Para acessar a documentação de métodos, <a href="index.html">clique aqui</a>.</p>
+
+<ol>
+	<li><b>101</b> Você está tentando acessar um método inexistente.</li>
+    <li><b>102</b> Vocé precisa passa usuário e senha para os métodos que exigem login.  Exemplo: {URL}/login/coduser/1234/password/swordfish .</li>
+    <li><b>103</b> Você não tem permissão para acessar este método.</li>
+    <li><b>104</b> Para usar o método licencekey, você precisa enviar na URL os parâmetros usuário, senha e chave. Exemplo: Exemplo: {URL}/applicence/coduser/1234/password/swordfish/licencekey/9876 .</li>    
+    <li><b>105</b> Para usar o método getapp, você precisa enviar na URL os parâmetros usuário, senha e código da aplicação. Exemplo: Exemplo: {URL}/getapp/coduser/1234/password/swordfish/codapp/555 .</li>
+    <li><b>106</b> Para usar o método location, você precisa enviar na URL os parâmetros usuário, senha, latitude, longitude, velocidade (em metros por segundo) e data (yyyymmddhhmmss). Exemplo: Exemplo: {URL}/location/coduser/1234/password/swordfish/lat/99.999/lon/99.999/speed/99.999/datetime/20130820215512 .</li>
+    <li><b>107</b> O parâmetro lat (latitude) deve conter um valor do tipo float válido. Exemplo: 99.999</li>    
+    <li><b>108</b> O parâmetro lon (longitude) deve conter um valor do tipo float válido. Exemplo: 99.999</li>    
+    <li><b>109</b> O parâmetro speed deve conter um valor do tipo float válido, representando metros por segundo. Exemplo: 99.999</li>    
+    <li><b>110</b> O parâmetro datetime deve estar no formato yyyymmddhhmmss. Exemplo: 20130820215512 para 20/08/2013 21h55m12s</li>        
+</ol>
+</body>
+</html>
