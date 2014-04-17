@@ -45,7 +45,12 @@ class category
         $dados["description"] = addslashes($description);
         $dados["status"] = 1;
         
-        return $this->con->insert($this->table,$dados);
+        if ($this->id > 0) {
+            $dados["id"] = $this->id;
+            return $this->con->update($this->table,$dados);
+        } else {
+            return $this->con->insert($this->table,$dados);
+        }
         
     }
 

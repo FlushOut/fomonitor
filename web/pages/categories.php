@@ -2,13 +2,19 @@
 require_once("../config.php");
 
 $category = new category();
+$cat = new category();
 $list_categories = $category->list_categories(1);
 
 
 if ($_POST['action'] == 'Save') {
-        $category->save(1, $_POST['txtDescription']);
-        header("Location: ". $_SERVER['REQUEST_URI']);
-        exit;
+        if (isset($_POST['hdIdAct'])) {
+            $cat->open($_POST['hdIdAct']);
+        }
+        if ($_POST['txtDescription']){
+            $cat->save(1, $_POST['txtDescription']);
+            header("Location: ". $_SERVER['REQUEST_URI']);
+            exit;
+        }
 }
 ?>
 
@@ -152,7 +158,10 @@ if ($_POST['action'] == 'Save') {
                                                                     <table>
                                                                         <tr>
                                                                             <td>Description</td>
-                                                                            <td><input type="text" id="txtDescription" name="txtDescription" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
+                                                                            <td>
+                                                                                <input name="hdIdAct" id="hdIdAct" type="hidden"/>
+                                                                                <input type="text" id="txtDescription" name="txtDescription" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
+                                                                            </td>    
                                                                         </tr>
                                                                         <tr>
                                                                             <td></td>
@@ -170,16 +179,17 @@ if ($_POST['action'] == 'Save') {
                                                     <tr>
                                                         <th class="head0">Id</th>
                                                         <th class="head1">Description</th>
-                                                        <th class="head0">Actions</th>
+                                                        <th class="head0"></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php foreach ($list_categories as $item) { ?>
                                                         <tr src="category">
-                                                            <td><?php echo $item->id; ?><input type="hidden" value="<?php echo $item->id; ?>"/></td>
-                                                            <td><?php echo $item->description; ?></td>
+                                                            <td><?php echo $item->id; ?><input name="hdId" type="hidden" value="<?php echo $item->id; ?>"/></td>
+                                                            <td><?php echo $item->description; ?><input name="hdDesc" type="hidden" value="<?php echo $item->description; ?>"/></td>
                                                             <td>
-                                                                <button type="button" class="btn btn-link">Edit</button>
+                                                                <a href="#myModal" role="button" class="btn btn-link" data-toggle="modal" id="aEdit">Edit</a>
+                                                                <!-- <button name="btnUpdate" type="button" class="btn btn-link">Edit</button> -->
                                                                 <button name="btnDelete" type="button" class="btn btn-link">Delete</button>
                                                             </td>
                                                         </tr>
@@ -233,12 +243,16 @@ if ($_POST['action'] == 'Save') {
         <script type="text/javascript">
             $(document).ready(function() {
                 // try your js
+
+                $('#myModal').on('shown', function () {
+                    $('#txtDescription').focus();
+                });
                
                 //delete individual row
                 $('button[name="btnDelete"]').click(function(){
                     var c = confirm('Continue delete?');
                     if (c) jQuery(this).parents('tr').fadeOut(function () {
-                        var id = jQuery("input", this).val();
+                        var id = jQuery('input[name="hdId"]', this).val();
                         var src = jQuery(this).attr("src");
 
                         jQuery.ajax({
@@ -252,10 +266,22 @@ if ($_POST['action'] == 'Save') {
                     return false;
                 });
 
+                //update individual row
+                $('a#aEdit').bind('click',function(){
+                    jQuery(this).parents('tr').map(function () {
+                        var id = jQuery('input[name="hdId"]', this).val();
+                        var desc = jQuery('input[name="hdDesc"]', this).val();
+                        $("#hdIdAct").val(id);
+                        $("#txtDescription").val(desc);                       
+                    });
+                    return true;
+                });
 
                 // validate form
                 $("a#aAdd").bind('click', function () {
+                    $("#hdIdAct").val('');
                     $("#txtDescription").val('');
+
                     var validator = $( "#form-validate" ).validate();
                     validator.resetForm();
                     

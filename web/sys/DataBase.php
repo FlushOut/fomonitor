@@ -101,14 +101,14 @@ class DataBase extends PDO{
         $updateSQL = null;
         $id = 0;
         foreach ($values as $key => $value) {
-            if ($key == "_id") {
+            if ($key == "id") {
                 $id = $value;
             } else {
                 $updateSQL .= ($updateSQL ? ',' : '');
                 $updateSQL .= $key . "='" . $value."'";
             }
         }
-        $update = $this->connect()->prepare("UPDATE " . $table . " SET " . $updateSQL . " WHERE _id=" . $id);
+        $update = $this->connect()->prepare("UPDATE " . $table . " SET " . $updateSQL . " WHERE id=" . $id);
         try{
             $update->execute();
         }catch (Exception $e){
