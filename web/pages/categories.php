@@ -6,7 +6,9 @@ $list_categories = $category->list_categories(1);
 
 
 if ($_POST['action'] == 'Save') {
-         $category->save(1, $_POST['txtDescription']);
+        $category->save(1, $_POST['txtDescription']);
+        header("Location: ". $_SERVER['REQUEST_URI']);
+        exit;
 }
 ?>
 
@@ -139,8 +141,7 @@ if ($_POST['action'] == 'Save') {
                                             </div>
                                             <span>Categories&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                             <a href="#myModal" role="button" class="btn" data-toggle="modal" id="aAdd">Add</a>
-                                                
-                                                    <!-- Modal -->
+                                                    <!-- Modal-->
                                                     <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -148,17 +149,19 @@ if ($_POST['action'] == 'Save') {
                                                         </div>
                                                         <div class="modal-body">
                                                             <form class="form-horizontal" id="form-validate" action="" method="post" />
-                                                                    <tr>
-                                                                        <td>Description</td>
-                                                                        <td><input type="text" id="txtDescription" name="txtDescription" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button></td>
-                                                                        <td><button class="btn btn-primary" id="btnSave" name="action" value="Save">Save</button></td>
-                                                                    </tr>
+                                                                    <table>
+                                                                        <tr>
+                                                                            <td>Description</td>
+                                                                            <td><input type="text" id="txtDescription" name="txtDescription" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td></td>
+                                                                            <td><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                                            <button class="btn btn-primary" id="btnSave" name="action" value="Save">Save</button></td>
+                                                                        </tr>
+                                                                    </table>
                                                             </form>
                                                         </div>
-                                                        
                                                     </div>
                                         </div>
                                         <div class="box-body">
@@ -172,12 +175,12 @@ if ($_POST['action'] == 'Save') {
                                                 </thead>
                                                 <tbody>
                                                     <?php foreach ($list_categories as $item) { ?>
-                                                        <tr>
-                                                            <td><?php echo $item->id; ?></td>
+                                                        <tr src="category">
+                                                            <td><?php echo $item->id; ?><input type="hidden" value="<?php echo $item->id; ?>"/></td>
                                                             <td><?php echo $item->description; ?></td>
                                                             <td>
-                                                                <button type="button" class="btn btn-link" onclick="location.href='/pages/edit_point.php?id=<?php echo $item->id ?>'">Edit</button>
-                                                                <button type="button" class="btn btn-link" onclick="location.href='#">Delete</button>
+                                                                <button type="button" class="btn btn-link">Edit</button>
+                                                                <button name="btnDelete" type="button" class="btn btn-link">Delete</button>
                                                             </td>
                                                         </tr>
                                                     <?php } ?>
@@ -230,6 +233,25 @@ if ($_POST['action'] == 'Save') {
         <script type="text/javascript">
             $(document).ready(function() {
                 // try your js
+               
+                //delete individual row
+                $('button[name="btnDelete"]').click(function(){
+                    var c = confirm('Continue delete?');
+                    if (c) jQuery(this).parents('tr').fadeOut(function () {
+                        var id = jQuery("input", this).val();
+                        var src = jQuery(this).attr("src");
+
+                        jQuery.ajax({
+                            url: "/ajax/delete.php",
+                            type: "POST",
+                            data: {id: id, source: src }
+                        }).done(function (resp) {
+                                jQuery(this).remove();
+                            });
+                    });
+                    return false;
+                });
+
 
                 // validate form
                 $("a#aAdd").bind('click', function () {

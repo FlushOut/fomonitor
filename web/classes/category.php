@@ -63,4 +63,9 @@ class category
 
         return $objReturn;
     }
+
+    function del()
+    {
+        $query = $this->con->genericQuery("delete from " . $this->table . " where id=" . $this->id);
+    }
 }
