@@ -1,5 +1,4 @@
-        <!-- section header -->
-        <header class="header">
+<header class="header" data-spy="affix" data-offset-top="0">
             <!--nav bar helper-->
             <div class="navbar-helper">
                 <div class="row-fluid">
@@ -14,7 +13,7 @@
                     <div class="span6">
                         <!--panel search-->
                         <div class="panel-search">
-                            <form class="form-search" />
+                            <form />
                                 <div class="input-icon-append">
                                     <button type="submit" rel="tooltip-bottom" title="search" class="icon"><i class="icofont-search"></i></button>
                                     <input class="input-large search-query grd-white" maxlength="23" placeholder="Search here..." type="text" />
@@ -22,7 +21,7 @@
                             </form>
                         </div><!--/panel search-->
                     </div>
-                    <div class="span4"> 
+                    <div class="span4">
                         <!--panel button ext-->
                         <div class="panel-ext">
                             <div class="btn-group">
@@ -34,7 +33,7 @@
                                         <a href="#">
                                             <div class="notification">John Doe commented on a post</div>
                                             <div class="media">
-                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <img class="media-object pull-left" data-src="../js/holder.js/64x64" />
                                                 <div class="media-body">
                                                     <h4 class="media-heading">Lorem ipsum <small class="helper-font-small"> john doe</small></h4>
                                                     <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
@@ -46,7 +45,7 @@
                                         <a href="#">
                                             <div class="notification">Request new order</div>
                                             <div class="media">
-                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <img class="media-object pull-left" data-src="../js/holder.js/64x64" />
                                                 <div class="media-body">
                                                     <h4 class="media-heading">Tortor dapibus</h4>
                                                     <p>Vegan fanny pack odio cillum wes anderson 8-bit.</p>
@@ -58,7 +57,7 @@
                                         <a href="#">
                                             <div class="notification">Request new order</div>
                                             <div class="media">
-                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <img class="media-object pull-left" data-src="../js/holder.js/64x64" />
                                                 <div class="media-body">
                                                     <h4 class="media-heading">Lacinia non</h4>
                                                     <p>Messenger bag gentrify pitchfork tattooed craft beer.</p>
@@ -70,7 +69,7 @@
                                         <a href="#">
                                             <div class="notification">John Doe commented on a post</div>
                                             <div class="media">
-                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <img class="media-object pull-left" data-src="../js/holder.js/64x64" />
                                                 <div class="media-body">
                                                     <h4 class="media-heading">Lorem ipsum <small class="helper-font-small"> john doe</small></h4>
                                                     <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
@@ -82,7 +81,7 @@
                                         <a href="#">
                                             <div class="notification">Request new order</div>
                                             <div class="media">
-                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <img class="media-object pull-left" data-src="../js/holder.js/64x64" />
                                                 <div class="media-body">
                                                     <h4 class="media-heading">Tortor dapibus</h4>
                                                     <p>Vegan fanny pack odio cillum wes anderson 8-bit.</p>
@@ -94,7 +93,7 @@
                                         <a href="#">
                                             <div class="notification">Request new order</div>
                                             <div class="media">
-                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <img class="media-object pull-left" data-src="../js/holder.js/64x64" />
                                                 <div class="media-body">
                                                     <h4 class="media-heading">Lacinia non</h4>
                                                     <p>Messenger bag gentrify pitchfork tattooed craft beer.</p>
@@ -143,19 +142,19 @@
                             <div class="btn-group user-group">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                     <img class="corner-all" align="middle" src="../img/user-thumb.jpg" title="John Doe" alt="john doe" /> <!--this for display on PC device-->
-                                    <button class="btn btn-small btn-inverse"><?php echo $userweb->name ?></button> <!--this for display on tablet and phone device-->
+                                    <button class="btn btn-small btn-inverse">John Doe</button> <!--this for display on tablet and phone device-->
                                 </a>
                                 <ul class="dropdown-menu dropdown-user" role="menu" aria-labelledby="dLabel">
                                     <li>
                                         <div class="media">
                                             <a class="pull-left" href="#">
-                                                <img class="img-circle" src="../img/user.jpg" title="profile" alt="profile" />
+                                                <img class="../img-circle" src="../img/user.jpg" title="profile" alt="profile" />
                                             </a>
                                             <div class="media-body description">
-                                                <p><strong><?php echo $userweb->name ?></strong></p>
-                                                <p class="muted"><?php echo $userweb->email ?></p>
+                                                <p><strong>John Doe</strong></p>
+                                                <p class="muted">johndoe@mail.com</p>
                                                 <p class="action"><a class="link" href="#">Activity</a> - <a class="link" href="#">Setting</a></p>
-                                                <a href="bonus-page/resume/index.html" class="btn btn-primary btn-small btn-block">View Profile</a>
+                                                <a class="btn btn-primary btn-small btn-block">View Profile</a>
                                             </div>
                                         </div>
                                     </li>

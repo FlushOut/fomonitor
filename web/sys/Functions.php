@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: jaelson.apolinario
- * Date: 27/08/13
- * Time: 12:22
- * Classe com funcoes para usar em todo o sistema
- */
+
 class Functions {
 
     /**

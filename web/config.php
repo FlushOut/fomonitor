@@ -5,9 +5,9 @@ error_reporting(1);
 require('autoload.php');
 $config['debug'] = FALSE;
 
-// if ($_SERVER['SCRIPT_NAME'] != "/index.php") {
-//     if (!isset($_SESSION['loginsession'])) redirect("/index.php");
-// }
+if ($_SERVER['SCRIPT_NAME'] != "/index.php") {
+     if (!isset($_SESSION['loginsession'])) redirect("/index.php");
+}
 
 function curPageURL()
 {
@@ -21,25 +21,19 @@ function curPageURL()
 }
 
 
+if (strstr(curPageURL(), "d-") != false) {
+    
     $config['bd']['host'] = '127.0.0.1';
     $config['bd']['user'] = 'root';
     $config['bd']['password'] = 'mysql';
     $config['bd']['base'] = 'dbmonitor';
-    $config['bd']['port'] = '3306';        
-
-// if (strstr(curPageURL(), "d-") != false) {
+    $config['bd']['port'] = '3306';
     
-//     $config['bd']['host'] = '127.0.0.1';
-//     $config['bd']['user'] = 'root';
-//     $config['bd']['password'] = '';
-//     $config['bd']['base'] = 'dbmonitor';
-//     $config['bd']['port'] = '3306';
+} else if (strstr(curPageURL(), ".com") != false) {
     
-// } else if (strstr(curPageURL(), ".com") != false) {
+} else {
     
-// } else {
-    
-// }
+}
 
 
 function redirect($url)
@@ -48,12 +42,12 @@ function redirect($url)
 }
 
 if (isset($_SESSION['loginsession'])) {
-    $userweb = new user();
-    $userweb->open($_SESSION['loginsession']);
+    $user = new user();
+    $user->open($_SESSION['loginsession']);
     $company = new company();
-    $company->open($userweb->fk_company);
+    $company->open($user->fk_company);
     $menu = new menu();
-    $list_Access = $menu->getAccess($userweb->email);
+    $list_Access = $menu->getAccess($user->email);
     foreach ($list_Access as $value) {
         if (strlen($value['tab'])<=0){
             if (in_array($value, $list_modules)) continue;

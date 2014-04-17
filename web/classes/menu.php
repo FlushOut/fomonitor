@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-class menu{
+class menu {
 
     protected $tb_userweb = "users";
     protected $tb_uw_profile = "user_profiles";
