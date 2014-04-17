@@ -7,6 +7,11 @@ switch ($_POST['source']) {
         $obj->open($id);
         $obj->del();
         break;
+    case 'point':
+        $obj = new point();
+        $obj->open($id);
+        $obj->del();
+        break;
     default:
         # code...
         break;
