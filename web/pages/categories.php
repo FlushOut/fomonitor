@@ -168,9 +168,9 @@ if ($_POST['action'] == 'Save') {
                                             <table id="datatables" class="table table-bordered table-striped responsive">
                                                 <thead>
                                                     <tr>
-                                                        <th>Id</th>
-                                                        <th>Description</th>
-                                                        <th>Satus</th>
+                                                        <th class="head0">Id</th>
+                                                        <th class="head1">Description</th>
+                                                        <th class="head0">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>

@@ -184,12 +184,14 @@ if ($_POST['action'] == 'Save') {
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Radius (in meters)</td>
+                                                                        <td>Radius (meters)</td>
                                                                         <td><input type="text" id="txtRadius" name="txtRadius" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button></td>
-                                                                        <td><button class="btn btn-primary" id="btnSave" name="action" value="Save">Save</button></td>
+                                                                        <td></td>
+                                                                        <td><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                                            <button class="btn btn-primary" id="btnSave" name="action" value="Save">Save</button>
+                                                                        </td>
                                                                     </tr>
                                                                 </table>
                                                             </form>
@@ -202,13 +204,13 @@ if ($_POST['action'] == 'Save') {
                                                     <tr>
                                                         <th class="head0">Id</th>
                                                         <th class="head0">Nome</th>
-                                                        <th class="head1">Logradouro</th>
-                                                        <th class="head0">N&uacute;mero</th>
-                                                        <th class="head1">Bairro</th>
-                                                        <th class="head0">Cidade</th>
-                                                        <th class="head1">Estado</th>
-                                                        <th class="head0">CEP</th>
-                                                        <th class="head1"></th>
+                                                        <th class="head1">Street</th>
+                                                        <th class="head0">Number</th>
+                                                        <th class="head1">District</th>
+                                                        <th class="head0">City</th>
+                                                        <th class="head1">State</th>
+                                                        <th class="head0">PostalCode</th>
+                                                        <th class="head1">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -367,14 +369,12 @@ if ($_POST['action'] == 'Save') {
     function resizeMap(){
         var sizeForm = jQuery('.form.left').width();
         var sizeContent = jQuery('.content').width();
+        
 
         var sizeMap = sizeContent-(sizeForm);
         jQuery(".form.left").css('padding-right', '30px');
         jQuery("#mapa").attr("width", sizeMap);
     }
-
-
-
 
     jQuery(window).resize(function(){
         resizeMap();
