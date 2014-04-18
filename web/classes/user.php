@@ -72,4 +72,42 @@ class user
         }
     }
 
+    function save($fk_company, $name, $email,$password)
+    {
+        $dados["fk_company"] = $fk_company;
+        $dados["name"] = addslashes($name);
+        $dados["email"] = addslashes($email);
+        $dados["password"] = md5($password);
+        $dados["status"] = 1;
+
+       
+        if ($this->id > 0) {
+            $dados["id"] = $this->id;
+            return $this->con->update($this->table,$dados);
+        } else {
+            return $this->con->insert($this->table,$dados);
+        }
+        
+    }
+
+    function list_users($fk_company)
+    {
+        $query = $this->con->genericQuery("select * from " . $this->table . " where fk_company = '$fk_company'");
+
+        $objReturn = array();
+
+        foreach ($query as $value) {
+            $user = new user();
+            $user->open($value);
+            $objReturn[] = $user;
+        }
+
+        return $objReturn;
+    }
+
+    function del()
+    {
+        $query = $this->con->genericQuery("delete from " . $this->table . " where id=" . $this->id);
+    }
+
 }

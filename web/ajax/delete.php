@@ -12,6 +12,11 @@ switch ($_POST['source']) {
         $obj->open($id);
         $obj->del();
         break;
+    case 'user':
+        $obj = new user();
+        $obj->open($id);
+        $obj->del();
+        break;
     default:
         # code...
         break;

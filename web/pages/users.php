@@ -1,17 +1,17 @@
 <?php
 require_once("../config.php");
 
-$category = new category();
-$cat = new category();
-$list_categories = $category->list_categories(1);
+$user = new user();
+$u = new user();
+$list_users = $user->list_users(1);
 
 
 if ($_POST['action'] == 'Save') {
         if (isset($_POST['hdIdAct'])) {
-            $cat->open($_POST['hdIdAct']);
+            $u->open($_POST['hdIdAct']);
         }
-        if ($_POST['txtDescription']){
-            $cat->save(1, $_POST['txtDescription']);
+        if ($_POST['txtName']){
+            $u->save(1, $_POST['txtName'], $_POST['txtEmail'], $_POST['txtPassword']);
             header("Location: ". $_SERVER['REQUEST_URI']);
             exit;
         }
@@ -92,7 +92,7 @@ if ($_POST['action'] == 'Save') {
                                     </a>
                                 </li>
                             </ul>
-                            <h2><i class="icofont-table"></i> Categories</h2>
+                            <h2><i class="icofont-table"></i> Users</h2>
                         </div><!-- /content-header -->
                         
                         <!-- content-breadcrumb -->
@@ -128,7 +128,7 @@ if ($_POST['action'] == 'Save') {
                             
                             <!--breadcrumb-->
                             <ul class="breadcrumb">
-                                <li><a href="index.html"><i class="icofont-home"></i> Categories</a> <span class="divider">&rsaquo;</span></li>
+                                <li><a href="index.html"><i class="icofont-home"></i> Users</a> <span class="divider">&rsaquo;</span></li>
                                 <li class="active">List</li>
                             </ul><!--/breadcrumb-->
                         </div><!-- /content-breadcrumb -->
@@ -145,7 +145,7 @@ if ($_POST['action'] == 'Save') {
                                                 <a data-box="collapse"><i class="icofont-caret-up"></i></a>
                                                 <a data-box="close" data-hide="bounceOutRight">&times;</a>
                                             </div>
-                                            <span>Categories&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                            <span>Users&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                             <a href="#myModal" role="button" class="btn" data-toggle="modal" id="aAdd">Add</a>
                                                     <!-- Modal-->
                                                     <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -157,10 +157,22 @@ if ($_POST['action'] == 'Save') {
                                                             <form class="form-horizontal" id="form-validate" action="" method="post" />
                                                                     <table>
                                                                         <tr>
-                                                                            <td>Description</td>
+                                                                            <td>Name</td>
                                                                             <td>
                                                                                 <input name="hdIdAct" id="hdIdAct" type="hidden"/>
-                                                                                <input type="text" id="txtDescription" name="txtDescription" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
+                                                                                <input type="text" id="txtName" name="txtName" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
+                                                                            </td>    
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Email</td>
+                                                                            <td>
+                                                                                <input type="text" id="txtEmail" name="txtEmail" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
+                                                                            </td>    
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Password</td>
+                                                                            <td>
+                                                                                <input type="text" id="txtPassword" name="txtPassword" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
                                                                             </td>    
                                                                         </tr>
                                                                         <tr>
@@ -178,15 +190,19 @@ if ($_POST['action'] == 'Save') {
                                                 <thead>
                                                     <tr>
                                                         <th class="head0">Id</th>
-                                                        <th class="head1">Description</th>
+                                                        <th class="head1">Name</th>
+                                                        <th class="head0">Email</th>
                                                         <th class="head0">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php foreach ($list_categories as $item) { ?>
-                                                        <tr src="category">
+                                                    <?php foreach ($list_users as $item) { ?>
+                                                        <tr src="user">
                                                             <td><?php echo $item->id; ?><input name="hdId" type="hidden" value="<?php echo $item->id; ?>"/></td>
-                                                            <td><?php echo $item->description; ?><input name="hdDesc" type="hidden" value="<?php echo $item->description; ?>"/></td>
+                                                            <td><?php echo $item->name; ?><input name="hdName" type="hidden" value="<?php echo $item->name; ?>"/></td>
+                                                            <td><?php echo $item->email; ?>
+                                                                <input name="hdEmail" type="hidden" value="<?php echo $item->email; ?>"/>
+                                                            </td>
                                                             <td>
                                                                 <a href="#myModal" role="button" class="btn btn-link" data-toggle="modal" id="aEdit">Edit</a>
                                                                 <!-- <button name="btnUpdate" type="button" class="btn btn-link">Edit</button> -->
@@ -242,7 +258,7 @@ if ($_POST['action'] == 'Save') {
                 // try your js
 
                 $('#myModal').on('shown', function () {
-                    $('#txtDescription').focus();
+                    $('#txtName').focus();
                 });
                
                 //delete individual row
@@ -267,9 +283,13 @@ if ($_POST['action'] == 'Save') {
                 $('a#aEdit').bind('click',function(){
                     jQuery(this).parents('tr').map(function () {
                         var id = jQuery('input[name="hdId"]', this).val();
-                        var desc = jQuery('input[name="hdDesc"]', this).val();
+                        var name = jQuery('input[name="hdName"]', this).val();
+                        var email = jQuery('input[name="hdEmail"]', this).val();
+                        
                         $("#hdIdAct").val(id);
-                        $("#txtDescription").val(desc);                       
+                        $("#txtName").val(name);                       
+                        $("#txtEmail").val(email);
+                        
                     });
                     return true;
                 });
@@ -277,8 +297,10 @@ if ($_POST['action'] == 'Save') {
                 // validate form
                 $("a#aAdd").bind('click', function () {
                     $("#hdIdAct").val('');
-                    $("#txtDescription").val('');
-
+                    $("#txtName").val('');
+                    $("#txtEmail").val('');
+                    $("#txtPassword").val('');
+                    
                     var validator = $( "#form-validate" ).validate();
                     validator.resetForm();
                     
