@@ -47,10 +47,12 @@ if (isset($_SESSION['loginsession'])) {
     $company = new company();
     $company->open($user->fk_company);
     $menu = new menu();
+    $isAdmin = false;
     $list_Access = $menu->getAccess($user->email);
     foreach ($list_Access as $value) {
         if (in_array($value, $list_modules)) continue;
         $list_modules[] = $value;
+        if($value['fk_profile'] == 1) $isAdmin = true;
         if ($value['start_module'] == 1 and $value['first_profile'] == 1){
             $url = $value['url'];
         }

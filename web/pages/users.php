@@ -1,22 +1,22 @@
 <?php
 require_once("../config.php");
 
-$user = new user();
-$list_users = $user->list_users(1);
+$newUser = new user();
+$list_users = $newUser->list_users(1);
 
 if ($_POST['action'] == 'Save') {
         if (isset($_POST['hdIdAct'])) {
-            $user->open($_POST['hdIdAct']);
+            $newUser->open($_POST['hdIdAct']);
         }
         if ($_POST['txtName']){
-            $user->save(1, $_POST['txtName'], $_POST['txtEmail'], $_POST['txtPassword']);
+            $newUser->save(1, $_POST['txtName'], $_POST['txtEmail'], $_POST['txtPassword']);
             header("Location: ". $_SERVER['REQUEST_URI']);
             exit;
         }
 }
 if ($_POST['action'] == 'SaveProfiles') {
         if (isset($_POST['hdIdUP'])) {
-        $user->saveProfiles($_POST['hdIdUP'],$_POST['prof']);
+        $newUser->saveProfiles($_POST['hdIdUP'],$_POST['prof']);
         header("Location: ". $_SERVER['REQUEST_URI']);
         exit;
     }

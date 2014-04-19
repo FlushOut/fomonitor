@@ -53,11 +53,11 @@ if ($_POST['action'] == 'SaveCompany') {
                                     <li class="dropdown-header grd-white"><a href="#">View All Notifications</a></li>
                                     <li class="new">
                                         <a href="#">
-                                            <div class="notification">John Doe commented on a post</div>
+                                            <div class="notification"><?php echo $user->name ?> commented on a post</div>
                                             <div class="media">
                                                 <img class="media-object pull-left" data-src="../js/holder.js/64x64" />
                                                 <div class="media-body">
-                                                    <h4 class="media-heading">Lorem ipsum <small class="helper-font-small"> john doe</small></h4>
+                                                    <h4 class="media-heading">Lorem ipsum <small class="helper-font-small"> <?php echo $user->name ?></small></h4>
                                                     <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
                                                 </div>
                                             </div>
@@ -89,11 +89,11 @@ if ($_POST['action'] == 'SaveCompany') {
                                     </li>
                                     <li>
                                         <a href="#">
-                                            <div class="notification">John Doe commented on a post</div>
+                                            <div class="notification"><?php echo $user->name ?> commented on a post</div>
                                             <div class="media">
                                                 <img class="media-object pull-left" data-src="../js/holder.js/64x64" />
                                                 <div class="media-body">
-                                                    <h4 class="media-heading">Lorem ipsum <small class="helper-font-small"> john doe</small></h4>
+                                                    <h4 class="media-heading">Lorem ipsum <small class="helper-font-small"> <?php echo $user->name ?></small></h4>
                                                     <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
                                                 </div>
                                             </div>
@@ -163,8 +163,8 @@ if ($_POST['action'] == 'SaveCompany') {
                             </div>
                             <div class="btn-group user-group">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <img class="corner-all" align="middle" src="../img/user-thumb.jpg" title="John Doe" alt="john doe" /> <!--this for display on PC device-->
-                                    <button class="btn btn-small btn-inverse">John Doe</button> <!--this for display on tablet and phone device-->
+                                    <img class="corner-all" align="middle" src="../img/user-thumb.jpg" title="<?php echo $user->name ?>" alt="<?php echo $user->name ?>" /> <!--this for display on PC device-->
+                                    <button class="btn btn-small btn-inverse"><?php echo $user->name ?></button> <!--this for display on tablet and phone device-->
                                 </a>
                                 <ul class="dropdown-menu dropdown-user" role="menu" aria-labelledby="dLabel">
                                     <li>
@@ -173,9 +173,15 @@ if ($_POST['action'] == 'SaveCompany') {
                                                 <img class="../img-circle" src="../img/user.jpg" title="profile" alt="profile" />
                                             </a>
                                             <div class="media-body description">
-                                                <p><strong>John Doe</strong></p>
-                                                <p class="muted">johndoe@mail.com</p>
-                                                <p class="action"><a class="link" href="#">Activity</a> - <a role="button" class="btn btn-link" data-toggle="modal" href="#myModalConfiguration">Setting</a></p>
+                                                <p><strong><?php echo $user->name ?></strong></p>
+                                                <p class="muted"><?php echo $user->email ?></p>
+                                                <?php
+                                                if($isAdmin){
+                                                ?>                                                    
+                                                    <p><a role="button" class="btn btn-link" style="padding-left:0;" data-toggle="modal" href="#myModalConfiguration">Setting</a></p>
+                                                <?php
+                                                }
+                                                ?>
                                                 <a class="btn btn-primary btn-small btn-block">View Profile</a>
                                             </div>
                                         </div>
