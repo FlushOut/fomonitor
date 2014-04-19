@@ -18,8 +18,6 @@
                             <div class="sidebar-right-control">
                                 <ul class="sr-control-item">
                                     <li class="active"><a href="#contact" data-toggle="tab" title="contacts"><i class="icofont-group"></i></a></li>
-                                    <li><a href="#alt1" data-toggle="tab" title="alternative 1"><i class="icofont-flag"></i></a></li>
-                                    <li rel="tooltip-bottom" title="view site"><a href="index.html" target="_BLANK"><i class="icofont-external-link"></i></a></li>
                                 </ul>
                             </div><!-- /sidebar-right-control-->
                             <!-- sidebar-right-content -->
@@ -199,69 +197,6 @@
                                         </div>
                                         <div class="divider-content"><span></span></div>
                                     </div><!--chat-->
-                                    
-                                    <!--alternative 1-->
-                                    <div class="tab-pane fade" id="alt1">
-                                        <div class="divider-content"><span></span></div> <!--divider-->
-                                        
-                                        <button class="btn btn-block btn-mini btn-primary">Add Action</button>
-                                        <button class="btn btn-block btn-mini">Add Action</button>
-                                        
-                                        <div class="divider-content"><span></span></div> <!--divider-->
-                                        
-                                        <!-- side-task -->
-                                        <div class="side-task">
-                                            <div class="task active">
-                                                <span class="task-header">
-                                                    <img src="../img/loader_16.gif" /> 
-                                                    <strong>Portofolio_W34GF.zip</strong>
-                                                </span>
-                                                <span class="task-desc">9.1 of 17MB - 243KB/sec - 1 min</span>
-                                                <div class="progress progress-striped active" rel="tooltip" title="40%">
-                                                    <div class="bar bar-success" style="width: 40%;"></div>
-                                                </div>
-                                            </div>
-                                            <div class="task fade in">
-                                                <i class="icofont-ok-sign color-green" title="success"></i>
-                                                <span class="task-desc">Paralax_bg_5448.jpg</span>
-                                                <button data-dismiss="alert" class="close">&times;</button>
-                                            </div>
-                                            <div class="task fade in">
-                                                <i class="icofont-ok-sign color-green" title="success"></i>
-                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
-                                                <button data-dismiss="alert" class="close">&times;</button>
-                                            </div>
-                                            <div class="task fade in">
-                                                <i class="icofont-remove-sign color-red" title="failed"></i>
-                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
-                                                <button data-dismiss="alert" class="close">&times;</button>
-                                            </div>
-                                            <div class="task fade in">
-                                                <i class="typicn-loop color-silver-dark" title="cancel"></i>
-                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
-                                                <button data-dismiss="alert" class="close">&times;</button>
-                                            </div>
-                                            <div class="task fade in">
-                                                <i class="typicn-loop color-silver-dark" title="cancel"></i>
-                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
-                                                <button data-dismiss="alert" class="close">&times;</button>
-                                            </div>
-                                            <div class="task fade in">
-                                                <i class="icofont-ok-sign color-green" title="success"></i>
-                                                <span class="task-desc">Icons_bg_I98GH.jpg</span>
-                                                <button data-dismiss="alert" class="close">&times;</button>
-                                            </div>
-                                            <div class="task fade in">
-                                                <i class="icofont-remove-sign color-red" title="failed"></i>
-                                                <span class="task-desc">Dashboard_3805.jpg</span>
-                                                <button data-dismiss="alert" class="close">&times;</button>
-                                            </div>
-                                        </div><!-- /side-task -->
-                                        
-                                        <div class="divider-content"><span></span></div> <!--divider-->
-                                        
-                                    </div><!--/alternative 1-->
-                                    
                                 </div>
                             </div><!-- /sidebar-right-content -->
                         </div><!-- /sidebar-right -->

@@ -49,15 +49,8 @@ if (isset($_SESSION['loginsession'])) {
     $menu = new menu();
     $list_Access = $menu->getAccess($user->email);
     foreach ($list_Access as $value) {
-        if (strlen($value['tab'])<=0){
-            if (in_array($value, $list_modules)) continue;
-            $list_modules[] = $value;
-        }else{
-            $list_AllTabs[] = $value;
-            if ($value['parent'] == $mod and $value['tab'] == 1){
-                $list_tabs[] = $value;
-            }
-        }
+        if (in_array($value, $list_modules)) continue;
+        $list_modules[] = $value;
         if ($value['start_module'] == 1 and $value['first_profile'] == 1){
             $url = $value['url'];
         }
@@ -77,7 +70,7 @@ function format_date($strDate)
     return "$d/$m/$Y às $G:$i:$s";
 }
 
-function verify_access($list_modules,$list_AllTabs){
+function verify_access(){
     $access = 0;
     $URI="";
     $pos = strpos($_SERVER['REQUEST_URI'], '?');
@@ -87,11 +80,6 @@ function verify_access($list_modules,$list_AllTabs){
         $URI = substr($_SERVER['REQUEST_URI'], 0,strpos($_SERVER['REQUEST_URI'], '?'));
     foreach ($list_modules as $module) {
         if ($URI == $module['url']){
-            $access += 1;
-        }
-    }
-    foreach ($list_AllTabs as $tab) {
-        if ($URI == $tab['url']){
             $access += 1;
         }
     }

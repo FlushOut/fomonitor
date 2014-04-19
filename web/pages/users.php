@@ -285,7 +285,10 @@ if ($_POST['action'] == 'SaveProfiles') {
         <script type="text/javascript">
             $(document).ready(function() {
                 // try your js
-
+                /*
+                jQuery(".sidebar-right-content *").prop('disabled',true); 
+                jQuery(".sidebar-right-content").css({ opacity: 0.5 });
+                */    
                 jQuery("label.checkbox").each(function () {
                 if (jQuery("input", this).attr("checked") == 'checked') jQuery(this).addClass("checked");
                 });
