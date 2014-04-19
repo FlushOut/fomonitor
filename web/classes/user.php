@@ -68,6 +68,17 @@ class user
             $this->update_date = $query['update_date'];
             $this->update_user = $query['update_user'];
 
+            $query_profiles = $this->con->genericQuery("select fk_profile from user_profiles 
+                                                        where fk_user = " . $this->id);
+
+            
+
+            if (count($query_profiles) > 0) {
+                foreach ($query_profiles as $value) {
+                    array_push($this->profiles,$value['fk_profile']);
+                }
+            }
+
             return true;
         }
     }
@@ -90,6 +101,24 @@ class user
         
     }
 
+    function saveProfiles($idUser, $profiles)
+    {
+        $query = "delete from user_profiles where fk_user=" . $idUser;
+        $this->con->genericQuery($query);
+        $first = true;
+        foreach ($profiles as $value) {
+            $first_prof = 0;
+            if($first){
+                $first_prof = 1;
+                $first = false;
+            }
+            
+            $query = "insert into user_profiles(fk_user,fk_profile,first_profile)
+                      values(".$idUser.",".$value.",".$first_prof.")";
+            $this->con->genericQuery($query);
+        }   
+    }
+    
     function list_users($fk_company)
     {
         $query = $this->con->genericQuery("select * from " . $this->table . " where fk_company = '$fk_company'");
@@ -108,6 +137,11 @@ class user
     function del()
     {
         $query = $this->con->genericQuery("delete from " . $this->table . " where id=" . $this->id);
+    }
+
+    function list_profiles()
+    {
+        return $query = $this->con->genericQuery("select * from profiles where status = 1");        
     }
 
 }

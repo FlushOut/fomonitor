@@ -2,20 +2,27 @@
 require_once("../config.php");
 
 $user = new user();
-$u = new user();
 $list_users = $user->list_users(1);
-
 
 if ($_POST['action'] == 'Save') {
         if (isset($_POST['hdIdAct'])) {
-            $u->open($_POST['hdIdAct']);
+            $user->open($_POST['hdIdAct']);
         }
         if ($_POST['txtName']){
-            $u->save(1, $_POST['txtName'], $_POST['txtEmail'], $_POST['txtPassword']);
+            $user->save(1, $_POST['txtName'], $_POST['txtEmail'], $_POST['txtPassword']);
             header("Location: ". $_SERVER['REQUEST_URI']);
             exit;
         }
 }
+if ($_POST['action'] == 'SaveProfiles') {
+        if (isset($_POST['hdIdUP'])) {
+        $user->saveProfiles($_POST['hdIdUP'],$_POST['prof']);
+        header("Location: ". $_SERVER['REQUEST_URI']);
+        exit;
+    }
+
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -166,13 +173,13 @@ if ($_POST['action'] == 'Save') {
                                                                         <tr>
                                                                             <td>Email</td>
                                                                             <td>
-                                                                                <input type="text" id="txtEmail" name="txtEmail" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
-                                                                            </td>    
+                                                                                <input type="text" id="txtEmail" name="txtEmail" class="grd-white" data-validate="{required: true, email:true, messages:{required:'Please enter field email', email:'Please enter a valid email address'}}" name="email" id="email" />
+                                                                            </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Password</td>
                                                                             <td>
-                                                                                <input type="text" id="txtPassword" name="txtPassword" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
+                                                                                <input type="password" id="txtPassword" name="txtPassword" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field password'}}" name="password" id="password" />
                                                                             </td>    
                                                                         </tr>
                                                                         <tr>
@@ -184,6 +191,28 @@ if ($_POST['action'] == 'Save') {
                                                             </form>
                                                         </div>
                                                     </div>
+                                                    <!-- Modal-->
+                                                    <div id="myModalProfiles" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                            <h3 id="myModalLabel">Select Profiles</h3>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form class="form-horizontal" id="form-validate" action="" method="post" />
+                                                                <input name="hdIdUP" id="hdIdUP" type="hidden"/>
+                                                                <div class="control-group">
+                                                                    <div class="controls">
+                                                                    </div>
+                                                                </div>
+                                                                <p align="center">
+                                                                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                                <button class="btn btn-primary" id="btnSaveProfiles" name="action" value="SaveProfiles">Save</button>
+                                                                </p>
+
+                                                            </form>
+                                                        </div>
+                                                    </div>
+
                                         </div>
                                         <div class="box-body">
                                             <table id="datatables" class="table table-bordered table-striped responsive">
@@ -205,8 +234,8 @@ if ($_POST['action'] == 'Save') {
                                                             </td>
                                                             <td>
                                                                 <a href="#myModal" role="button" class="btn btn-link" data-toggle="modal" id="aEdit">Edit</a>
-                                                                <!-- <button name="btnUpdate" type="button" class="btn btn-link">Edit</button> -->
                                                                 <button name="btnDelete" type="button" class="btn btn-link">Delete</button>
+                                                                <a href="#myModalProfiles" role="button" class="btn btn-link" data-toggle="modal" id="aProfiles">Profiles</a>
                                                             </td>
                                                         </tr>
                                                     <?php } ?>
@@ -257,10 +286,33 @@ if ($_POST['action'] == 'Save') {
             $(document).ready(function() {
                 // try your js
 
+                jQuery("label.checkbox").each(function () {
+                if (jQuery("input", this).attr("checked") == 'checked') jQuery(this).addClass("checked");
+                });
+
                 $('#myModal').on('shown', function () {
                     $('#txtName').focus();
                 });
                
+                //Edit Profile users
+                $('a#aProfiles').bind('click',function(){
+                    jQuery(this).parents('tr').map(function () {
+                        var id = jQuery('input[name="hdId"]', this).val();
+                        var action = "getProfiles";
+
+                        $("#hdIdUP").val(id);
+
+                        jQuery.ajax({
+                            url: "/ajax/actions.php",
+                            type: "POST",
+                            data: {id: id, action: action }
+                        }).done(function (resp) {
+                                $(".controls").html(resp);
+                            });
+                    });
+                    return true;
+                });
+
                 //delete individual row
                 $('button[name="btnDelete"]').click(function(){
                     var c = confirm('Continue delete?');
@@ -278,6 +330,7 @@ if ($_POST['action'] == 'Save') {
                     });
                     return false;
                 });
+
 
                 //update individual row
                 $('a#aEdit').bind('click',function(){

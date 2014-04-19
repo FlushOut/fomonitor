@@ -31,7 +31,7 @@ class menu {
         $email = addslashes($email);
 
         $query = $this->con->genericQuery("select uw.id 'id_User',uw.name 'User' ,uw.email,m.id  'id_Module',
-                                      d.description 'Module',m.class,m.parent,pm.url,pm.start_module,up.first_profile
+                                      d.description 'Module',m.parent,m.type,m.class,pm.url,pm.start_module,up.first_profile
                                       from " . $this->tb_userweb . " uw
                                       inner join ". $this->tb_uw_profile ." up
                                       on uw.id = up.fk_user
