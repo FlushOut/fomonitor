@@ -17,8 +17,9 @@ if ($_POST['action'] == 'Save') {
 
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
         <title>Tables - Stilearn Admin Bootstrap</title>
@@ -42,7 +43,9 @@ if ($_POST['action'] == 'Save') {
         
         <link href="../css/DT_bootstrap.css" rel="stylesheet" />
         <link href="../css/responsive-tables.css" rel="stylesheet" />
-        
+
+        <script src="../js/jquery.js"></script>
+        <script src="../js/jquery-ui.min.js"></script> <!-- this for sliders-->        
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -268,7 +271,6 @@ if ($_POST['action'] == 'Save') {
         <!-- javascript
         ================================================== -->
         <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-        <script src="../js/jquery.js"></script>
         <script src="../js/bootstrap.js"></script>
         <script src="../js/uniform/jquery.uniform.js"></script>
 
@@ -289,6 +291,7 @@ if ($_POST['action'] == 'Save') {
 
         <script type="text/javascript">
             $(document).ready(function() {
+
                 // try your js
                 //delete individual row
                 $('button[name="btnDelete"]').click(function(){

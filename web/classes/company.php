@@ -47,4 +47,30 @@ class company
             return true;
         }
     }
+
+    function save($name, $foto, $type, $gps_time, $gps_distance, $inactive_time, $idle_time)
+    {
+        echo "save";
+        $pont = fopen($foto, "rb");
+        $fotoFinal = fread($pont,filesize($foto));
+        fclose($pont);
+        $fotoFinal = addslashes($fotoFinal);
+
+        $dados["name"] = $name;
+        $dados["logo"] = $fotoFinal;
+        $dados["logo_type"] = $type;
+        $dados["gps_time"] = $gps_time;
+        $dados["gps_distance"] = $gps_distance;
+        $dados["inactive_time"] = $inactive_time;
+        $dados["idle_time"] = $idle_time;
+        
+        if ($this->id > 0) {
+            $dados["id"] = $this->id;
+            return $this->con->update($this->table,$dados);
+        } else {
+            return $this->con->insert($this->table,$dados);
+        }
+        
+    }
+
 }

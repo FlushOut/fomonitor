@@ -44,6 +44,9 @@ if ($_POST['action'] == 'Save') {
         <link href="../css/DT_bootstrap.css" rel="stylesheet" />
         <link href="../css/responsive-tables.css" rel="stylesheet" />
         
+        <script src="../js/jquery.js"></script>
+        <script src="../js/jquery-ui.min.js"></script> <!-- this for sliders-->        
+        
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -220,7 +223,6 @@ if ($_POST['action'] == 'Save') {
         <!-- javascript
         ================================================== -->
         <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-        <script src="../js/jquery.js"></script>
         <script src="../js/bootstrap.js"></script>
         <script src="../js/uniform/jquery.uniform.js"></script>
 
