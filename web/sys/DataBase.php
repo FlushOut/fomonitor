@@ -96,6 +96,7 @@ class DataBase extends PDO{
             return $insert->errorInfo()[2];
         }
     }
+
     public function update($table,$values)
     {
         $updateSQL = null;
