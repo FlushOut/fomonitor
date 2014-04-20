@@ -3,7 +3,7 @@ $config['debug'] = FALSE;
 
 //$config['urls']['base'] = 'http://r-monitor.flushoutsolutions.com'; //Produção
 $config['urls']['base'] = 'http://d-r-monitor.flushoutsolutions.com'; //Local
-$config['urls']['docs'] = $config['urls']['base'].'/doc/index.html'; 
+$config['urls']['docs'] = $config['urls']['base']; 
 
 
 function curPageURL()

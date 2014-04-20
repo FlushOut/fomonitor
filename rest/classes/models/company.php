@@ -17,4 +17,17 @@ class company extends superModel {
 		$collection = $this->select("id",array("code='".$code."'"));
 		return $collection[0]['id'];	
 	}
+
+	public function checkCompanyId($code)
+	{
+		$collection = $this->select("*",array("code='".$code."'"));
+		
+		if(!count($collection)) {
+			return false;
+		}
+		else
+		{
+			return $collection;
+		}
+	}
 }

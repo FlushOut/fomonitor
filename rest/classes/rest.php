@@ -1,8 +1,8 @@
 <?php
 
 class rest extends superRest {
-	
-	protected $permitidos = array('version','validate','send_apps','get_apps','get_settings','send_data','getcompanysettings','getuserdata');
+
+	protected $permitidos = array('version','validate','send_information','send_apps','get_apps','get_settings','send_data','getcompanysettings','getuserdata');
 	
 
 	public function version() 
@@ -13,10 +13,28 @@ class rest extends superRest {
 
 	public function validate() 
 	{
+		$company = new company();
+		$exists = $company->checkCompanyId($this->vars['code']);
+		
+
+		if($exists !== false)
+		{
+			$this->retorno["status"] = true;
+			$this->retorno["company"] = $exists[0]['name'];	
+		}
+		else
+		{
+			$this->retorno["status"] = false;
+			$this->retorno["message"] = "Invalid company code.";
+		}
+	}
+
+	public function send_information() 
+	{
 		if (!$this->vars['imei']
 			or !$this->vars['code']
 			or !$this->vars['name']
-			or !$this->vars['pinhash']
+			or !$this->vars['password']
 			or !$this->vars['date']
 			or !$this->vars['model']
 			or !$this->vars['manufacturer']
@@ -35,7 +53,7 @@ class rest extends superRest {
 			if (!$erro) {
 
 				$mobile = new mobile();
-				$id = $mobile->registrar($this->vars['imei'], urldecode($this->vars['model']),  urldecode($this->vars['manufacturer']), $companyId, urldecode($this->vars['name']), $this->vars['pinhash'], $this->vars['date']);
+				$id = $mobile->registrar($this->vars['imei'], urldecode($this->vars['model']),  urldecode($this->vars['manufacturer']), $companyId, urldecode($this->vars['name']), $this->vars['password'], $this->vars['date']);
 				
 				$mobile->setSettings($this->vars['imei'], 1, 1, 1, 1, 1, 1,
 														  1, 1, 1, 1, 1);
@@ -199,7 +217,6 @@ class rest extends superRest {
 												$this->vars['carrier'],
 												$bytes_rx,
 												$bytes_tx);
-				$imei,$date,$phoneNumber,$lat,$lon,$speed,$bearing,$accuracy,$batteryLevel,$gsmstrength,$carrier,$bytes_rx,$bytes_tx
 				if(isset($id)) 
 				{
 					$this->retorno['id'] = $this->vars['id'];	

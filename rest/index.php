@@ -1,10 +1,6 @@
 <?php
 require('./config.php');
  
-/*if ($_GET["debug"] == 1) {
-	$config["debug"]= true;
-}*/
-
 if (!$config['debug']) {
 	error_reporting(0);
 } else {

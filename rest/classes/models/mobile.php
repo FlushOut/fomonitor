@@ -32,10 +32,10 @@ class mobile extends superModel {
 		$dt = $create_date;
 		$dados["create_date"] ="'". addslashes(substr($dt,0,4)."-".substr($dt,4,2)."-".substr($dt,6,2)." ".substr($dt,8,2).":".substr($dt,10,2).":".substr($dt,12,2))."'";
 
-		$reg = $this->genericQuery("select * from user where imei = '".$imei."'");
+		$reg = $this->genericQuery("select * from mobiles where imei = '".$imei."'");
 		if ($reg[0]['id'])
 		{
-			$this->genericQuery("UPDATE user SET imei=".$reg[0]['imei'].", manufacturer=".$dados["manufacturer"]." ,model=".$dados["model"]." ,fk_company=".$dados["fk_company"]." ,name=".$dados["name"]." ,contact=".$dados["contact"]." ,email=".$dados["email"]." ,password=".$dados["password"]." ,status=".$dados["status"]." ,create_date=".$dados["create_date"]." where id =".$reg[0]['id'].";");
+			$this->genericQuery("UPDATE mobiles SET imei=".$reg[0]['imei'].", manufacturer=".$dados["manufacturer"]." ,model=".$dados["model"]." ,fk_company=".$dados["fk_company"]." ,name=".$dados["name"]." ,contact=".$dados["contact"]." ,email=".$dados["email"]." ,password=".$dados["password"]." ,status=".$dados["status"]." ,create_date=".$dados["create_date"]." where id =".$reg[0]['id'].";");
 			return $reg[0]['id'];
 		}
 		else
@@ -91,13 +91,13 @@ class mobile extends superModel {
 								        carrier, 
 								       bytes_rx,
 								       bytes_tx,
-								        from location_imei 
+								        from mobile_data 
 								        where imei = '".$imei."' order by date_time desc limit 1");
 	}
 
 	public function getSettings($imei) {
 		
-		return $this->select("imei, wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, datetime, about",array("imei='".addslashes($imei)."'"));
+		return $this->genericQuery(" select imei, wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, datetime, about from mobile_settings where imei=".$imei);
 	}
 
 	public function setSettings($imei, $wifi, $screen, $localsafety, $apps, $accounts, $privacy, 
@@ -131,10 +131,10 @@ class mobile extends superModel {
 								 keyboard=1, 
 								 voice=1, 
 								 accessibility=1 , 
-								 about=1 where _id=".$reg[0]['id'].";");
+								 about=1 where id=".$reg[0]['id'].";");
 			return $reg[0]['id'];
 		}else{
-			return $this->insert($dados);
+			return $this->insertTable($dados,'mobile_settings');
 		}		
 	}
 

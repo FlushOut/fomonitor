@@ -5,20 +5,9 @@
  * @author Manuel Moyano <mnlmoyano@gmail.com>
  */
 class superModel {
-	
-   /**
-    * @var array configuração da aplicação
-    */		
+
 	protected $config;
-	
-   /**
-    * @var bool guarda a configuração de debug
-    */		
-	protected $debug;
-	
-   /**
-    * @var object instância do classe mysqli
-    */		 
+	protected $debug; 
 	protected $db;
 	
 	
@@ -105,7 +94,27 @@ class superModel {
 		
 
 		$query = "INSERT INTO ".$this->table. " (".$colunasSQL.") VALUES (".$valoresSQL.")";
+		$this->db->query($query);
+		return $this->db->insert_id;
+	}
 
+	public function insertTable($values,$EspecificTable) {
+	
+		$colunasSQL = null;
+		$valoresSQL = null;
+
+		foreach($values as $key => $value) {
+			
+			$colunasSQL.=($colunasSQL?',':'');
+			$colunasSQL.="`".$key."`";
+
+			$valoresSQL.=($valoresSQL?',':'');
+			$valoresSQL.=$value;
+			
+		}
+		
+
+		$query = "INSERT INTO ".$EspecificTable. " (".$colunasSQL.") VALUES (".$valoresSQL.")";
 		$this->db->query($query);
 		return $this->db->insert_id;
 	}

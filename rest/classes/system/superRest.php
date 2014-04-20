@@ -46,8 +46,8 @@ class superRest {
 		$temp = explode('/',$url);
 
 		//MMOYANO modificado para test
-		$this->method = $temp[0];
-		//$this->method = str_replace('index.php?','',$temp[0]);
+		//$this->method = $temp[0];
+		$this->method = str_replace('index.php?','',$temp[0]);
 		
 		for($i=1;$i<count($temp); $i+=2) {
 			if (trim($temp[$i]) != '') {
