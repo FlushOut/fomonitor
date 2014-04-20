@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 20-04-2014 a las 03:43:29
+-- Tiempo de generación: 20-04-2014 a las 06:19:32
 -- Versión del servidor: 5.6.12-log
 -- Versión de PHP: 5.4.12
 
@@ -196,7 +196,14 @@ CREATE TABLE IF NOT EXISTS `mobiles` (
   `create_date` datetime DEFAULT NULL,
   `last_update` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=7 ;
+
+--
+-- Volcado de datos para la tabla `mobiles`
+--
+
+INSERT INTO `mobiles` (`id`, `imei`, `fk_status`, `fk_category`, `fk_company`, `manufacturer`, `model`, `warranty`, `name`, `contact`, `email`, `password`, `status`, `create_date`, `last_update`) VALUES
+(6, '353229050830973', 1, 1, 1, 'Test', 'Test', '2014-04-30 00:00:00', 'Test', 'Test', 'Test@test.com', '1234', 1, '2014-04-20 00:00:00', '2014-04-15 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -212,7 +219,15 @@ CREATE TABLE IF NOT EXISTS `mobile_applications` (
   `allowed` tinyint(1) NOT NULL,
   `installed` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=3 ;
+
+--
+-- Volcado de datos para la tabla `mobile_applications`
+--
+
+INSERT INTO `mobile_applications` (`id`, `imei`, `name`, `package`, `allowed`, `installed`) VALUES
+(1, '353229050830973', 'Test1', 'pck Test1', 1, 1),
+(2, '353229050830973', 'Test2', 'pck Test2', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -236,7 +251,14 @@ CREATE TABLE IF NOT EXISTS `mobile_data` (
   `bytes_rx` float NOT NULL,
   `bytes_tx` float NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
+
+--
+-- Volcado de datos para la tabla `mobile_data`
+--
+
+INSERT INTO `mobile_data` (`id`, `imei`, `date`, `phonenumber`, `latitude`, `longitude`, `speed`, `bearing`, `accuracy`, `batterylevel`, `gsmstrength`, `carrier`, `bytes_rx`, `bytes_tx`) VALUES
+(1, '353229050830973', '2014-04-20 00:00:00', '5511965766464', -23.5109, -46.6928, 7.39347, 349.01, 6, 0.25, 19, 'Claro', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -259,7 +281,14 @@ CREATE TABLE IF NOT EXISTS `mobile_settings` (
   `accessibility` tinyint(1) DEFAULT NULL,
   `about` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=5 ;
+
+--
+-- Volcado de datos para la tabla `mobile_settings`
+--
+
+INSERT INTO `mobile_settings` (`id`, `imei`, `wifi`, `screen`, `localsafety`, `apps`, `accounts`, `privacy`, `storage`, `keyboard`, `voice`, `accessibility`, `about`) VALUES
+(4, '353229050830973', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
