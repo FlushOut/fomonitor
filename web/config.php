@@ -30,11 +30,12 @@ if (strstr(curPageURL(), "d-") != false) {
     $config['bd']['port'] = '3306';
     
 } else if (strstr(curPageURL(), ".com") != false) {
-    
-} else {
-    
+    $config['bd']['host'] = 'flushoutsolutionscom.ipagemysql.com';
+    $config['bd']['user'] = 'monitoruser';
+    $config['bd']['password'] = 'M0n!t0r220591';
+    $config['bd']['base'] = 'dbmonitor';
+    $config['bd']['port'] = '3306';
 }
-
 
 function redirect($url)
 {
@@ -69,7 +70,7 @@ function format_date($strDate)
     $i = substr($strDate, 14, 2);
     $s = substr($strDate, 17, 2);
 
-    return "$d/$m/$Y às $G:$i:$s";
+    return "$d/$m/$Y at $G:$i:$s";
 }
 
 function verify_access(){
