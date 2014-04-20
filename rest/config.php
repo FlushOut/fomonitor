@@ -24,6 +24,11 @@ if (strstr(curPageURL(), "d-") != false) {
     $config['bd']['base'] = 'dbmonitor';
     $config['bd']['port'] = '3306';
 }elseif (strstr(curPageURL(), ".com") != false) {
+    $config['bd']['host'] = 'flushoutsolutionscom.ipagemysql.com';
+    $config['bd']['user'] = 'monitoruser';
+    $config['bd']['password'] = 'M0n!t0r220591';
+    $config['bd']['base'] = 'dbmonitor';
+    $config['bd']['port'] = '3306';
 
 } 
 ?>
