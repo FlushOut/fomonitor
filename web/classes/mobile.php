@@ -13,6 +13,7 @@ class mobile
     protected $table = "mobiles";
 
     public $id = 0;
+    public $imei;
     public $fk_status;
     public $fk_category;
     public $fk_company;
@@ -35,7 +36,7 @@ class mobile
     function open($query)
     {
         if(!is_array($query)){
-            $result = $this->con->genericQuery("select * from " . $this->table . " where id = '$query'");
+            $result = $this->con->genericQuery("select * from " . $this->table . " where id = '$query'");    
             $query = $result[0];
         }
 
@@ -43,6 +44,37 @@ class mobile
             return false;
         else {
             $this->id = $query['id'];
+            $this->imei = $query['imei'];
+            $this->fk_status = $query['fk_status'];
+            $this->fk_category = $query['fk_category'];
+            $this->fk_company = $query['fk_company'];
+            $this->manufacturer = $query['manufacturer'];
+            $this->model = $query['model'];
+            $this->warranty = $query['warranty'];
+            $this->name = $query['name'];
+            $this->contact = $query['contact'];
+            $this->email = $query['email'];
+            $this->password = $query['password'];
+            $this->status= $query['status'];
+            $this->create_date = $query['create_date'];
+            $this->last_update = $query['last_update'];
+
+            return true;
+        }
+    }
+
+    function openByImei($query)
+    {
+        if(!is_array($query)){
+        	$result = $this->con->genericQuery("select * from " . $this->table . " where imei = '$query'");
+            $query = $result[0];
+        }
+
+        if (count($query) == 0)
+            return false;
+        else {
+            $this->id = $query['id'];
+            $this->imei = $query['imei'];
             $this->fk_status = $query['fk_status'];
             $this->fk_category = $query['fk_category'];
             $this->fk_company = $query['fk_company'];
@@ -124,6 +156,7 @@ class mobile
             foreach ($query as $value) {
                 $md = new mobile_dataL;
                 $md->id = $value['idMobil'];
+                $md->imei = $value['imeiMobil'];
                 $md->name = $value['name'];
                 $md->batterylevel = $value['batterylevel'];
                 $md->gsmstrength = $value['gsmstrength'];
@@ -148,7 +181,12 @@ class mobile
 
     public function getSettings() {
         
-        return $this->con->genericQuery(" select imei, wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, datetime, about from mobile_settings imei='" . $this->imei . "'");
+        return $this->con->genericQuery(" select imei, wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, about from mobile_settings where imei='" . $this->imei . "'");
+    }
+
+    public function getSettingsImei($imei) {
+        
+        return $this->con->genericQuery(" select imei, wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, about from mobile_settings where imei='" . $imei . "'");
     }
 
     function setSettings($options)
@@ -180,10 +218,7 @@ class mobile
 
 
         $query = "update mobile_settings set wifi=" . $wifi . ", screen=" . $screen . ", localsafety=" . $localsafety . ", apps=" . $apps . ", accounts=" . $accounts . ", privacy=" . $privacy . ", storage=" . $storage . ", keyboard=" . $keyboard . ", voice=" . $voice . ", accessibility=" . $accessibility . ", about=" . $about . " where imei='" . $this->imei . "'";
-
         $this->con->genericQuery($query);
-
-        $this->open($this->id);
 
     }
 
@@ -197,7 +232,6 @@ class mobile
             $query = "update mobile_applications set allowed=1 where id='" . $value . "'";
             $this->con->genericQuery($query);
         }
-        $this->open($this->id);
     }
 
     function getApps()
@@ -206,18 +240,24 @@ class mobile
         return $query;
     }
 
+    function getAppsImei($imei)
+    {
+        $query = $this->con->genericQuery("select * from mobile_applications where imei = '" . $imei . "' order by name asc");
+        return $query;
+    }
+
     function update($fk_status, $fk_category, $warranty, $name, $contact, $email, $password)
     {
         if(isset($fk_status)) $dados["fk_status"] = $fk_status;
         if(isset($fk_category)) $dados["fk_category"] = $fk_category;
-        if(isset($warranty)) {
-            $warranty = substr($warranty, 6, 4) . "-" . substr($warranty, 3, 2) . "-" . substr($warranty, 0, 2) . " 00:00:00";
-            $dados["warranty"] = $warranty;
+        if(strlen($warranty)>0) {
+        	$t = strtotime($warranty);
+        	$dados["warranty"] = date('Y-m-d H:i:s',$t);
         }
-        if(isset($name)) $dados["name"] = $name;
-        if(isset($contact)) $dados["contact"] = $contact;
-        if(isset($email)) $dados["email"] = $email;
-        if(isset($password)) $dados["password"] = $password;
+        if(strlen($name)>0) $dados["name"] = $name;
+        if(strlen($contact)>0) $dados["contact"] = $contact;
+        if(strlen($email)>0) $dados["email"] = $email;
+        if(strlen($password)>0) $dados["password"] = $password;
 
         if(isset($dados)) {
             $date = date('Y-m-d H:i:s');

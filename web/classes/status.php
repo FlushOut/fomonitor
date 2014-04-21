@@ -9,42 +9,51 @@
 
 class status
 {
-    $arrayEN = array(
-    "1" => "In use",
-    "2" => "Idle",
-    "3" => "Broken",
-    "4" => "Stolen",
-    "5" => "Lost"
-    );
+	public $arrayEN;
+	public $arrayPT;
+	public $arrayES;
 
-    $arrayPT = array(
-    "1" => "Em uso",
-    "2" => "Ocioso",
-    "3" => "Defeituoso",
-    "4" => "Roubado",
-    "5" => "Desaparecido"
-    );
+    function __construct(){
 
-    $arrayES = array(
-    "1" => "En uso",
-    "2" => "En desuso",
-    "3" => "Descompuesto",
-    "4" => "Robado",
-    "5" => "Desaparecido"
-    );
+    	$this->arrayEN = array(
+	    "1" => "In use",
+	    "2" => "Idle",
+	    "3" => "Broken",
+	    "4" => "Stolen",
+	    "5" => "Lost"
+	    );		
+    	
+	    $this->arrayPT = array(
+	    "1" => "Em uso",
+	    "2" => "Ocioso",
+	    "3" => "Defeituoso",
+	    "4" => "Roubado",
+	    "5" => "Desaparecido"
+	    );
 
-    function listByLang($lang)
-    {
-        switch ($lang) {
-            case 'en':
-                return $arrayEN;
-                break;
-            case 'pt':
-                return $arrayPT;
-                break;
-            case 'es':
-                return $arrayES;
-                break;
-        }
+	    $this->arrayES = array(
+	    "1" => "En uso",
+	    "2" => "En desuso",
+	    "3" => "Descompuesto",
+	    "4" => "Robado",
+	    "5" => "Desaparecido"
+	    );
+    }
+
+    function getByLang($lang){
+    	switch ($lang) {
+    		case 'en':
+    			return $this->arrayEN;
+    			break;
+    		case 'pt':
+    			return $this->arrayPT;
+    			break;
+    		case 'es':
+    			return $this->arrayES;
+    			break;
+    		default:
+    			# code...
+    			break;
+    	}
     }
 }

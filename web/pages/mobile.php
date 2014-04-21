@@ -2,13 +2,14 @@
 require_once("../config.php");
 
 $mobile = new mobile();
+
 $list_mobile = $mobile->getLastData(1);
 
 if ($_POST['action'] == 'Update') {
         if (isset($_POST['hdIdAct'])) {
-            $mobile->open($_POST['hdIdAct']);
+            $mobile->openByImei($_POST['hdIdAct']);
             $mobile->update($_POST['cboStatus'], $_POST['cboCategory'], 
-            				$_POST['txtWarranty'], $_POST['name'],
+            				$_POST['txtWarranty'], $_POST['txtName'],
             				$_POST['txtContact'], $_POST['txtEmail'], $_POST['txtPassword']);
             header("Location: ". $_SERVER['REQUEST_URI']);
             exit;
@@ -16,7 +17,7 @@ if ($_POST['action'] == 'Update') {
 }
 if ($_POST['action'] == 'SaveSettings') {
         if (isset($_POST['hdIdSet'])) {
-        	$mobile->open($_POST['hdIdSet']);
+        	$mobile->openByImei($_POST['hdIdSet']);
         	$mobile->setSettings($_POST);	
         	header("Location: ". $_SERVER['REQUEST_URI']);
         	exit;
@@ -24,12 +25,13 @@ if ($_POST['action'] == 'SaveSettings') {
 }
 if ($_POST['action'] == 'SaveApps') {
         if (isset($_POST['hdIdApp'])) {
-        	$mobile->open($_POST['hdIdApp']);
+        	$mobile->openByImei($_POST['hdIdApp']);
         	$mobile->setApps($_POST['app']);	
         	header("Location: ". $_SERVER['REQUEST_URI']);
         	exit;
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -54,6 +56,10 @@ if ($_POST['action'] == 'SaveApps') {
         <link href="../css/font-awesome.css" rel="stylesheet" />
         <link href="../css/animate.css" rel="stylesheet" />
         <link href="../css/uniform.default.css" rel="stylesheet" />
+
+        <link href="../css/datepicker.css" rel="stylesheet" />
+        <link href="../css/select2.css" rel="stylesheet" />
+        <link href="../css/bootstrap-wysihtml5.css" rel="stylesheet" />
         
         <link href="../css/DT_bootstrap.css" rel="stylesheet" />
         <link href="../css/responsive-tables.css" rel="stylesheet" />
@@ -164,18 +170,21 @@ if ($_POST['action'] == 'SaveApps') {
                                             </div>
                                             <span>Mobil&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                                 <!-- Modal -->
-                                                <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height:550px !important;">
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                                         <h3 id="myModalLabel">Information</h3>
                                                     </div>
-                                                    <div class="modal-body">
+                                                    <div class="modal-body" style="height:450px !important;max-height:450px;">
                                                         <form class="form-horizontal" id="form-validate" action="" method="post" />
                                                             <input name="hdIdAct" id="hdIdAct" type="hidden"/>
-                                                            <p align="center">
-                                                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                                                            <button class="btn btn-primary" id="btnUpdate" name="action" value="Update">Update</button>
-                                                            </p>
+                                                            <fieldset>
+	                                                            <div id="EditControl"></div>
+	                                                            <p align="center">
+                                                            		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                            		<button class="btn btn-primary" id="btnUpdate" name="action" value="Update">Update</button>
+                                                            	</p>
+                                                            </fieldset>
 
                                                         </form>
                                                     </div>
@@ -188,7 +197,10 @@ if ($_POST['action'] == 'SaveApps') {
                                                     </div>
                                                     <div class="modal-body">
                                                         <form class="form-horizontal" id="form-validate" action="" method="post" />
-                                                            <input name="hdIdDet" id="hdIdDet" type="hidden"/>
+															<input name="hdIdDet" id="hdIdDet" type="hidden"/>
+															<fieldset>
+                                                            <div id="DetailsControl"></div>
+                                                            </fieldset>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -202,7 +214,10 @@ if ($_POST['action'] == 'SaveApps') {
                                                     <div class="modal-body">
                                                         <form class="form-horizontal" id="form-validate" action="" method="post" />
                                                             <input name="hdIdSet" id="hdIdSet" type="hidden"/>
-
+                                                            <div class="control-group">
+                                                                <div id="SettingsControl" class="controls">
+                                                                </div>
+                                                            </div>
                                                             <p align="center">
                                                             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                                                             <button class="btn btn-primary" id="btnSaveSettings" name="action" value="SaveSettings">Update</button>
@@ -220,6 +235,10 @@ if ($_POST['action'] == 'SaveApps') {
                                                     <div class="modal-body">
                                                         <form class="form-horizontal" id="form-validate" action="" method="post" />
                                                             <input name="hdIdApp" id="hdIdApp" type="hidden"/>
+                                                            <div class="control-group">
+                                                                <div id="AppsControl" class="controls">
+                                                                </div>
+                                                            </div>
                                                             <p align="center">
                                                             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                                                             <button class="btn btn-primary" id="btnSaveApps" name="action" value="SaveApps">Save</button>
@@ -259,9 +278,9 @@ if ($_POST['action'] == 'SaveApps') {
                                                 </thead>
                                                 <tbody>
                                                     <?php foreach ($list_mobile as $item) { ?>
-                                                        <tr src="user">
+                                                        <tr src="mobile">
                                                             <td>
-                                                            <input name="hdId" type="hidden" value="<?php echo $item->imeiMobil; ?>"/>
+                                                            <input name="hdId" type="hidden" value="<?php echo $item->imei; ?>"/>
                                                             <?php echo $item->name; ?>
                                                             </td>
                                                             <td><?php echo number_format(($item->batterylevel * 100), 1, ",", ""); ?> %</td>
@@ -309,6 +328,11 @@ if ($_POST['action'] == 'SaveApps') {
         <script src="../js/bootstrap.js"></script>
         <script src="../js/uniform/jquery.uniform.js"></script>
 
+        <script src="../js/datepicker/bootstrap-datepicker.js"></script>
+        <script src="../js/select2/select2.js"></script>
+        <script src="../js/wysihtml5/wysihtml5-0.3.0.js"></script>
+        <script src="../js/wysihtml5/bootstrap-wysihtml5.js"></script>
+
         <script src="../js/validate/jquery.validate.js"></script>
         <script src="../js/validate/jquery.metadata.js"></script>
         
@@ -350,7 +374,7 @@ if ($_POST['action'] == 'SaveApps') {
                             type: "POST",
                             data: {id: id, action: action }
                         }).done(function (resp) {
-                                //$(".controls").html(resp);
+                            $("#SettingsControl").html(resp);
                             });
                     });
                     return true;
@@ -369,7 +393,7 @@ if ($_POST['action'] == 'SaveApps') {
                             type: "POST",
                             data: {id: id, action: action }
                         }).done(function (resp) {
-                                //$(".controls").html(resp);
+                            $("#AppsControl").html(resp);
                             });
                     });
                     return true;
@@ -407,35 +431,43 @@ if ($_POST['action'] == 'SaveApps') {
                             type: "POST",
                             data: {id: id, action: action }
                         }).done(function (resp) {
-                                //$(".controls").html(resp);
+                                $("#EditControl").html(resp);
                             });
                     });
                     return true;
                 });
-
+				
                 //view mobile details
                 $('a#aDetails').bind('click',function(){
                     jQuery(this).parents('tr').map(function () {
                         var id = jQuery('input[name="hdId"]', this).val();
                         var action = "getDetails";
 
-                        $("#hdIdAct").val(id);
+                        $("#hdIdDet").val(id);
 
                         jQuery.ajax({
                             url: "/ajax/actions.php",
                             type: "POST",
                             data: {id: id, action: action }
                         }).done(function (resp) {
-                                //$(".controls").html(resp);
+                            $("#DetailsControl").html(resp);
                             });
                     });
                     return true;
                 });
 
-                $('#form-validate').validate();
-                
+                // select2
+                //$('[data-form=select2]').select2();
+
+                // datepicker
+                //$('[data-form=datepicker]').datepicker();
+
                 // uniform
-                $('[data-form=uniform]').uniform();
+                //$('[data-form=uniform]').uniform();
+
+                //$('[data-form=wysihtml5]').wysihtml5();
+
+                $('#form-validate').validate();
                 
                 // datatables
                 $('#datatables').dataTable( {
