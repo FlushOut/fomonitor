@@ -247,16 +247,14 @@ if ($_POST['action'] == 'SaveApps') {
                                                         </form>
                                                     </div>
                                                 </div>
-                                                <!-- Modal Map-->
-                                                <div id="myModalMap" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                 <!-- Modal Map-->
+                                                <div id="myModalMap" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height:480px !important;">
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                        <h3 id="myModalLabel">User on the Map</h3>
+                                                        <h3 id="myModalLabel">User On The Map</h3>
                                                     </div>
-                                                    <div class="modal-body">
-                                                        <form class="form-horizontal" id="form-validate" action="" method="post" />
-                                                            <input name="hdIdMap" id="hdIdMap" type="hidden"/>
-                                                        </form>
+                                                    <div class="modal-body" style="height:400px !important;max-height:400px;">
+                                                        <div class="mapa" id="mapa"  style="height:400px; width: 100%; float: right"></div>
                                                     </div>
                                                 </div>
 
@@ -328,6 +326,8 @@ if ($_POST['action'] == 'SaveApps') {
         <script src="../js/bootstrap.js"></script>
         <script src="../js/uniform/jquery.uniform.js"></script>
 
+        <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyDMgdYP46UluNKKgDqakkI0HUYQoQwhX9g&sensor=true&libraries=geometry"></script>
+
         <script src="../js/datepicker/bootstrap-datepicker.js"></script>
         <script src="../js/select2/select2.js"></script>
         <script src="../js/wysihtml5/wysihtml5-0.3.0.js"></script>
@@ -352,13 +352,18 @@ if ($_POST['action'] == 'SaveApps') {
                 /*
                 jQuery(".sidebar-right-content *").prop('disabled',true); 
                 jQuery(".sidebar-right-content").css({ opacity: 0.5 });
-                */    
+                */
+
                 jQuery("label.checkbox").each(function () {
                 if (jQuery("input", this).attr("checked") == 'checked') jQuery(this).addClass("checked");
                 });
 
                 $('#myModal').on('shown', function () {
                     $('#txtName').focus();
+                });
+
+                $('#myModalMap').on('shown', function () {
+                    google.maps.event.trigger(map, "resize");
                 });
                
                 //Update Settings
@@ -503,6 +508,49 @@ if ($_POST['action'] == 'SaveApps') {
                     }
                 });
             });
+
+//INIT MAP
+
+    var map;
+    var markersArray = [];
+    var circlesArray = [];
+    var infoWindow = new google.maps.InfoWindow({maxWidth: 200});
+
+    jQuery(document).ready(function(){
+        initMap();
+        resizeMap();
+
+    });
+    function resizeMap(){
+        var sizeForm = jQuery('.form.left').width();
+        var sizeContent = jQuery('.content-modal').width();
+        
+
+        var sizeMap = sizeContent-(sizeForm);
+        jQuery(".form.left").css('padding-right', '30px');
+        jQuery("#mapa").attr("width", sizeMap);
+    }
+
+    jQuery(window).resize(function(){
+        resizeMap();
+    });
+
+
+    function initMap() {
+        var options = {
+            zoom: 15,
+            center: new google.maps.LatLng('-23.565262', '-46.683653'),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        map = new google.maps.Map(document.getElementById("mapa"), options);
+
+        google.maps.event.addListener(map, 'click', function() {
+            if (infoWindow) {
+                infoWindow.close();
+            }
+        });
+    }
       
         </script>
     </body>

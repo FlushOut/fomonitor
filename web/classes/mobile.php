@@ -115,6 +115,8 @@ class mobile
                 `ultima_pos`.`idMobil`,
                 `ultima_pos`.`imeiMobil`,
                 `ultima_pos`.`name`,
+                `mobile_data`.`latitude`,
+                `mobile_data`.`longitude`,
                 `mobile_data`.`batterylevel`,
                 `mobile_data`.`gsmstrength`,
                 `mobile_data`.`accuracy`,
@@ -158,6 +160,8 @@ class mobile
                 $md->id = $value['idMobil'];
                 $md->imei = $value['imeiMobil'];
                 $md->name = $value['name'];
+                $md->latitude = $value['latitude'];
+                $md->longitude = $value['longitude'];
                 $md->batterylevel = $value['batterylevel'];
                 $md->gsmstrength = $value['gsmstrength'];
                 $md->accuracy = $value['accuracy'];
