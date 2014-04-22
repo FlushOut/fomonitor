@@ -331,10 +331,12 @@ if ($_POST['action'] == 'Save') {
 
                 // validate form
                 $("a#aAdd").bind('click', function () {
-                    //$("#txtName").val('');
                     var validator = $( "#form-validate" ).validate();
                     validator.resetForm();
-                    
+                });
+
+                $('#myModal').on('shown', function () {
+                    google.maps.event.trigger(map, "resize");
                 });
 
                 $('#form-validate').validate();
@@ -393,6 +395,7 @@ if ($_POST['action'] == 'Save') {
         if(jQuery('#latitude').val() != '' && jQuery('#longitude').val() != ''){
             plotLocation();
         }
+        
 
     });
     function resizeMap(){
