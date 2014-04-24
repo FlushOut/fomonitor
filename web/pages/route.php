@@ -143,6 +143,23 @@ require_once("../config.php");
                                            <div class="control-group">
                                                 <div class="controls form-inline">
                                                     <label class="checkbox inline">
+                                                        <input type="checkbox" data-form="uniform" name="inputCheckbox3" id="inlineCheckbox3" value="option1" /> All Categories
+                                                    </label>
+                                                    &nbsp;
+                                                    <select id="inputSelectMulti" data-form="select2" style="width:200px" data-placeholder="Select users..." multiple="">
+                                                        <option />Category 1
+                                                        <option />Category 2
+                                                        <option />Category 3
+                                                        <option />Category 4
+                                                        <option />Category 5
+                                                        <option />Category 6
+                                                        <option />Category 7
+                                                        <option />Category 8
+                                                    </select>
+                                                    &nbsp;
+                                                    <button type="button" class="btn">Clear</button>
+                                                    &nbsp;
+                                                    <label class="checkbox inline">
                                                         <input type="checkbox" data-form="uniform" name="inputCheckbox" id="inlineCheckbox1" value="option1" /> All Users
                                                     </label>
                                                     &nbsp;
@@ -158,37 +175,20 @@ require_once("../config.php");
                                                     </select>
                                                     &nbsp;
                                                     <button type="button" class="btn">Clear</button>
-                                                    
+                                                    &nbsp;
                                                     <label class="checkbox inline">
                                                         <input type="checkbox" data-form="uniform" name="inputCheckbox2" id="inlineCheckbox2" value="option2" /> All Points
                                                     </label>
                                                     &nbsp;
                                                     <select id="inputSelectMulti2" data-form="select2" style="width:200px" data-placeholder="Select points..." multiple="">
-                                                        <option />Point 1
-                                                        <option />Point 2
+                                                        <option />Pointasdasdasd 1
+                                                        <option />Pointdfsdfdsfsdfdsfdsfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdf 2
                                                         <option />Point 3
                                                         <option />Point 4
                                                         <option />Point 5
                                                         <option />Point 6
                                                         <option />Point 7
                                                         <option />Point 8
-                                                    </select>
-                                                    &nbsp;
-                                                    <button type="button" class="btn">Clear</button>
-                                                   
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" data-form="uniform" name="inputCheckbox3" id="inlineCheckbox3" value="option1" /> All Categories
-                                                    </label>
-                                                    &nbsp;
-                                                    <select id="inputSelectMulti" data-form="select2" style="width:200px" data-placeholder="Select users..." multiple="">
-                                                        <option />Category 1
-                                                        <option />Category 2
-                                                        <option />Category 3
-                                                        <option />Category 4
-                                                        <option />Category 5
-                                                        <option />Category 6
-                                                        <option />Category 7
-                                                        <option />Category 8
                                                     </select>
                                                     &nbsp;
                                                     <button type="button" class="btn">Clear</button>
