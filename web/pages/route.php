@@ -181,8 +181,8 @@ require_once("../config.php");
                                                     </label>
                                                     &nbsp;
                                                     <select id="inputSelectMulti2" data-form="select2" style="width:200px" data-placeholder="Select points..." multiple="">
-                                                        <option />Pointasdasdasd 1
-                                                        <option />Pointdfsdfdsfsdfdsfdsfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdf 2
+                                                        <option />Point 1
+                                                        <option />Point 2
                                                         <option />Point 3
                                                         <option />Point 4
                                                         <option />Point 5
@@ -284,7 +284,7 @@ require_once("../config.php");
                 $('[data-form=select2]').select2();
 
                 // datepicker
-                $('[data-form=datepicker]').datepicker();
+                $('[data-form=datepicker]').datetimepicker();
                 
                 // datatables
                 $('#datatables').dataTable( {
