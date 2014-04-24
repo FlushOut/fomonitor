@@ -248,13 +248,13 @@ if ($_POST['action'] == 'SaveApps') {
                                                     </div>
                                                 </div>
                                                  <!-- Modal Map-->
-                                                <div id="myModalMap" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height:480px !important;">
+                                                <div id="myModalMap" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height:550px !important;width:700px !important;">
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                                         <h3 id="myModalLabel">User On The Map</h3>
                                                     </div>
-                                                    <div class="modal-body" style="height:400px !important;max-height:400px;">
-                                                        <div class="mapa" id="mapa"  style="height:400px; width: 100%; float: right"></div>
+                                                    <div class="modal-body" style="height:530px !important;max-height:530px;width:680px !important;max-width:680p;padding-top:5px;">
+                                                        <div class="mapa" id="mapa" style="height:490px; width: 690px; float: right"></div>
                                                     </div>
                                                 </div>
 
@@ -279,6 +279,14 @@ if ($_POST['action'] == 'SaveApps') {
                                                         <tr src="mobile">
                                                             <td>
                                                             <input name="hdId" type="hidden" value="<?php echo $item->imei; ?>"/>
+                                                            <input name="hdName" type="hidden" value="<?php echo $item->name; ?>"/>
+                                                            <input name="hdBatLev" type="hidden" value="<?php echo number_format(($item->batterylevel * 100), 1, ",", ""); ?>"/>
+                                                            <input name="hdGsmStr" type="hidden" value="<?php echo $item->gsm_strength_param; ?>"/>
+                                                            <input name="hdAcc" type="hidden" value="<?php echo number_format($item->accuracy, 2, ",", ""); ?>"/>
+                                                            <input name="hdSpe" type="hidden" value="<?php echo number_format($item->speed * 3.6, 1, ",", ""); ?>"/>
+                                                            <input name="hdDat" type="hidden" value="<?php echo format_date($item->date); ?>"/>
+                                                            <input name="hdLat" type="hidden" value="<?php echo $item->latitude; ?>"/>
+                                                            <input name="hdLon" type="hidden" value="<?php echo $item->longitude; ?>"/>
                                                             <?php echo $item->name; ?>
                                                             </td>
                                                             <td><?php echo number_format(($item->batterylevel * 100), 1, ",", ""); ?> %</td>
@@ -326,7 +334,7 @@ if ($_POST['action'] == 'SaveApps') {
         <script src="../js/bootstrap.js"></script>
         <script src="../js/uniform/jquery.uniform.js"></script>
 
-        <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyDMgdYP46UluNKKgDqakkI0HUYQoQwhX9g&sensor=true&libraries=geometry"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 
         <script src="../js/datepicker/bootstrap-datepicker.js"></script>
         <script src="../js/select2/select2.js"></script>
@@ -345,15 +353,26 @@ if ($_POST['action'] == 'SaveApps') {
         <!-- required stilearn template js, for full feature-->
         <script src="../js/holder.js"></script>
         <script src="../js/stilearn-base.js"></script>
-
         <script type="text/javascript">
             $(document).ready(function() {
-                // try your js
+                var mapImei;
+                var mapName;
+                var mapBatLev;
+                var mapGsmStr;
+                var mapAcc;
+                var mapSpe;
+                var mapDat;
+                var mapLat;
+                var mapLon;
+                var myLatlng;
+                var mapOptions;
+                var map;
+
+                // Disabled chat
                 /*
                 jQuery(".sidebar-right-content *").prop('disabled',true); 
                 jQuery(".sidebar-right-content").css({ opacity: 0.5 });
                 */
-
                 jQuery("label.checkbox").each(function () {
                 if (jQuery("input", this).attr("checked") == 'checked') jQuery(this).addClass("checked");
                 });
@@ -363,9 +382,38 @@ if ($_POST['action'] == 'SaveApps') {
                 });
 
                 $('#myModalMap').on('shown', function () {
-                    google.maps.event.trigger(map, "resize");
+                    google.maps.event.trigger(map, "resize"); 
+                    map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
+
+                    var contentString = '<div id="content">'+
+                        '<div id="siteNotice">'+
+                        '</div>'+
+                        '<h2 id="firstHeading" class="firstHeading">'+ mapName +'</h2>'+
+                        '<div id="bodyContent">'+
+                        '<p><b>IMEI: </b>'+mapImei+'</p>'+
+                        '<p><b>Battery: </b>'+mapBatLev+'</p>'+
+                        '<p><b>Signal: </b>'+mapGsmStr+'</p>'+
+                        '<p><b>Accuracy: </b>'+mapAcc+'</p>'+
+                        '<p><b>Speed: </b>'+mapSpe+'</p>'+
+                        '<p><b>Last Update: </b>'+mapDat+'</p>'+
+                        '<p><b>Status: </b>Satus</p>'+
+                        '</div>'+
+                        '</div>';
+
+                    var infowindow = new google.maps.InfoWindow({
+                          content: contentString
+                      });
+
+                    var marker = new google.maps.Marker({
+                        position: myLatlng,
+                        map: map,
+                        title: ''
+                    });
+                    google.maps.event.addListener(marker, 'click', function() {
+                        infowindow.open(map,marker);
+                    });
                 });
-               
+                
                 //Update Settings
                 $('a#aSettings').bind('click',function(){
                     jQuery(this).parents('tr').map(function () {
@@ -407,19 +455,23 @@ if ($_POST['action'] == 'SaveApps') {
                 //User Map
                 $('a#aMap').bind('click',function(){
                     jQuery(this).parents('tr').map(function () {
-                        var id = jQuery('input[name="hdId"]', this).val();
-                        var action = "getUserMap";
-
-                        $("#hdIdMap").val(id);
-
-                        jQuery.ajax({
-                            url: "/ajax/actions.php",
-                            type: "POST",
-                            data: {id: id, action: action }
-                        }).done(function (resp) {
-                                //$(".controls").html(resp);
-                            });
+                        mapImei = jQuery('input[name="hdId"]', this).val();
+                        mapName = jQuery('input[name="hdName"]', this).val();
+                        mapBatLev = jQuery('input[name="hdBatLev"]', this).val();
+                        mapGsmStr = jQuery('input[name="hdGsmStr"]', this).val();
+                        mapAcc = jQuery('input[name="hdAcc"]', this).val();
+                        mapSpe = jQuery('input[name="hdSpe"]', this).val();
+                        mapDat = jQuery('input[name="hdDat"]', this).val();
+                        mapLat = jQuery('input[name="hdLat"]', this).val();
+                        mapLon = jQuery('input[name="hdLon"]', this).val();
                     });
+
+                    myLatlng = new google.maps.LatLng(mapLat,mapLon);
+                        mapOptions = {
+                            zoom: 15,
+                            center: myLatlng
+                        };
+                    map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
                     return true;
                 });
 
@@ -461,17 +513,6 @@ if ($_POST['action'] == 'SaveApps') {
                     return true;
                 });
 
-                // select2
-                //$('[data-form=select2]').select2();
-
-                // datepicker
-                //$('[data-form=datepicker]').datepicker();
-
-                // uniform
-                //$('[data-form=uniform]').uniform();
-
-                //$('[data-form=wysihtml5]').wysihtml5();
-
                 $('#form-validate').validate();
                 
                 // datatables
@@ -508,50 +549,6 @@ if ($_POST['action'] == 'SaveApps') {
                     }
                 });
             });
-
-//INIT MAP
-
-    var map;
-    var markersArray = [];
-    var circlesArray = [];
-    var infoWindow = new google.maps.InfoWindow({maxWidth: 200});
-
-    jQuery(document).ready(function(){
-        initMap();
-        resizeMap();
-
-    });
-    function resizeMap(){
-        var sizeForm = jQuery('.form.left').width();
-        var sizeContent = jQuery('.content-modal').width();
-        
-
-        var sizeMap = sizeContent-(sizeForm);
-        jQuery(".form.left").css('padding-right', '30px');
-        jQuery("#mapa").attr("width", sizeMap);
-    }
-
-    jQuery(window).resize(function(){
-        resizeMap();
-    });
-
-
-    function initMap() {
-        var options = {
-            zoom: 15,
-            center: new google.maps.LatLng('-23.565262', '-46.683653'),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-
-        map = new google.maps.Map(document.getElementById("mapa"), options);
-
-        google.maps.event.addListener(map, 'click', function() {
-            if (infoWindow) {
-                infoWindow.close();
-            }
-        });
-    }
-      
         </script>
     </body>
 </html>
