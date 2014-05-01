@@ -140,12 +140,12 @@ require_once("../config.php");
                                         </div>
                                         <div class="box-body">
                                            <div class="control-group">
-                                                <div class="controls form-inline">
+                                                <div class="controls form-inline" style="text-align:center;">
                                                     <label class="checkbox inline">
                                                         <input type="checkbox" data-form="uniform" name="inputCheckbox3" id="inlineCheckbox3" value="option1" /> All Categories
                                                     </label>
                                                     &nbsp;
-                                                    <select id="inputSelectMulti" data-form="select2" style="width:200px" data-placeholder="Select users..." multiple="">
+                                                    <select id="inputSelectMulti" data-form="select2" style="width:200px" data-placeholder="Select categories..." multiple="">
                                                         <option />Category 1
                                                         <option />Category 2
                                                         <option />Category 3
@@ -157,7 +157,7 @@ require_once("../config.php");
                                                     </select>
                                                     &nbsp;
                                                     <button type="button" class="btn">Clear</button>
-                                                    
+                                                    &nbsp;&nbsp;
                                                     <label class="checkbox inline">
                                                         <input type="checkbox" data-form="uniform" name="inputCheckbox" id="inlineCheckbox1" value="option1" /> All Users
                                                     </label>
@@ -174,7 +174,11 @@ require_once("../config.php");
                                                     </select>
                                                     &nbsp;
                                                     <button type="button" class="btn">Clear</button>
-                                                    
+                                                </div>
+                                            </div>
+                                            <div class="divider-content"><span></span></div>
+                                            <div class="control-group">
+                                                <div class="controls form-inline" style="text-align:center;">
                                                     <label class="checkbox inline">
                                                         <input type="checkbox" data-form="uniform" name="inputCheckbox2" id="inlineCheckbox2" value="option2" /> All Points
                                                     </label>
@@ -191,6 +195,7 @@ require_once("../config.php");
                                                     </select>
                                                     &nbsp;
                                                     <button type="button" class="btn">Clear</button>
+
                                                 </div>
                                             </div>
                                             <div class="divider-content"><span></span></div>
