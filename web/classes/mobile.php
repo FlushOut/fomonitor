@@ -95,7 +95,7 @@ class mobile
 
     function list_mobile($fk_company)
     {
-        $query = $this->con->genericQuery("select * from " . $this->table . " where fk_company = '$     fk_company' order by name asc");
+        $query = $this->con->genericQuery("select * from " . $this->table . " where fk_company = '$fk_company' order by name asc");
         $objReturn = array();
 
 
@@ -107,6 +107,11 @@ class mobile
         }
 
         return $objReturn;
+    }
+
+    function list_mobileByCategory($fk_category)
+    {
+        return $query = $this->con->genericQuery("select imei, name from " . $this->table . " where fk_category = '$fk_category' and status = 1 order by name asc");
     }
 
     function getLastData($fk_company){

@@ -1,6 +1,13 @@
 <?php
 require_once("../config.php");
 
+$category = new category();
+$list_categories = $category->list_categories($company->id);
+
+$point = new point();
+$list_points = $point->list_points($company->id);
+$jlist_points = json_encode($list_points);
+
 ?>
 
 <!DOCTYPE html>
@@ -141,61 +148,40 @@ require_once("../config.php");
                                         <div class="box-body">
                                            <div class="control-group">
                                                 <div class="controls form-inline" style="text-align:center;">
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" data-form="uniform" name="inputCheckbox3" id="inlineCheckbox3" value="option1" /> All Categories
-                                                    </label>
+                                                    <label class="control-label" for="isCategories">Categories</label>
                                                     &nbsp;
-                                                    <select id="inputSelectMulti" data-form="select2" style="width:200px" data-placeholder="Select categories..." multiple="">
-                                                        <option />Category 1
-                                                        <option />Category 2
-                                                        <option />Category 3
-                                                        <option />Category 4
-                                                        <option />Category 5
-                                                        <option />Category 6
-                                                        <option />Category 7
-                                                        <option />Category 8
+                                                    <select id="isCategories" data-form="select2" style="width:200px;" data-placeholder="Select category...">
+                                                        <option value="-1"/>Select category...
+                                                        <?php foreach ($list_categories as $item) { ?>
+                                                        <option value="<?php echo $item->id; ?>"/><?php echo $item->description; ?>
+                                                        <?php }?>
                                                     </select>
-                                                    &nbsp;
-                                                    <button type="button" class="btn">Clear</button>
                                                     &nbsp;&nbsp;
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" data-form="uniform" name="inputCheckbox" id="inlineCheckbox1" value="option1" /> All Users
+                                                    <label class="checkbox inline" id="lblAllPoints" name="lblAllPoints">
+                                                        <input type="checkbox" data-form="uniform" name="chkAllPoints" id="chkAllPoints" value="option2" /> All Points
                                                     </label>
                                                     &nbsp;
-                                                    <select id="inputSelectMulti" data-form="select2" style="width:200px" data-placeholder="Select users..." multiple="">
-                                                        <option />User 1
-                                                        <option />User 2
-                                                        <option />User 3
-                                                        <option />User 4
-                                                        <option />User 5
-                                                        <option />User 6
-                                                        <option />User 7
-                                                        <option />User 8
+                                                    <select id="ismPoints" data-form="select2" style="width:200px" data-placeholder="Select points..." multiple="">
+                                                        <?php foreach ($list_points as $item) { ?>
+                                                        <option value="<?php echo $item->id; ?>"/><?php echo $item->name; ?>
+                                                        <?php }?>
                                                     </select>
                                                     &nbsp;
-                                                    <button type="button" class="btn">Clear</button>
+                                                    <button type="button" id="btnClearPoints" name="btnClearPoints" class="btn">Clear</button>
+                                                    &nbsp;&nbsp;
+                                                    <button type="button" class="btn btn-primary" id="bntShow">Show</button>
                                                 </div>
                                             </div>
-                                            <div class="divider-content"><span></span></div>
+                                            <div class="divider-content" id="dvDivConUsers" style="display:none;"><span></span></div>
                                             <div class="control-group">
-                                                <div class="controls form-inline" style="text-align:center;">
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" data-form="uniform" name="inputCheckbox2" id="inlineCheckbox2" value="option2" /> All Points
+                                                <div class="controls form-inline" id="dvFilterUsers" style="text-align:center;display:none;">
+                                                    <label class="checkbox inline" id="lblAllUsers" name="lblAllUsers">
+                                                        <input type="checkbox" data-form="uniform" name="chkAllUsers" id="chkAllUsers" value="option1"/> All Users
                                                     </label>
                                                     &nbsp;
-                                                    <select id="inputSelectMulti2" data-form="select2" style="width:200px" data-placeholder="Select points..." multiple="">
-                                                        <option />Point 1
-                                                        <option />Point 2
-                                                        <option />Point 3
-                                                        <option />Point 4
-                                                        <option />Point 5
-                                                        <option />Point 6
-                                                        <option />Point 7
-                                                        <option />Point 8
-                                                    </select>
+                                                    <input type="hidden" id="ismUsers" style="width:200px"/>
                                                     &nbsp;
-                                                    <button type="button" class="btn">Clear</button>
-
+                                                    <button type="button" class="btn" id="btnClearUsers" name="btnClearUsers">Clear</button>
                                                 </div>
                                             </div>
                                             <div class="divider-content"><span></span></div>
@@ -302,8 +288,91 @@ require_once("../config.php");
                         "sSwfPath": "../js/datatables/swf/copy_csv_xls_pdf.swf"
                     }
                 });
+
+                //Get users by categories
+                var data;
+                function format(item) { return item.name; }
+                $('#isCategories').on('change', function(){
+                    var id = $(this).val();
+                    var action = "getUsersByCategory";
+                    jQuery.ajax({
+                        url: "/ajax/actions.php",
+                        type: "POST",
+                        data: {id: id, action: action }
+                    }).done(function (resp) {
+                        data = jQuery.parseJSON(resp);
+                        $("#chkAllUsers").removeAttr( "checked" );
+                        $("#chkAllUsers").removeClass( "checked" );
+                        $("#chkAllUsers").parent().removeAttr( "checked" );
+                        $("#chkAllUsers").parent().removeClass( "checked" );
+                        $("#ismUsers").val('').trigger("change");
+                        $("#ismUsers").select2({
+                            data:{ results: data, text: 'name' },
+                            multiple: true,
+                            formatSelection: format,
+                            placeholder: "Select users...",
+                            formatResult: format,
+                            initSelection : function (element, callback) {
+                                callback(data);
+                            }
+                        });    
+                        $( "#dvDivConUsers" ).show();
+                        $( "#dvFilterUsers" ).show();
+                    });
+
+                });
+                $("#chkAllUsers").click(function () {
+                    if (jQuery(this).attr("checked") == 'checked') {
+                        $("#ismUsers").val('data').trigger("change");
+                    } else {
+                        $("#ismUsers").val('').trigger("change");
+                    }
+                });
+
+                $("#btnClearUsers").click(function () {
+                    $("#ismUsers").val('').trigger("change");
+                    if (jQuery("#chkAllUsers").attr("checked") == 'checked'){
+                        $("#chkAllUsers").removeAttr( "checked" );
+                        $("#chkAllUsers").removeClass( "checked" );
+                        $("#chkAllUsers").parent().removeAttr( "checked" );
+                        $("#chkAllUsers").parent().removeClass( "checked" );
+                    }
+                });
+
+                $("#chkAllPoints").click(function(){
+                    if($("#chkAllPoints").is(':checked') ){
+                        $("#ismPoints > option").prop("selected","selected");
+                        $("#ismPoints").trigger("change");
+                    }else{
+                        $("#ismPoints > option").removeAttr("selected");
+                        $("#ismPoints").trigger("change");
+                    }
+                });
+
+                $("#btnClearPoints").click(function () {
+                    $("#ismPoints").val('').trigger("change");
+                    if (jQuery("#chkAllPoints").attr("checked") == 'checked'){
+                        $("#chkAllPoints").removeAttr( "checked" );
+                        $("#chkAllPoints").removeClass( "checked" );
+                        $("#chkAllPoints").parent().removeAttr( "checked" );
+                        $("#chkAllPoints").parent().removeClass( "checked" );
+                    }
+                });
+
+
+
+                $("#bntShow").click(function(){
+                    alert('users'+ $("#ismUsers").val() + 'points'+ $("#ismPoints").val());
+                });
+
+                $('#ismUsers').on("change", function(e) {
+                    alert('users'+ $("#ismUsers").val() + 'points'+ $("#ismPoints").val());
+                });
+
+                $('#ismPoints').on("change", function(e) {
+                    alert('users'+ $("#ismUsers").val() + 'points'+ $("#ismPoints").val());
+                });
             });
-      
         </script>
     </body>
 </html>

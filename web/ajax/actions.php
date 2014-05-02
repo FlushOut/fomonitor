@@ -20,6 +20,9 @@ switch ($_POST['action']) {
 	case 'getDetails':
 		getDetails($id);
 		break;
+    case 'getUsersByCategory':
+        getUsersByCategory($id);
+        break;
 	default:
         # code...
         break;
@@ -287,5 +290,18 @@ function getDetailstoUpdate($imei){
         echo $html;
 }
 
+function getUsersByCategory($fk_category){
+        $mobile = new mobile();
+        $objReturn = array();
+        $list_mobile = $mobile->list_mobileByCategory($fk_category);
+        foreach ($list_mobile as $value) {
+            $mob = new mobileMap();
+            $mob->id = $value['imei'];
+            $mob->name = $value['name'];
+            $objReturn[] = $mob;
+        }
+
+        echo json_encode($objReturn);
+}
 
 
