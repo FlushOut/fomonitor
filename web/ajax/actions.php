@@ -1,6 +1,9 @@
 <?php require_once("../config.php");
 
-$id = $_POST['id'];
+if (isset($_POST['id'])) $id = $_POST['id'];
+if (isset($_POST['idUsers'])) $idUsers = $_POST['idUsers'];
+if (isset($_POST['idPoints'])) $idPoints = $_POST['idPoints'];
+
 switch ($_POST['action']) {
 	case 'getProfiles':
 		getProfiles($id);
@@ -22,6 +25,9 @@ switch ($_POST['action']) {
 		break;
     case 'getUsersByCategory':
         getUsersByCategory($id);
+        break;
+    case 'showUsersPointsInMap':
+        showUsersPointsInMap($idUsers,$idPoints);
         break;
 	default:
         # code...
@@ -300,8 +306,23 @@ function getUsersByCategory($fk_category){
             $mob->name = $value['name'];
             $objReturn[] = $mob;
         }
-
         echo json_encode($objReturn);
+}
+
+function showUsersPointsInMap($idUsers,$idPoints){
+    $users = (string)$idUsers;
+    if (substr($users, 0, strpos($users, ',')) == 'data')
+        $users = substr($users, strpos($users, ",") + 1);   
+
+    $points = implode(",", $idPoints);
+    $data = array();
+    $mobile = new mobile();
+    $data['users'] = $mobile->getLastDataByImei($users);
+
+    $point = new point();
+    $data['points'] = $point->list_pointsById($points);
+
+    echo json_encode($data);
 }
 
 

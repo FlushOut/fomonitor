@@ -188,6 +188,79 @@ class mobile
         }
     }
 
+    function getLastDataByImei($idUsers){
+        $query = $this->con->genericQuery("
+            SELECT
+                `ultima_pos`.`idMobil`,
+                `ultima_pos`.`imeiMobil`,
+                `ultima_pos`.`name`,
+                `mobile_data`.`latitude`,
+                `mobile_data`.`longitude`,
+                `mobile_data`.`batterylevel`,
+                `mobile_data`.`gsmstrength`,
+                `mobile_data`.`accuracy`,
+                `mobile_data`.`speed`,
+                `ultima_pos`.`date`
+            FROM
+                (
+                    SELECT
+                        STRAIGHT_JOIN Max(`mobile_data`.`id`) AS `id`,
+                        Max(`mobile_data`.`date`) AS `date`,
+                        `mobiles`.`id` AS `idMobil`,
+                        `mobiles`.`imei` AS `imeiMobil`,
+                        `mobiles`.`name`
+                    FROM
+                        `mobiles`
+                            INNER JOIN
+                                `mobile_data`
+                                    ON
+                                        `mobiles`.`imei` = `mobile_data`.`imei`
+                    WHERE
+                        `mobiles`.`imei` in ({$idUsers})
+                    GROUP BY
+                        `mobile_data`.`imei`
+                ) `ultima_pos`
+                    INNER JOIN
+                        `mobile_data`
+                            ON
+                                `mobile_data`.`id` = `ultima_pos`.`id`
+            ORDER BY
+                `ultima_pos`.`name`");
+
+        if (count($query) == 0)
+        {
+            return false;
+        }
+        else 
+        { 
+            foreach ($query as $value) {
+                $md = new mobile_dataL;
+                $md->id = $value['idMobil'];
+                $md->imei = $value['imeiMobil'];
+                $md->name = $value['name'];
+                $md->latitude = $value['latitude'];
+                $md->longitude = $value['longitude'];
+                $md->batterylevel = $value['batterylevel'];
+                $md->gsmstrength = $value['gsmstrength'];
+                $md->accuracy = $value['accuracy'];
+                $md->speed = $value['speed'];
+                $md->date = $value['date'];
+
+                 if ($md->gsmstrength == 99 || $md->gsmstrength < 5)
+                    $md->gsm_strength_param = 0;
+                elseif ($md->gsmstrength >= 5 && $md->gsmstrength < 10)
+                    $md->gsm_strength_param = 1; elseif ($md->gsmstrength >= 10 && $md->gsmstrength < 15)
+                    $md->gsm_strength_param = 2; elseif ($md->gsmstrength >= 15 && $md->gsmstrength < 20)
+                    $md->gsm_strength_param = 3; elseif ($md->gsmstrength >= 20 && $md->gsmstrength < 25)
+                    $md->gsm_strength_param = 4; else
+                    $md->gsm_strength_param = 5;
+
+                $objReturn[] = $md;
+            }
+            return $objReturn;
+        }
+    }
+
     public function getSettings() {
         
         return $this->con->genericQuery(" select imei, wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, about from mobile_settings where imei='" . $this->imei . "'");

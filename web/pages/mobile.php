@@ -3,7 +3,7 @@ require_once("../config.php");
 
 $mobile = new mobile();
 
-$list_mobile = $mobile->getLastData(1);
+$list_mobile = $mobile->getLastData($company->id);
 
 if ($_POST['action'] == 'Update') {
         if (isset($_POST['hdIdAct'])) {

@@ -6,7 +6,6 @@ $list_categories = $category->list_categories($company->id);
 
 $point = new point();
 $list_points = $point->list_points($company->id);
-$jlist_points = json_encode($list_points);
 
 ?>
 
@@ -200,6 +199,7 @@ $jlist_points = json_encode($list_points);
                 <!-- end right_menu -->
 
             </div>
+            <div id="legend"></div>
         </section>
 
         <!-- start left_menu -->
@@ -229,6 +229,18 @@ $jlist_points = json_encode($list_points);
         <!-- required stilearn template js, for full feature-->
         <script src="../js/holder.js"></script>
         <script src="../js/stilearn-base.js"></script>
+        <style>
+            #legend {
+                font-family: Arial, sans-serif;
+                background: #fff;
+                padding: 10px;
+                margin: 10px;
+                border: 1px solid #000;
+            }
+            #legend img {
+                vertical-align: middle;
+            }
+        </style>
 
         <script type="text/javascript">
             $(document).ready(function() {
@@ -236,6 +248,29 @@ $jlist_points = json_encode($list_points);
                 var myLatlng;
                 var mapOptions;
                 var map;
+                var markersUser = [];
+                var markersPoint = [];
+                var infowindow = null;
+                var iconBase = '../img/';
+                var icons = {
+                  users: {
+                    name: 'Users',
+                    icon: iconBase + 'user.png'
+                  },
+                  points: {
+                    name: 'Points',
+                    icon: iconBase + 'point.png'
+                  }
+                };
+                var legend = document.getElementById('legend');
+                for (var key in icons) {
+                    var type = icons[key];
+                    var name = type.name;
+                    var icon = type.icon;
+                    var div = document.createElement('div');
+                    div.innerHTML = '<img src="' + icon + '"> ' + name;
+                    legend.appendChild(div);
+                }
 
                 myLatlng = new google.maps.LatLng('-23.565262', '-46.683653');
                         mapOptions = {
@@ -244,6 +279,7 @@ $jlist_points = json_encode($list_points);
                         };
 
                 map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
+                map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 
                 // try your js
 
@@ -337,6 +373,7 @@ $jlist_points = json_encode($list_points);
                         $("#chkAllUsers").parent().removeAttr( "checked" );
                         $("#chkAllUsers").parent().removeClass( "checked" );
                     }
+                    deleteMarkersUsers();
                 });
 
                 $("#chkAllPoints").click(function(){
@@ -357,21 +394,137 @@ $jlist_points = json_encode($list_points);
                         $("#chkAllPoints").parent().removeAttr( "checked" );
                         $("#chkAllPoints").parent().removeClass( "checked" );
                     }
+                    deleteMarkersPoints();
                 });
-
-
 
                 $("#bntShow").click(function(){
-                    alert('users'+ $("#ismUsers").val() + 'points'+ $("#ismPoints").val());
+                    var idUsers = $("#ismUsers").val();
+                    var idPoints = $("#ismPoints").val();
+                    var action = "showUsersPointsInMap";
+                    jQuery.ajax({
+                        url: "/ajax/actions.php",
+                        type: "POST",
+                        data: {idUsers: idUsers, idPoints: idPoints, action: action}
+                    }).done(function (resp) {
+                        var data = jQuery.parseJSON(resp);
+                        deleteMarkersPoints();
+                        deleteMarkersUsers();
+                        if(data.points.length > 0){
+                            for (var i = 0;i < data.points.length; i += 1) {
+                                addMarkerPoints(data.points[i]);
+                            }
+                        }
+                        if(data.users.length > 0){
+                            for (var i = 0;i < data.users.length; i += 1) {
+                                addMarkerUsers(data.users[i]);
+                            }
+                        }
+                        infowindow = new google.maps.InfoWindow({
+                            content: 'loading...',
+                        });
+                    });
+                    
                 });
 
-                $('#ismUsers').on("change", function(e) {
-                    alert('users'+ $("#ismUsers").val() + 'points'+ $("#ismPoints").val());
-                });
+                function addMarkerPoints(data){
+                    var image = {
+                        url: '../img/point.png'
+                    };
+                    var latlng = new google.maps.LatLng(data.latitude,data.longitude);  
+                    var contentString = 
+                        '<div style="line-height:1.35;overflow:hidden !important;white-space:nowrap;" id="content">'+
+                            '<div id="siteNotice">'+
+                            '</div>'+
+                            '<h2 id="firstHeading" class="firstHeading">'+ data.name +'</h2>'+
+                            '<div id="bodyContent">'+
+                                '<p><b>Street: </b>'+data.addr_street+'</p>'+
+                                '<p><b>Number: </b>'+data.addr_number+'</p>'+
+                                '<p><b>District: </b>'+data.addr_district+'</p>'+
+                                '<p><b>City: </b>'+data.addr_city+'</p>'+
+                                '<p><b>state: </b>'+data.addr_state+'</p>'+
+                                '<p><b>Postal Code: </b>'+data.addr_postalcode+'</p>'+
+                            '</div>'+
+                        '</div>';
+                    var marker = new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                    icon: image,
+                    html: contentString,
+                    animation: google.maps.Animation.DROP
+                    });
+                    google.maps.event.addListener(marker, "click", function () {
+                        infowindow.setContent(this.html);
+                        infowindow.open(map, this);
+                    });
 
-                $('#ismPoints').on("change", function(e) {
-                    alert('users'+ $("#ismUsers").val() + 'points'+ $("#ismPoints").val());
-                });
+                    markersPoint.push(marker);
+                }
+
+                function addMarkerUsers(data){
+                    var image = {
+                        url: '../img/user.png'
+                    };
+                    var latlng = new google.maps.LatLng(data.latitude,data.longitude);
+                    var contentString = 
+                        '<div style="line-height:1.35;overflow:hidden !important;white-space:nowrap;" id="content">'+
+                            '<div id="siteNotice">'+
+                            '</div>'+
+                            '<h2 id="firstHeading" class="firstHeading">'+ data.name +'</h2>'+
+                            '<div id="bodyContent">'+
+                                '<p><b>IMEI: </b>'+data.imei+'</p>'+
+                                '<p><b>Battery: </b>'+data.battery_level+'</p>'+
+                                '<p><b>Signal: </b>'+data.gsm_strength_param+'</p>'+
+                                '<p><b>Accuracy: </b>'+data.accuracy+'</p>'+
+                                '<p><b>Speed: </b>'+data.speed+'</p>'+
+                                '<p><b>Last Update: </b>'+data.date+'</p>'+
+                                '<p><b>Status: </b>Satus</p>'+
+                            '</div>'+
+                            '<button type="button" class="btn btn-primary" id="btnShowRoute" onclick=location.href=&#39;/pages/route.php?user='+data.imei+'&#39; name="btnShowRoute">Route</button>'+
+                        '</div>';
+                    var marker = new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                    icon: image,
+                    html: contentString,
+                    animation: google.maps.Animation.DROP
+                    });
+                    google.maps.event.addListener(marker, "click", function () {
+                        infowindow.setContent(this.html);
+                        infowindow.open(map, this);
+                    });
+
+                    markersUser.push(marker);
+                }
+               
+                function setAllMapPoints(map) {
+                  for (var i = 0; i < markersPoint.length; i++) {
+                    markersPoint[i].setMap(map);
+                  }
+                }
+                function clearMarkersPoints() {
+                  setAllMapPoints(null);
+                }
+                function deleteMarkersPoints() {
+                  clearMarkersPoints();
+                  markersPoint = [];
+                }
+
+                 function setAllMapUsers(map) {
+                  for (var i = 0; i < markersUser.length; i++) {
+                    markersUser[i].setMap(map);
+                  }
+                }
+                function clearMarkersUsers() {
+                  setAllMapUsers(null);
+                }
+                function deleteMarkersUsers() {
+                  clearMarkersUsers();
+                  markersUser = [];
+                }
+
+                $('#ismUsers').on("change", function(e) {});
+
+                $('#ismPoints').on("change", function(e) {});
             });
         </script>
     </body>

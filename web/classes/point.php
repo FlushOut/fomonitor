@@ -95,6 +95,21 @@ class point
         return $objReturn;
     }
 
+    function list_pointsById($idPoints)
+    {
+        $query = $this->con->genericQuery("select * from " . $this->table . " where id in ({$idPoints})");
+
+        $objReturn = array();
+
+        foreach ($query as $value) {
+            $point = new point();
+            $point->open($value);
+            $objReturn[] = $point;
+        }
+
+        return $objReturn;
+    }
+
     function del()
     {
         $query = $this->con->genericQuery("delete from " . $this->table . " where id=" . $this->id);
