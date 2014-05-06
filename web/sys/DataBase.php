@@ -93,7 +93,7 @@ class DataBase extends PDO{
 
         self::__destruct();
         if($insert->rowCount() == 0){
-            return $insert->errorInfo()[2];
+            //return $insert->errorInfo()[2];
         }
     }
 
