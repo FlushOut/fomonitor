@@ -1,6 +1,13 @@
 <?php
 require_once("../config.php");
 
+$category = new category();
+$list_categories = $category->list_categories($company->id);
+
+$point = new point();
+$list_points = $point->list_points($company->id);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -142,68 +149,51 @@ require_once("../config.php");
                                         <div class="box-body">
                                            <div class="control-group">
                                                 <div class="controls form-inline" style="text-align:center;">
-                                                    <label class="control-label" for="inputSelect">Select Categories</label>
+                                                    <label class="control-label" for="isCategories">Categories</label>
                                                     &nbsp;
-                                                    <select id="inputSelect" data-form="select2" style="width:200px" data-placeholder="Select category...">
-                                                        <option />Select category...
-                                                        <option />Category 1
-                                                        <option />Category 2
-                                                        <option />Category 3
-                                                        <option />Category 4
-                                                        <option />Category 5
-                                                        <option />Category 6
-                                                        <option />Category 7
-                                                        <option />Category 8
+                                                    <select id="isCategories" data-form="select2" style="width:200px;" data-placeholder="Select category...">
+                                                        <option value="-1"/>Select category...
+                                                        <?php foreach ($list_categories as $item) { ?>
+                                                        <option value="<?php echo $item->id; ?>"/><?php echo $item->description; ?>
+                                                        <?php }?>
                                                     </select>
                                                     &nbsp;&nbsp;
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" data-form="uniform" name="inputCheckbox" id="inlineCheckbox1" value="option1" /> All Users
+                                                    <label class="checkbox inline" id="lblAllPoints" name="lblAllPoints">
+                                                        <input type="checkbox" data-form="uniform" name="chkAllPoints" id="chkAllPoints" value="option2" /> All Points
                                                     </label>
                                                     &nbsp;
-                                                    <select id="inputSelectMulti1" data-form="select2" style="width:200px" data-placeholder="Select users..." multiple="">
-                                                        <option />User 1
-                                                        <option />User 2
-                                                        <option />User 3
-                                                        <option />User 4
-                                                        <option />User 5
-                                                        <option />User 6
-                                                        <option />User 7
-                                                        <option />User 8
+                                                    <select id="ismPoints" data-form="select2" style="width:200px" data-placeholder="Select points..." multiple="">
+                                                        <?php foreach ($list_points as $item) { ?>
+                                                        <option value="<?php echo $item->id; ?>"/><?php echo $item->name; ?>
+                                                        <?php }?>
                                                     </select>
                                                     &nbsp;
-                                                    <button type="button" class="btn">Clear</button>
+                                                    <button type="button" id="btnClearPoints" name="btnClearPoints" class="btn">Clear</button>
+                                                    &nbsp;&nbsp;
+                                                    <button type="button" class="btn btn-primary" id="bntShow">Show</button>
                                                 </div>
                                             </div>
-                                            <div class="divider-content"><span></span></div>
+                                            <div class="divider-content" id="dvDivConUsers" style="display:none;"><span></span></div>
                                             <div class="control-group">
-                                                <div class="controls form-inline" style="text-align:center;">
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" data-form="uniform" name="inputCheckbox2" id="inlineCheckbox2" value="option2" /> All Points
+                                                <div class="controls form-inline" id="dvFilterUsers" style="text-align:center;display:none;">
+                                                    <label class="checkbox inline" id="lblAllUsers" name="lblAllUsers">
+                                                        <input type="checkbox" data-form="uniform" name="chkAllUsers" id="chkAllUsers" value="option1"/> All Users
                                                     </label>
                                                     &nbsp;
-                                                    <select id="inputSelectMulti2" data-form="select2" style="width:200px" data-placeholder="Select points..." multiple="">
-                                                        <option />Point 1
-                                                        <option />Point 2
-                                                        <option />Point 3
-                                                        <option />Point 4
-                                                        <option />Point 5
-                                                        <option />Point 6
-                                                        <option />Point 7
-                                                        <option />Point 8
-                                                    </select>
+                                                    <input type="hidden" id="ismUsers" style="width:200px"/>
                                                     &nbsp;
-                                                    <button type="button" class="btn">Clear</button>
+                                                    <button type="button" class="btn" id="btnClearUsers" name="btnClearUsers">Clear</button>
                                                     &nbsp;
                                                     From
                                                     &nbsp;
-                                                    <div class="input-append date" data-form="datepicker" data-date="12-02-2012" data-date-format="dd-mm-yyyy" style="width:150px">
-                                                        <input id="inputDate" class="grd-white" data-form="datepicker" size="16" type="text" value="12-02-2012" style="width:100px"/>
+                                                    <div id="dvFrom" name ="dvFrom" class="input-append date" data-form="datepicker" data-date-format="dd-mm-yyyy" style="width:150px">
+                                                        <input id="inFrom" name ="inFrom" class="grd-white" data-form="datepicker" size="16" type="text" style="width:100px"/>
                                                         <span class="add-on"><i class="icon-th"></i></span>
                                                     </div>
                                                     To
                                                     &nbsp;
-                                                    <div class="input-append date" data-form="datepicker" data-date="12-02-2012" data-date-format="dd-mm-yyyy" style="width:150px">
-                                                        <input id="inputDate2" class="grd-white" data-form="datepicker" size="16" type="text" value="12-02-2012" style="width:100px"/>
+                                                    <div id="dvTo" name="dvTo" class="input-append date" data-form="datepicker" data-date-format="dd-mm-yyyy" style="width:150px">
+                                                        <input id="inTo" name="inTo" class="grd-white" data-form="datepicker" size="16" type="text" style="width:100px"/>
                                                         <span class="add-on"><i class="icon-th"></i></span>
                                                     </div>
                                                 </div>
@@ -224,6 +214,7 @@ require_once("../config.php");
                 <!-- end right_menu -->
 
             </div>
+            <div id="legend"></div>
         </section>
 
         <!-- start left_menu -->
@@ -254,6 +245,18 @@ require_once("../config.php");
         <!-- required stilearn template js, for full feature-->
         <script src="../js/holder.js"></script>
         <script src="../js/stilearn-base.js"></script>
+        <style>
+            #legend {
+                font-family: Arial, sans-serif;
+                background: #fff;
+                padding: 10px;
+                margin: 10px;
+                border: 1px solid #000;
+            }
+            #legend img {
+                vertical-align: middle;
+            }
+        </style>
 
         <script type="text/javascript">
             $(document).ready(function() {
@@ -261,6 +264,24 @@ require_once("../config.php");
                 var myLatlng;
                 var mapOptions;
                 var map;
+                var markersPoint = [];
+                var infowindow = null;
+                var iconBase = '../img/';
+                var icons = {
+                  points: {
+                    name: 'Points',
+                    icon: iconBase + 'point.png'
+                  }
+                };
+                var legend = document.getElementById('legend');
+                for (var key in icons) {
+                    var type = icons[key];
+                    var name = type.name;
+                    var icon = type.icon;
+                    var div = document.createElement('div');
+                    div.innerHTML = '<img src="' + icon + '"> ' + name;
+                    legend.appendChild(div);
+                }
 
                 myLatlng = new google.maps.LatLng('-23.565262', '-46.683653');
                         mapOptions = {
@@ -269,6 +290,7 @@ require_once("../config.php");
                         };
 
                 map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
+                map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 
                 // try your js
 
@@ -281,7 +303,7 @@ require_once("../config.php");
                 $('[data-form=select2]').select2();
 
                 // datepicker
-                $('[data-form=datepicker]').datepicker();
+                $('[data-form=datepicker]').datepicker({format:'dd-mm-yyyy'});
                 
                 // datatables
                 $('#datatables').dataTable( {
@@ -316,6 +338,171 @@ require_once("../config.php");
                         "sSwfPath": "../js/datatables/swf/copy_csv_xls_pdf.swf"
                     }
                 });
+
+                //Get users by categories
+                var data;
+                function format(item) { return item.name; }
+                $('#isCategories').on('change', function(){
+                    var id = $(this).val();
+                    var action = "getUsersByCategory";
+                    jQuery.ajax({
+                        url: "/ajax/actions.php",
+                        type: "POST",
+                        data: {id: id, action: action }
+                    }).done(function (resp) {
+                        data = jQuery.parseJSON(resp);
+                        $("#chkAllUsers").removeAttr( "checked" );
+                        $("#chkAllUsers").removeClass( "checked" );
+                        $("#chkAllUsers").parent().removeAttr( "checked" );
+                        $("#chkAllUsers").parent().removeClass( "checked" );
+                        $("#ismUsers").val('').trigger("change");
+                        $("#ismUsers").select2({
+                            data:{ results: data, text: 'name' },
+                            multiple: true,
+                            formatSelection: format,
+                            placeholder: "Select users...",
+                            formatResult: format,
+                            initSelection : function (element, callback) {
+                                callback(data);
+                            }
+                        });    
+                        $( "#dvDivConUsers" ).show();
+                        $( "#dvFilterUsers" ).show();
+                    });
+
+                });
+                $("#chkAllUsers").click(function () {
+                    if (jQuery(this).attr("checked") == 'checked') {
+                        $("#ismUsers").val('data').trigger("change");
+                    } else {
+                        $("#ismUsers").val('').trigger("change");
+                    }
+                });
+
+                $("#btnClearUsers").click(function () {
+                    $("#ismUsers").val('').trigger("change");
+                    if (jQuery("#chkAllUsers").attr("checked") == 'checked'){
+                        $("#chkAllUsers").removeAttr( "checked" );
+                        $("#chkAllUsers").removeClass( "checked" );
+                        $("#chkAllUsers").parent().removeAttr( "checked" );
+                        $("#chkAllUsers").parent().removeClass( "checked" );
+                    }
+                    // Delete Marker Route user
+                    //deleteMarkersUserRoute();
+                });
+
+                $("#chkAllPoints").click(function(){
+                    if($("#chkAllPoints").is(':checked') ){
+                        $("#ismPoints > option").prop("selected","selected");
+                        $("#ismPoints").trigger("change");
+                    }else{
+                        $("#ismPoints > option").removeAttr("selected");
+                        $("#ismPoints").trigger("change");
+                    }
+                });
+
+                $("#btnClearPoints").click(function () {
+                    $("#ismPoints").val('').trigger("change");
+                    if (jQuery("#chkAllPoints").attr("checked") == 'checked'){
+                        $("#chkAllPoints").removeAttr( "checked" );
+                        $("#chkAllPoints").removeClass( "checked" );
+                        $("#chkAllPoints").parent().removeAttr( "checked" );
+                        $("#chkAllPoints").parent().removeClass( "checked" );
+                    }
+                    deleteMarkersPoints();
+                });
+
+                $("#bntShow").click(function(){
+                    var idUsers = $("#ismUsers").val();
+                    var idPoints = $("#ismPoints").val();
+                    var action = "showUsersPointsInMap";
+                    console.log($("#dvFrom").find("input").val());
+                    console.log($("#dvTo").find("input").val());
+                    console.log(idUsers);
+                    console.log(idPoints);
+
+                    jQuery.ajax({
+                        url: "/ajax/actions.php",
+                        type: "POST",
+                        data: {idUsers: idUsers, idPoints: idPoints, action: action}
+                    }).done(function (resp) {
+                        var data = jQuery.parseJSON(resp);
+                        deleteMarkersPoints();
+                        // Delete Marker Route user    
+                        //deleteMarkersUserRoute();
+                        if(data.points.length > 0){
+                            for (var i = 0;i < data.points.length; i += 1) {
+                                addMarkerPoints(data.points[i]);
+                            }
+                        }
+                        /*if(data.users.length > 0){
+                            for (var i = 0;i < data.users.length; i += 1) {
+                                addMarkerUsers(data.users[i]);
+                            }
+                        }*/
+                        infowindow = new google.maps.InfoWindow({
+                            content: 'loading...',
+                        });
+                    });
+                });
+
+                function addMarkerPoints(data){
+                    var image = {
+                        url: '../img/point.png'
+                    };
+                    var latlng = new google.maps.LatLng(data.latitude,data.longitude);  
+                    var contentString = 
+                        '<div style="line-height:1.35;overflow:hidden !important;white-space:nowrap;" id="content">'+
+                            '<div id="siteNotice">'+
+                            '</div>'+
+                            '<h2 id="firstHeading" class="firstHeading">'+ data.name +'</h2>'+
+                            '<div id="bodyContent">'+
+                                '<p><b>Street: </b>'+data.addr_street+'</p>'+
+                                '<p><b>Number: </b>'+data.addr_number+'</p>'+
+                                '<p><b>District: </b>'+data.addr_district+'</p>'+
+                                '<p><b>City: </b>'+data.addr_city+'</p>'+
+                                '<p><b>state: </b>'+data.addr_state+'</p>'+
+                                '<p><b>Postal Code: </b>'+data.addr_postalcode+'</p>'+
+                            '</div>'+
+                        '</div>';
+                    var marker = new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                    icon: image,
+                    html: contentString,
+                    animation: google.maps.Animation.DROP
+                    });
+                    google.maps.event.addListener(marker, "click", function () {
+                        infowindow.setContent(this.html);
+                        infowindow.open(map, this);
+                    });
+
+                    markersPoint.push(marker);
+                }
+
+                function setAllMapPoints(map) {
+                  for (var i = 0; i < markersPoint.length; i++) {
+                    markersPoint[i].setMap(map);
+                  }
+                }
+                function clearMarkersPoints() {
+                  setAllMapPoints(null);
+                }
+                function deleteMarkersPoints() {
+                  clearMarkersPoints();
+                  markersPoint = [];
+                }
+
+                var d = new Date();
+                var year = d.getFullYear();
+                var month = d.getMonth()+1;
+                var day = d.getDate();
+                var startDate = ((''+day).length<2 ? '0' : '') + day +'-'+ 
+                                ((''+month).length<2 ? '0' : '') + month +'-'+  
+                                year; 
+
+                $('#dvFrom').data({date: startDate}).datepicker('update').children("input").val(startDate);
+                $('#dvTo').data({date: startDate}).datepicker('update').children("input").val(startDate);
             });
       
         </script>
