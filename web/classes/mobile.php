@@ -261,6 +261,32 @@ class mobile
         }
     }
 
+    function getRoutesByImeiData($idUsers,$dtStart,$dtEnd){
+        
+        $query = $this->con->genericQuery("select id, fk_user, date, points 
+                                            from route_map 
+                                            where fk_user in ({$idUsers}) 
+                                            and (date between STR_TO_DATE(  '".$dtStart."',  '%d-%m-%Y' ) 
+                                                and STR_TO_DATE(  '".$dtEnd."',  '%d-%m-%Y' ))");
+        if (count($query) == 0)
+        {
+            return false;
+        }
+        else 
+        { 
+            foreach ($query as $value) {
+                $mr = new mobile_dataR;
+                $mr->id = $value['id'];
+                $mr->fk_user = $value['fk_user'];   
+                $mr->date = $value['date'];
+                $mr->points = explode(';',$value['points']);
+
+                $objReturn[] = $mr;
+            }
+            return $objReturn;
+        }
+    }
+    
     public function getSettings() {
         
         return $this->con->genericQuery(" select imei, wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, about from mobile_settings where imei='" . $this->imei . "'");
@@ -350,3 +376,4 @@ class mobile
         
     }
 }
+

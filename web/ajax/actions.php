@@ -3,6 +3,8 @@
 if (isset($_POST['id'])) $id = $_POST['id'];
 if (isset($_POST['idUsers'])) $idUsers = $_POST['idUsers'];
 if (isset($_POST['idPoints'])) $idPoints = $_POST['idPoints'];
+if (isset($_POST['dtStart'])) $dtStart = $_POST['dtStart'];
+if (isset($_POST['dtEnd'])) $dtEnd = $_POST['dtEnd'];
 
 switch ($_POST['action']) {
 	case 'getProfiles':
@@ -28,6 +30,9 @@ switch ($_POST['action']) {
         break;
     case 'showUsersPointsInMap':
         showUsersPointsInMap($idUsers,$idPoints);
+        break;
+    case 'showRoutesPointsInMap':
+        showRoutesPointsInMap($idUsers,$idPoints,$dtStart,$dtEnd);
         break;
 	default:
         # code...
@@ -318,6 +323,24 @@ function showUsersPointsInMap($idUsers,$idPoints){
     $data = array();
     $mobile = new mobile();
     $data['users'] = $mobile->getLastDataByImei($users);
+
+    $point = new point();
+    $data['points'] = $point->list_pointsById($points);
+
+    echo json_encode($data);
+}
+
+function showRoutesPointsInMap($idUsers,$idPoints,$dtStart,$dtEnd){
+
+    $users = (string)$idUsers;
+    if (substr($users, 0, strpos($users, ',')) == 'data')
+        $users = substr($users, strpos($users, ",") + 1);   
+
+    $points = implode(",", $idPoints);
+    $data = array();
+    $mobile = new mobile();
+    $data['routes'] = $mobile->getRoutesByImeiData($users,$dtStart,$dtEnd);
+
 
     $point = new point();
     $data['points'] = $point->list_pointsById($points);

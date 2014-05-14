@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-//Last ubicatin of user
+//Last ubication of user
 class mobile_dataL
 {
 

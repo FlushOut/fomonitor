@@ -120,7 +120,7 @@ class DataBase extends PDO{
 
     }
     public function genericQuery($query)
-    {	
+    {
         $this->connect()->prepare($query);
         $obj = array();
         foreach($this->connect()->query($query) as $row){

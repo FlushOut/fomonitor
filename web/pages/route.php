@@ -265,7 +265,17 @@ $list_points = $point->list_points($company->id);
                 var mapOptions;
                 var map;
                 var markersPoint = [];
+                var markersRoute = [];
                 var infowindow = null;
+                var examples = [{
+                    latlngs: [
+                      [37.801000, -122.426499],
+                      [37.802051, -122.419418],
+                      [37.802729, -122.413989]
+                    ],
+                    mapType: google.maps.MapTypeId.ROADMAP,
+                    travelMode: 'driving'
+                }];
                 var iconBase = '../img/';
                 var icons = {
                   points: {
@@ -288,9 +298,23 @@ $list_points = $point->list_points($company->id);
                             zoom: 8,
                             center: myLatlng
                         };
+                var directionsService = null;
+                var elevationService = null;
+                var SAMPLES = 256;
+                var polyline = null;
+                var elevations = null;
+
+
+
 
                 map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
                 map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+
+                elevationService = new google.maps.ElevationService();
+                directionsService = new google.maps.DirectionsService();
+
+                loadExample(0);
+
 
                 // try your js
 
@@ -415,16 +439,19 @@ $list_points = $point->list_points($company->id);
                 $("#bntShow").click(function(){
                     var idUsers = $("#ismUsers").val();
                     var idPoints = $("#ismPoints").val();
-                    var action = "showUsersPointsInMap";
-                    console.log($("#dvFrom").find("input").val());
-                    console.log($("#dvTo").find("input").val());
+                    var dtStart = $("#dvFrom").find("input").val();
+                    var dtEnd = $("#dvTo").find("input").val();
+                    var action = "showRoutesPointsInMap";
+
+                    console.log(dtStart);
+                    console.log(dtEnd);
                     console.log(idUsers);
                     console.log(idPoints);
 
                     jQuery.ajax({
                         url: "/ajax/actions.php",
                         type: "POST",
-                        data: {idUsers: idUsers, idPoints: idPoints, action: action}
+                        data: {idUsers: idUsers, idPoints: idPoints, dtStart: dtStart, dtEnd: dtEnd, action: action}
                     }).done(function (resp) {
                         var data = jQuery.parseJSON(resp);
                         deleteMarkersPoints();
@@ -435,11 +462,12 @@ $list_points = $point->list_points($company->id);
                                 addMarkerPoints(data.points[i]);
                             }
                         }
-                        /*if(data.users.length > 0){
-                            for (var i = 0;i < data.users.length; i += 1) {
-                                addMarkerUsers(data.users[i]);
+                        if(data.routes.length > 0){
+                            for (var i = 0;i < data.routes.length; i += 1) {
+                                //addMarkerRoutes(data.routes)
+                                console.log(data.routes);
                             }
-                        }*/
+                        }
                         infowindow = new google.maps.InfoWindow({
                             content: 'loading...',
                         });
@@ -503,6 +531,154 @@ $list_points = $point->list_points($company->id);
 
                 $('#dvFrom').data({date: startDate}).datepicker('update').children("input").val(startDate);
                 $('#dvTo').data({date: startDate}).datepicker('update').children("input").val(startDate);
+
+                function loadExample(n) {
+                    //reset();
+                    map.setMapTypeId(examples[n].mapType);
+                    var bounds = new google.maps.LatLngBounds();
+                    for (var i = 0; i < examples[n].latlngs.length; i++) {
+                      var latlng = new google.maps.LatLng(
+                        examples[n].latlngs[i][0],
+                        examples[n].latlngs[i][1]
+                      );
+                      addMarkerRoutes(latlng, false);
+                      bounds.extend(latlng);
+                    }
+                    map.fitBounds(bounds);
+                    updateElevation();
+                }
+
+                function calcRoute(travelMode) {
+                    var origin = markersRoute[0].getPosition();
+                    var destination = markersRoute[markersRoute.length - 1].getPosition();
+                    
+                    var waypoints = [];
+                    for (var i = 1; i < markersRoute.length - 1; i++) {
+                      waypoints.push({
+                        location: markersRoute[i].getPosition(),
+                        stopover: true
+                      });
+                    }
+                    
+                    var request = {
+                      origin: origin,
+                      destination: destination,
+                      waypoints: waypoints
+                    };
+                   
+                    switch (travelMode) {
+                      case "bicycling":
+                        request.travelMode = google.maps.DirectionsTravelMode.BICYCLING;
+                        break;
+                      case "driving":
+                        request.travelMode = google.maps.DirectionsTravelMode.DRIVING;
+                        break;
+                      case "walking":
+                        request.travelMode = google.maps.DirectionsTravelMode.WALKING;
+                        break;
+                    }
+                    
+                    directionsService.route(request, function(response, status) {
+                      if (status == google.maps.DirectionsStatus.OK) {
+                        elevationService.getElevationAlongPath({
+                          path: response.routes[0].overview_path,
+                          samples: SAMPLES
+                        }, plotElevation);
+                      } else if (status == google.maps.DirectionsStatus.ZERO_RESULTS) {
+                        alert("Could not find a route between these points");
+                      } else {
+                        alert("Directions request failed");
+                      }
+                    });
+                }
+
+
+                function addMarkerRoutes(latlng, doQuery) {
+                    if (markersRoute.length < 10) {
+                      
+                      var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map,
+                        draggable: true
+                      })
+                      
+                      google.maps.event.addListener(marker, 'dragend', function(e) {
+                        updateElevation();
+                      });
+                      
+                      markersRoute.push(marker);
+                      
+                      if (doQuery) {
+                        updateElevation();
+                      }
+                      if (markersRoute.length == 10) {
+                        document.getElementById('address').disabled = true;
+                      }
+                    } else {
+                      alert("No more than 10 points can be added");
+                    }
+                }
+
+                function updateElevation() {
+                    if (markersRoute.length > 1) {
+                        var travelMode = examples[0].travelMode;
+                        if (travelMode != 'direct') {
+                            calcRoute(travelMode);
+                        } else {
+                            var latlngs = [];
+                            for (var i in markersRoute) {
+                                latlngs.push(markersRoute[i].getPosition())
+                            }
+                            elevationService.getElevationAlongPath(
+                            {
+                                path: latlngs,
+                                samples: SAMPLES
+                            }, 
+                            plotElevation);
+                        }
+                    }
+                }
+
+                function plotElevation(results) {
+                    elevations = results;
+                    
+                    var path = [];
+                    for (var i = 0; i < results.length; i++) {
+                      path.push(elevations[i].location);
+                    }
+                    
+                    if (polyline) {
+                      polyline.setMap(null);
+                    }
+                    
+                    polyline = new google.maps.Polyline({
+                        path: path,
+                        strokeColor: "#2E9AFE",
+                        strokeOpacity: 0.5,
+                        strokeWeight: 5,
+                        map: map
+                    });
+                    // Calculo de distancia total
+                    //document.getElementById("Distance").innerHTML = (polyline.Distance()/1000).toFixed(2)+" km";
+                    
+                    /* 
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'Sample');
+                    data.addColumn('number', 'Elevation');
+                    for (var i = 0; i < results.length; i++) {
+                        data.addRow(['', elevations[i].elevation]);
+                    }
+
+                    document.getElementById('chart_div').style.display = 'block';
+                    chart.draw(data, {
+                      width: 512,
+                      height: 200,
+                      legend: 'none',
+                      titleY: 'Elevation (m)',
+                      focusBorderColor: '#00ff00'
+                    });*/
+                }
+
             });
       
         </script>
