@@ -25,6 +25,7 @@ class mobile_dataL
     public $gsmstrength;
     public $gsm_strength_param = 0;
     public $carrier;
+    public $state;
     /*public $bytes_rx;
     public $bytes_tx;*/
 }

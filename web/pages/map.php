@@ -142,7 +142,8 @@ $list_points = $point->list_points($company->id);
                                                 <a data-box="close" data-hide="bounceOutRight">&times;</a>
                                             </div>
                                             <span>Map</span>
-                                            
+                                            <input name="hdcId" type="hidden" value="<?php echo $company->idle_time; ?>"/>
+                                            <input name="hdcIn" type="hidden" value="<?php echo $company->inactive_time; ?>"/> 
                                         </div>
                                         <div class="box-body">
                                            <div class="control-group">
@@ -253,9 +254,17 @@ $list_points = $point->list_points($company->id);
                 var infowindow = null;
                 var iconBase = '../img/';
                 var icons = {
-                  users: {
-                    name: 'Users',
-                    icon: iconBase + 'user.png'
+                  useronline: {
+                    name: 'Online Users',
+                    icon: iconBase + 'online.png'
+                  },
+                  userundefined: {
+                    name: 'Undefined Users',
+                    icon: iconBase + 'undefined.png'
+                  },
+                  useroffline: {
+                    name: 'Offline Users',
+                    icon: iconBase + 'offline.png'
                   },
                   points: {
                     name: 'Points',
@@ -400,11 +409,14 @@ $list_points = $point->list_points($company->id);
                 $("#bntShow").click(function(){
                     var idUsers = $("#ismUsers").val();
                     var idPoints = $("#ismPoints").val();
+                    var idletime = $('input[name="hdcId"]').val();
+                    var inactivetime = $('input[name="hdcIn"]').val();
                     var action = "showUsersPointsInMap";
+
                     jQuery.ajax({
                         url: "/ajax/actions.php",
                         type: "POST",
-                        data: {idUsers: idUsers, idPoints: idPoints, action: action}
+                        data: {idUsers: idUsers, idPoints: idPoints, idletime: idletime, inactivetime: inactivetime, action: action}
                     }).done(function (resp) {
                         var data = jQuery.parseJSON(resp);
                         deleteMarkersPoints();
@@ -461,9 +473,7 @@ $list_points = $point->list_points($company->id);
                 }
 
                 function addMarkerUsers(data){
-                    var image = {
-                        url: '../img/user.png'
-                    };
+                    var iconBase = '../img/';
                     var latlng = new google.maps.LatLng(data.latitude,data.longitude);
                     var contentString = 
                         '<div style="line-height:1.35;overflow:hidden !important;white-space:nowrap;" id="content">'+
@@ -471,20 +481,19 @@ $list_points = $point->list_points($company->id);
                             '</div>'+
                             '<h2 id="firstHeading" class="firstHeading">'+ data.name +'</h2>'+
                             '<div id="bodyContent">'+
-                                '<p><b>IMEI: </b>'+data.imei+'</p>'+
-                                '<p><b>Battery: </b>'+data.battery_level+'</p>'+
-                                '<p><b>Signal: </b>'+data.gsm_strength_param+'</p>'+
-                                '<p><b>Accuracy: </b>'+data.accuracy+'</p>'+
-                                '<p><b>Speed: </b>'+data.speed+'</p>'+
-                                '<p><b>Last Update: </b>'+data.date+'</p>'+
-                                '<p><b>Status: </b>Satus</p>'+
+                                '<p><b>IMEI : </b>'+data.imei+'</p>'+
+                                '<p><b>Battery : </b>'+data.batterylevel+' %</p>'+
+                                '<p><b>Signal : </b>&nbsp;&nbsp;<img src="../img/signal-'+data.gsm_strength_param+'.png"></p>'+
+                                '<p><b>Accuracy : </b>'+data.accuracy+' m</p>'+
+                                '<p><b>Speed : </b>'+data.speed+' km/h</p>'+
+                                '<p><b>Last Update : </b>'+data.date+'</p>'+
                             '</div>'+
                             '<button type="button" class="btn btn-primary" id="btnShowRoute" onclick=location.href=&#39;/pages/route.php?user='+data.imei+'&#39; name="btnShowRoute">Route</button>'+
                         '</div>';
                     var marker = new google.maps.Marker({
                     position: latlng,
                     map: map,
-                    icon: image,
+                    icon: iconBase + data.state +'.png',
                     html: contentString,
                     animation: google.maps.Animation.DROP
                     });

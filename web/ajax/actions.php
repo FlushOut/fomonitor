@@ -5,6 +5,8 @@ if (isset($_POST['idUsers'])) $idUsers = $_POST['idUsers'];
 if (isset($_POST['idPoints'])) $idPoints = $_POST['idPoints'];
 if (isset($_POST['dtStart'])) $dtStart = $_POST['dtStart'];
 if (isset($_POST['dtEnd'])) $dtEnd = $_POST['dtEnd'];
+if (isset($_POST['idletime'])) $idletime = $_POST['idletime'];
+if (isset($_POST['inactivetime'])) $inactivetime = $_POST['inactivetime'];
 
 switch ($_POST['action']) {
 	case 'getProfiles':
@@ -29,7 +31,7 @@ switch ($_POST['action']) {
         getUsersByCategory($id);
         break;
     case 'showUsersPointsInMap':
-        showUsersPointsInMap($idUsers,$idPoints);
+        showUsersPointsInMap($idUsers,$idPoints,$idletime,$inactivetime);
         break;
     case 'showRoutesPointsInMap':
         showRoutesPointsInMap($idUsers,$idPoints,$dtStart,$dtEnd);
@@ -314,7 +316,7 @@ function getUsersByCategory($fk_category){
         echo json_encode($objReturn);
 }
 
-function showUsersPointsInMap($idUsers,$idPoints){
+function showUsersPointsInMap($idUsers,$idPoints,$idletime,$inactivetime){
     $users = (string)$idUsers;
     if (substr($users, 0, strpos($users, ',')) == 'data')
         $users = substr($users, strpos($users, ",") + 1);   
@@ -322,7 +324,7 @@ function showUsersPointsInMap($idUsers,$idPoints){
     $points = implode(",", $idPoints);
     $data = array();
     $mobile = new mobile();
-    $data['users'] = $mobile->getLastDataByImei($users);
+    $data['users'] = $mobile->getLastDataByImei($users,$idletime,$inactivetime);
 
     $point = new point();
     $data['points'] = $point->list_pointsById($points);
@@ -347,5 +349,6 @@ function showRoutesPointsInMap($idUsers,$idPoints,$dtStart,$dtEnd){
 
     echo json_encode($data);
 }
+
 
 

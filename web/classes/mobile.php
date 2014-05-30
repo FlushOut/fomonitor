@@ -188,7 +188,7 @@ class mobile
         }
     }
 
-    function getLastDataByImei($idUsers){
+    function getLastDataByImei($idUsers, $idletime, $inactivetime){
         $query = $this->con->genericQuery("
             SELECT
                 `ultima_pos`.`idMobil`,
@@ -240,11 +240,12 @@ class mobile
                 $md->name = $value['name'];
                 $md->latitude = $value['latitude'];
                 $md->longitude = $value['longitude'];
-                $md->batterylevel = $value['batterylevel'];
+                $md->batterylevel = number_format(($value['batterylevel'] * 100), 1, ",", "");
                 $md->gsmstrength = $value['gsmstrength'];
-                $md->accuracy = $value['accuracy'];
-                $md->speed = $value['speed'];
-                $md->date = $value['date'];
+                $md->accuracy = number_format($value['accuracy'], 2, ",", "");
+                $md->speed = number_format($value['speed'] * 3.6, 1, ",", "");
+                $md->date = format_date($value['date']);
+                $md->state = $this->getStatus($value['date'], $idletime, $inactivetime);
 
                  if ($md->gsmstrength == 99 || $md->gsmstrength < 5)
                     $md->gsm_strength_param = 0;
@@ -374,6 +375,37 @@ class mobile
             return $this->con->update($this->table,$dados);    
         }
         
+    }
+
+    function getStatus($date_time, $idle_time, $inactive_time)
+    {
+
+        $now = date('Y-m-d H:i:s');
+        $to_time = strtotime($now);
+        $from_time = strtotime($date_time);
+        $status = "";
+        $min = round(abs($to_time - $from_time) / 60);
+
+        if ($min >= $idle_time and $min <= $inactive_time)
+            $status = 'inactive';
+        elseif ($min > $inactive_time)
+            $status = 'offline';
+        else
+            $status = 'online';
+       return $status;
+    }
+
+    function format_date($strDate)
+    {
+        $Y = substr($strDate, 0, 4);
+        $m = substr($strDate, 5, 2);
+        $d = substr($strDate, 8, 2);
+
+        $G = substr($strDate, 11, 2);
+        $i = substr($strDate, 14, 2);
+        $s = substr($strDate, 17, 2);
+
+        return "$d/$m/$Y at $G:$i:$s";
     }
 }
 

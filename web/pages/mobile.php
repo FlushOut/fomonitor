@@ -56,6 +56,7 @@ if ($_POST['action'] == 'SaveApps') {
         <link href="../css/font-awesome.css" rel="stylesheet" />
         <link href="../css/animate.css" rel="stylesheet" />
         <link href="../css/uniform.default.css" rel="stylesheet" />
+        <link href="../css/elusive-webfont.css" rel="stylesheet" />
 
         <link href="../css/datepicker.css" rel="stylesheet" />
         <link href="../css/select2.css" rel="stylesheet" />
@@ -290,18 +291,39 @@ if ($_POST['action'] == 'SaveApps') {
                                                             <?php echo $item->name; ?>
                                                             </td>
                                                             <td><?php echo number_format(($item->batterylevel * 100), 1, ",", ""); ?> %</td>
-                                                            <td><?php echo $item->gsm_strength_param; ?></td>
+                                                            <td><img src="../img/signal-<?php echo $item->gsm_strength_param; ?>.png"></td>
                                                             <td><?php echo number_format($item->accuracy, 2, ",", ""); ?> m</td>
                                                             <td><?php echo number_format($item->speed * 3.6, 1, ",", ""); ?> km/h</td>
                                                             <td><?php echo format_date($item->date); ?></td>
-                                                            <td>Status</td>
+                                                            <td><?php
+                                                                $status = $mobile->getStatus($item->date_time, $company->idle_time, $company->inactive_time);
+                                                                switch($status){
+                                                                    case 'online':
+                                                                        echo '<button type="button" class="btn btn-success">ONLINE</button>';
+                                                                        break;
+                                                                    case 'offline':
+                                                                        echo '<button type="button" class="btn btn-danger">OFFLINE</button>';
+                                                                        break;
+                                                                    case 'inative':
+                                                                        echo '<button type="button" class="btn btn-warning">INACTIVE</button>';
+                                                                        break;
+                                                                    default:
+                                                                        echo '<button type="button" class="btn btn-inverse">UNDEFINED</button>';
+                                                                        break;
+                                                                    }
+                                                                ?>
+                                                                <input name="hdSta" type="hidden" value="<?php echo $status; ?>"/>
+                                                                  
+                                                            </td>
                                                             <td><a href="#myModal" role="button" class="btn btn-link" data-toggle="modal" id="aEdit">Edit</a>
                                                             	<a href="#myModalDetalis" role="button" class="btn btn-link" data-toggle="modal" id="aDetails">Details</a>
+                                                                <a href="#myModalUnlock" role="button" class="btn btn-link" data-toggle="modal" id="aUnlock"><i class="elusive-unlock" title="Unlock device"></i></a>
                                                             </td>
                                                             <td>
                                                                 <a href="#myModalMap" role="button" class="btn btn-link" data-toggle="modal" id="aMap"><i class="icon-map-marker" title="View On Map"></i></a>
                                                                 <a href="#myModalSettings" role="button" class="btn btn-link" data-toggle="modal" id="aSettings"><i class="icon-wrench" title="Update Allowed Settings"></i></a>
                                                                 <a href="#myModalApps" role="button" class="btn btn-link" data-toggle="modal" id="aApps"><i class="icon-th-large" title="Update Allowed Applications"></i></a>
+                                                                
                                                             </td>
                                                         </tr>
                                                     <?php } ?>
@@ -364,6 +386,7 @@ if ($_POST['action'] == 'SaveApps') {
                 var mapDat;
                 var mapLat;
                 var mapLon;
+                var mapSta;
                 var myLatlng;
                 var mapOptions;
                 var map;
@@ -384,29 +407,30 @@ if ($_POST['action'] == 'SaveApps') {
                 $('#myModalMap').on('shown', function () {
                     google.maps.event.trigger(map, "resize"); 
                     map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
-
-                    var contentString = '<div id="content">'+
+                    
+                    var contentString = 
+                    '<div style="line-height:1.35;overflow:hidden !important;white-space:nowrap;" id="content">'+
                         '<div id="siteNotice">'+
                         '</div>'+
                         '<h2 id="firstHeading" class="firstHeading">'+ mapName +'</h2>'+
                         '<div id="bodyContent">'+
-                        '<p><b>IMEI: </b>'+mapImei+'</p>'+
-                        '<p><b>Battery: </b>'+mapBatLev+'</p>'+
-                        '<p><b>Signal: </b>'+mapGsmStr+'</p>'+
-                        '<p><b>Accuracy: </b>'+mapAcc+'</p>'+
-                        '<p><b>Speed: </b>'+mapSpe+'</p>'+
-                        '<p><b>Last Update: </b>'+mapDat+'</p>'+
-                        '<p><b>Status: </b>Satus</p>'+
+                        '<p><b>IMEI : </b>'+mapImei+'</p>'+
+                        '<p><b>Battery : </b>'+mapBatLev+' %</p>'+
+                        '<p><b>Signal : </b>&nbsp;&nbsp;<img src="../img/signal-'+mapGsmStr+'.png"></p>'+
+                        '<p><b>Accuracy : </b>'+mapAcc+' m</p>'+
+                        '<p><b>Speed : </b>'+mapSpe+' km/h</p>'+
+                        '<p><b>Last Update : </b>'+mapDat+'</p>'+
                         '</div>'+
                         '</div>';
 
                     var infowindow = new google.maps.InfoWindow({
                           content: contentString
                       });
-
+                    var iconBase = '../img/';
                     var marker = new google.maps.Marker({
                         position: myLatlng,
                         map: map,
+                        icon: iconBase + mapSta +'.png',
                         title: ''
                     });
                     google.maps.event.addListener(marker, 'click', function() {
@@ -437,6 +461,7 @@ if ($_POST['action'] == 'SaveApps') {
                 $('a#aApps').bind('click',function(){
                     jQuery(this).parents('tr').map(function () {
                         var id = jQuery('input[name="hdId"]', this).val();
+                        console.log(id);
                         var action = "getApps";
 
                         $("#hdIdApp").val(id);
@@ -446,6 +471,7 @@ if ($_POST['action'] == 'SaveApps') {
                             type: "POST",
                             data: {id: id, action: action }
                         }).done(function (resp) {
+                            console.log("resp:"+resp);
                             $("#AppsControl").html(resp);
                             });
                     });
@@ -463,7 +489,8 @@ if ($_POST['action'] == 'SaveApps') {
                         mapSpe = jQuery('input[name="hdSpe"]', this).val();
                         mapDat = jQuery('input[name="hdDat"]', this).val();
                         mapLat = jQuery('input[name="hdLat"]', this).val();
-                        mapLon = jQuery('input[name="hdLon"]', this).val();
+                        mapLon = jQuery('input[name="hdLon"]', this).val(); 
+                        mapSta = jQuery('input[name="hdSta"]', this).val();
                     });
 
                     myLatlng = new google.maps.LatLng(mapLat,mapLon);
