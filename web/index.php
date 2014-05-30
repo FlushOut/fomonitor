@@ -78,7 +78,7 @@ if (isset($_POST['login_username'])) {
                             <div class="box-body bg-white">
                                 <form id="sign-in" method="post" />
                                     <div class="control-group">
-                                        <label class="control-label">Username</label>
+                                        <label class="control-label">Email</label>
                                         <div class="controls">
                                             <input type="text" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field username'}}" name="login_username" id="login_username" autocomplete="on" />
                                         </div>
@@ -110,12 +110,12 @@ if (isset($_POST['login_username'])) {
                     <div class="span5">
                         <div class="box corner-all">
                             <div class="box-header grd-green color-white corner-top">
-                                <span>Create an account!</span>
+                                <span>Create an free account for a month!</span>
                             </div>
                             <div class="box-body bg-white">
                                 <form id="sign-up" method="post" />
                                     <div class="control-group">
-                                        <label class="control-label">Username</label>
+                                        <label class="control-label">Name</label>
                                         <div class="controls">
                                             <input type="text" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field username'}}" name="username" id="username" autocomplete="off" />
                                             <p class="help-block muted helper-font-small">May contain letters, digits, dashes and underscores, and should be between 2 and 20 characters long.</p>
@@ -143,7 +143,7 @@ if (isset($_POST['login_username'])) {
                                         </div>
                                     </div>
                                     <div class="control-group">
-                                        <p class="term-of-use">Lorem ipsum dolor sit amet, natoque per at morbi at vestibulum leo, velit non, curabitur ac est. <a href="#">terms of use</a> and <a href="#">privacy policy</a>.</p>
+                                        <p class="term-of-use">Before registering please read the following <a href="#">terms of use</a> and <a href="#">privacy policy</a>.</p>
                                     </div>
                                     <div class="control-group">
                                         <label class="checkbox">
