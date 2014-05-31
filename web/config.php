@@ -2,9 +2,9 @@
 session_start();
 define('USE_PCONNECT', 'false');
 error_reporting(1);
+date_default_timezone_set($_COOKIE['timezone']);
 require('autoload.php');
 $config['debug'] = FALSE;
-
 if ($_SERVER['SCRIPT_NAME'] != "/index.php") {
      if (!isset($_SESSION['loginsession'])) redirect("/index.php");
 }
@@ -96,7 +96,7 @@ function verify_access(){
 }
 
 
-function convertDateToTimezone($date, $format="Y-m-d H:i:s", $timezone="America/Sao_Paulo")
+/*function convertDateToTimezone($date, $format="Y-m-d H:i:s", $timezone="America/Sao_Paulo")
 {
     date_default_timezone_set('Europe/London');
 
@@ -109,6 +109,6 @@ function convertDateToTimezone($date, $format="Y-m-d H:i:s", $timezone="America/
     $now = $datetime_temp->format($format);
        
     return $now;        
-}
+}*/
 
 

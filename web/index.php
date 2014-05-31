@@ -192,10 +192,16 @@ if (isset($_POST['login_username'])) {
         
         <script src="js/validate/jquery.metadata.js"></script>
         <script src="js/validate/jquery.validate.js"></script>
-        
+
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
         <script type="text/javascript">
-            $(document).ready(function() {
-                // try your js
+          $(document).ready(function(){
+            var tz = jstz.determine(); // Determines the time zone of the browser client
+            var timezone = tz.name(); //'Asia/Kolhata' for Indian Time.
+
+            document.cookie="timezone="+timezone;
+
+             // try your js
                 
                 // uniform
                 $('[data-form=uniform]').uniform();
@@ -204,7 +210,7 @@ if (isset($_POST['login_username'])) {
                 $('#sign-in').validate();
                 $('#sign-up').validate();
                 $('#form-recover').validate();
-            })
+          });
         </script>
     </body>
 </html>

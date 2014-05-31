@@ -19,7 +19,6 @@ if ($_POST['action'] == 'SaveCompany') {
         return (key >= 48 && key <= 57)
     }
 </script>
-
 <header class="header" data-spy="affix" data-offset-top="0">
             <!--nav bar helper-->
             <div class="navbar-helper">
