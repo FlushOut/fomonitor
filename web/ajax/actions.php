@@ -36,6 +36,9 @@ switch ($_POST['action']) {
     case 'showRoutesPointsInMap':
         showRoutesPointsInMap($idUsers,$idPoints,$dtStart,$dtEnd);
         break;
+    case 'getUnlockCode':
+        getUnlockCode($id);
+        break;
 	default:
         # code...
         break;
@@ -212,6 +215,17 @@ function getDetails($imei){
 	    $html.= '<label class="control-label">'.$mobile->warranty.'</label>';
 		$html.= '</div>';
 	    
+        echo $html;
+}
+
+function getUnlockCode($imei){
+        $mobile = new mobile();
+        $html = "";
+        $html.= '<div class="control-group">';
+        $html.= '<label class="control-label"><b>Unlock Code :<b> </label>';
+        $html.= '<label class="control-label">'.$mobile->getUnlockCode($imei).'</label>';
+        $html.= '</div>';
+        
         echo $html;
 }
 

@@ -407,5 +407,17 @@ class mobile
 
         return "$d/$m/$Y at $G:$i:$s";
     }
+
+    function getUnlockCode($imei)
+    {
+        $div = substr($imei, 12, 3);
+
+        $current_date = date("dmhi");
+        $current_date = strrev($current_date);
+
+        $division = $current_date / $div;
+
+        return substr($division, 0, 4);
+    }
 }
 

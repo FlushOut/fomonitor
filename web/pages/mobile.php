@@ -205,7 +205,24 @@ if ($_POST['action'] == 'SaveApps') {
                                                         </form>
                                                     </div>
                                                 </div>
-
+                                                <!-- Modal Unlock-->
+                                                <div id="myModalUnlock" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        <h3 id="myModalLabel">Unlock Device</h3>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form class="form-horizontal" id="form-validate" action="" method="post" />
+                                                            <input name="hdIdUnl" id="hdIdUnl" type="hidden"/>
+                                                            <fieldset>
+                                                                <div id="UnlockControl"></div>
+                                                            </fieldset>
+                                                            <p align="center">
+                                                            <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">OK</button>
+                                                            </p>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                                 <!-- Modal Settings-->
                                                 <div id="myModalSettings" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                     <div class="modal-header">
@@ -473,6 +490,25 @@ if ($_POST['action'] == 'SaveApps') {
                         }).done(function (resp) {
                             console.log("resp:"+resp);
                             $("#AppsControl").html(resp);
+                            });
+                    });
+                    return true;
+                });
+
+                //Unlock device
+                $('a#aUnlock').bind('click',function(){
+                    jQuery(this).parents('tr').map(function () {
+                        var id = jQuery('input[name="hdId"]', this).val();
+                        var action = "getUnlockCode";
+
+                        $("#hdIdUnl").val(id);
+
+                        jQuery.ajax({
+                            url: "/ajax/actions.php",
+                            type: "POST",
+                            data: {id: id, action: action }
+                        }).done(function (resp) {
+                            $("#UnlockControl").html(resp);
                             });
                     });
                     return true;
