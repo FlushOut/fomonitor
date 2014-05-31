@@ -379,20 +379,21 @@ class mobile
 
     function getStatus($date_time, $idle_time, $inactive_time)
     {
-
         $now = date('Y-m-d H:i:s');
         $to_time = strtotime($now);
         $from_time = strtotime($date_time);
         $status = "";
         $min = round(abs($to_time - $from_time) / 60);
-
-        if ($min >= $idle_time and $min <= $inactive_time)
+        if ($min >= $idle_time && $min <= $inactive_time){
             $status = 'inactive';
-        elseif ($min > $inactive_time)
+        }
+        elseif ($min > $inactive_time){
             $status = 'offline';
-        else
+        }
+        else{
             $status = 'online';
-       return $status;
+        }
+        return $status;
     }
 
     function format_date($strDate)
@@ -411,7 +412,6 @@ class mobile
     function getUnlockCode($imei)
     {
         $div = substr($imei, 12, 3);
-
         $current_date = date("dmhi");
         $current_date = strrev($current_date);
 
@@ -419,5 +419,6 @@ class mobile
 
         return substr($division, 0, 4);
     }
+
 }
 

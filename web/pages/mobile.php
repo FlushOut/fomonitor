@@ -312,8 +312,9 @@ if ($_POST['action'] == 'SaveApps') {
                                                             <td><?php echo number_format($item->accuracy, 2, ",", ""); ?> m</td>
                                                             <td><?php echo number_format($item->speed * 3.6, 1, ",", ""); ?> km/h</td>
                                                             <td><?php echo format_date($item->date); ?></td>
-                                                            <td><?php
-                                                                $status = $mobile->getStatus($item->date_time, $company->idle_time, $company->inactive_time);
+                                                            <td>
+                                                            <?php
+                                                                $status = $mobile->getStatus($item->date, $company->idle_time, $company->inactive_time);
                                                                 switch($status){
                                                                     case 'online':
                                                                         echo '<button type="button" class="btn btn-success">ONLINE</button>';
@@ -321,7 +322,7 @@ if ($_POST['action'] == 'SaveApps') {
                                                                     case 'offline':
                                                                         echo '<button type="button" class="btn btn-danger">OFFLINE</button>';
                                                                         break;
-                                                                    case 'inative':
+                                                                    case 'inactive':
                                                                         echo '<button type="button" class="btn btn-warning">INACTIVE</button>';
                                                                         break;
                                                                     default:
