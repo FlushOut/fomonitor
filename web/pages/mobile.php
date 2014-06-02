@@ -7,7 +7,7 @@ $list_mobile = $mobile->getLastData($company->id);
 
 if ($_POST['action'] == 'Update') {
         if (isset($_POST['hdIdAct'])) {
-            $mobile->openByImei($_POST['hdIdAct']);
+            $mobile->open($_POST['hdIdAct']);
             $mobile->update($_POST['cboStatus'], $_POST['cboCategory'], 
             				$_POST['txtWarranty'], $_POST['txtName'],
             				$_POST['txtContact'], $_POST['txtEmail'], $_POST['txtPassword']);
@@ -17,7 +17,7 @@ if ($_POST['action'] == 'Update') {
 }
 if ($_POST['action'] == 'SaveSettings') {
         if (isset($_POST['hdIdSet'])) {
-        	$mobile->openByImei($_POST['hdIdSet']);
+        	$mobile->open($_POST['hdIdSet']);
         	$mobile->setSettings($_POST);	
         	header("Location: ". $_SERVER['REQUEST_URI']);
         	exit;
@@ -25,7 +25,7 @@ if ($_POST['action'] == 'SaveSettings') {
 }
 if ($_POST['action'] == 'SaveApps') {
         if (isset($_POST['hdIdApp'])) {
-        	$mobile->openByImei($_POST['hdIdApp']);
+        	$mobile->open($_POST['hdIdApp']);
         	$mobile->setApps($_POST['app']);	
         	header("Location: ". $_SERVER['REQUEST_URI']);
         	exit;
@@ -296,7 +296,7 @@ if ($_POST['action'] == 'SaveApps') {
                                                     <?php foreach ($list_mobile as $item) { ?>
                                                         <tr src="mobile">
                                                             <td>
-                                                            <input name="hdId" type="hidden" value="<?php echo $item->imei; ?>"/>
+                                                            <input name="hdId" type="hidden" value="<?php echo $item->id; ?>"/>
                                                             <input name="hdName" type="hidden" value="<?php echo $item->name; ?>"/>
                                                             <input name="hdBatLev" type="hidden" value="<?php echo number_format(($item->batterylevel * 100), 1, ",", ""); ?>"/>
                                                             <input name="hdGsmStr" type="hidden" value="<?php echo $item->gsm_strength_param; ?>"/>
@@ -395,7 +395,6 @@ if ($_POST['action'] == 'SaveApps') {
         <script src="../js/stilearn-base.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
-                var mapImei;
                 var mapName;
                 var mapBatLev;
                 var mapGsmStr;
@@ -432,7 +431,6 @@ if ($_POST['action'] == 'SaveApps') {
                         '</div>'+
                         '<h2 id="firstHeading" class="firstHeading">'+ mapName +'</h2>'+
                         '<div id="bodyContent">'+
-                        '<p><b>IMEI : </b>'+mapImei+'</p>'+
                         '<p><b>Battery : </b>'+mapBatLev+' %</p>'+
                         '<p><b>Signal : </b>&nbsp;&nbsp;<img src="../img/signal-'+mapGsmStr+'.png"></p>'+
                         '<p><b>Accuracy : </b>'+mapAcc+' m</p>'+
@@ -518,7 +516,6 @@ if ($_POST['action'] == 'SaveApps') {
                 //User Map
                 $('a#aMap').bind('click',function(){
                     jQuery(this).parents('tr').map(function () {
-                        mapImei = jQuery('input[name="hdId"]', this).val();
                         mapName = jQuery('input[name="hdName"]', this).val();
                         mapBatLev = jQuery('input[name="hdBatLev"]', this).val();
                         mapGsmStr = jQuery('input[name="hdGsmStr"]', this).val();

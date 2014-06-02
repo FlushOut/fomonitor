@@ -5,6 +5,7 @@ if (isset($_POST['idUsers'])) $idUsers = $_POST['idUsers'];
 if (isset($_POST['idPoints'])) $idPoints = $_POST['idPoints'];
 if (isset($_POST['dtStart'])) $dtStart = $_POST['dtStart'];
 if (isset($_POST['dtEnd'])) $dtEnd = $_POST['dtEnd'];
+if (isset($_POST['dt'])) $dt = $_POST['dt'];
 if (isset($_POST['idletime'])) $idletime = $_POST['idletime'];
 if (isset($_POST['inactivetime'])) $inactivetime = $_POST['inactivetime'];
 
@@ -39,6 +40,9 @@ switch ($_POST['action']) {
     case 'getUnlockCode':
         getUnlockCode($id);
         break;
+    case 'getRouteByIdDt':
+        getRouteByIdDt($id,$dt);
+        break;
 	default:
         # code...
         break;
@@ -64,10 +68,10 @@ function getProfiles($idUser){
         echo $html;
 }
 
-function getSettings($imei){
+function getSettings($id){
 		$mobile = new mobile();
 		$html = "";
-		$list_settings = $mobile->getSettingsImei($imei);
+		$list_settings = $mobile->getSettingsId($id);
 
     	$html.= '<label class="checkbox">';
     	$html.= '<input type="checkbox" data-form="uniform" name="wifichk" value="t"'; 
@@ -149,10 +153,10 @@ function getSettings($imei){
         echo $html;
 }
 
-function getApps($imei){
+function getApps($id){
 		$mobile = new mobile();
 		$html = "";
-		$list_apps = $mobile->getAppsImei($imei);
+		$list_apps = $mobile->getAppsId($id);
 
     	foreach ($list_apps as $item) {
 	    	$html.= '<label class="checkbox">';
@@ -165,20 +169,14 @@ function getApps($imei){
         echo $html;
 }
 
-function getDetails($imei){
+function getDetails($id){
 		$mobile = new mobile();
 		$html = "";
-		$mobile->openByImei($imei);
+		$mobile->open($id);
 		$status = new status();
 		$list_status = $status->getByLang('en');
 		$category = new category();
 		$list_categories = $category->list_categories(1);
-
-
-	    $html.= '<div class="control-group">';
-	    $html.= '<label class="control-label"><b>IMEI :<b> </label>';
-	    $html.= '<label class="control-label">'.$mobile->imei.'</label>';
-		$html.= '</div>';
 
 		$html.= '<div class="control-group">';
 	    $html.= '<label class="control-label"><b>Name : <b></label>';
@@ -218,32 +216,25 @@ function getDetails($imei){
         echo $html;
 }
 
-function getUnlockCode($imei){
+function getUnlockCode($id){
         $mobile = new mobile();
         $html = "";
         $html.= '<div class="control-group">';
         $html.= '<label class="control-label"><b>Unlock Code :<b> </label>';
-        $html.= '<label class="control-label">'.$mobile->getUnlockCode($imei).'</label>';
+        $html.= '<label class="control-label">'.$mobile->getUnlockCode($id).'</label>';
         $html.= '</div>';
         
         echo $html;
 }
 
-function getDetailstoUpdate($imei){
+function getDetailstoUpdate($id){
 		$mobile = new mobile();
 		$html = "";
-		$mobile->openByImei($imei);
+		$mobile->open($id);
 		$status = new status();
 		$list_status = $status->getByLang('en');
 		$category = new category();
-		$list_categories = $category->list_categories(1);
-
-		$html.= '<div class="control-group">';
-        $html.=     '<label class="control-label">IMEI</label>';
-        $html.=     '<div class="controls">';
-		$html.=         '<span class="input-xlarge uneditable-input" id=txtIMEI style="width:205px">'.$mobile->imei.'</span>';
-        $html.=     '</div>';
-        $html.= '</div>';
+		$list_categories = $category->list_categories($mobile->fk_company);
 
         $html.= '<div class="control-group">';
         $html.=     '<label class="control-label" for="txtName">Name</label>';
@@ -323,7 +314,7 @@ function getUsersByCategory($fk_category){
         $list_mobile = $mobile->list_mobileByCategory($fk_category);
         foreach ($list_mobile as $value) {
             $mob = new mobileMap();
-            $mob->id = $value['imei'];
+            $mob->id = $value['id'];
             $mob->name = $value['name'];
             $objReturn[] = $mob;
         }
@@ -338,7 +329,7 @@ function showUsersPointsInMap($idUsers,$idPoints,$idletime,$inactivetime){
     $points = implode(",", $idPoints);
     $data = array();
     $mobile = new mobile();
-    $data['users'] = $mobile->getLastDataByImei($users,$idletime,$inactivetime);
+    $data['users'] = $mobile->getLastDataByIds($users,$idletime,$inactivetime);
 
     $point = new point();
     $data['points'] = $point->list_pointsById($points);
@@ -355,7 +346,7 @@ function showRoutesPointsInMap($idUsers,$idPoints,$dtStart,$dtEnd){
     $points = implode(",", $idPoints);
     $data = array();
     $mobile = new mobile();
-    $data['routes'] = $mobile->getRoutesByImeiData($users,$dtStart,$dtEnd);
+    $data['routes'] = $mobile->getRoutesByIdsData($users,$dtStart,$dtEnd);
 
 
     $point = new point();
@@ -363,6 +354,28 @@ function showRoutesPointsInMap($idUsers,$idPoints,$dtStart,$dtEnd){
 
     echo json_encode($data);
 }
+
+function getRouteByIdDt($id,$dt){
+
+    $mobile = new mobile();
+    $mobile->open($id);
+    $data['route'] = $mobile->getRoutesByIdsDataOne($id,$dt,$dt);
+    $data['mobile'] = $mobile;
+
+    $objReturn = array();
+    $list_mobile = $mobile->list_mobileByCategory($mobile->fk_category);
+    foreach ($list_mobile as $value) {
+        $mob = new mobileMap();
+        $mob->id = $value['id'];
+        $mob->name = $value['name'];
+        $objReturn[] = $mob;
+    }
+    $data['mobiles'] = $objReturn;
+
+    echo json_encode($data);
+}
+
+
 
 
 

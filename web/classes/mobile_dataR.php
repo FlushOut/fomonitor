@@ -13,6 +13,7 @@ class mobile_dataR
 
     public $id = 0;
     public $fk_user;
+    public $name;
     public $date;
     public $points = array();
     

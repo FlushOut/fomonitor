@@ -13,7 +13,6 @@ class mobile
     protected $table = "mobiles";
 
     public $id = 0;
-    public $imei;
     public $fk_status;
     public $fk_category;
     public $fk_company;
@@ -44,37 +43,6 @@ class mobile
             return false;
         else {
             $this->id = $query['id'];
-            $this->imei = $query['imei'];
-            $this->fk_status = $query['fk_status'];
-            $this->fk_category = $query['fk_category'];
-            $this->fk_company = $query['fk_company'];
-            $this->manufacturer = $query['manufacturer'];
-            $this->model = $query['model'];
-            $this->warranty = $query['warranty'];
-            $this->name = $query['name'];
-            $this->contact = $query['contact'];
-            $this->email = $query['email'];
-            $this->password = $query['password'];
-            $this->status= $query['status'];
-            $this->create_date = $query['create_date'];
-            $this->last_update = $query['last_update'];
-
-            return true;
-        }
-    }
-
-    function openByImei($query)
-    {
-        if(!is_array($query)){
-        	$result = $this->con->genericQuery("select * from " . $this->table . " where imei = '$query'");
-            $query = $result[0];
-        }
-
-        if (count($query) == 0)
-            return false;
-        else {
-            $this->id = $query['id'];
-            $this->imei = $query['imei'];
             $this->fk_status = $query['fk_status'];
             $this->fk_category = $query['fk_category'];
             $this->fk_company = $query['fk_company'];
@@ -111,14 +79,13 @@ class mobile
 
     function list_mobileByCategory($fk_category)
     {
-        return $query = $this->con->genericQuery("select imei, name from " . $this->table . " where fk_category = '$fk_category' and status = 1 order by name asc");
+        return $query = $this->con->genericQuery("select id, name from " . $this->table . " where fk_category = '$fk_category' and status = 1 order by name asc");
     }
 
     function getLastData($fk_company){
         $query = $this->con->genericQuery("
             SELECT
                 `ultima_pos`.`idMobil`,
-                `ultima_pos`.`imeiMobil`,
                 `ultima_pos`.`name`,
                 `mobile_data`.`latitude`,
                 `mobile_data`.`longitude`,
@@ -133,18 +100,17 @@ class mobile
                         STRAIGHT_JOIN Max(`mobile_data`.`id`) AS `id`,
                         Max(`mobile_data`.`date`) AS `date`,
                         `mobiles`.`id` AS `idMobil`,
-                        `mobiles`.`imei` AS `imeiMobil`,
                         `mobiles`.`name`
                     FROM
                         `mobiles`
                             INNER JOIN
                                 `mobile_data`
                                     ON
-                                        `mobiles`.`imei` = `mobile_data`.`imei`
+                                        `mobiles`.`id` = `mobile_data`.`fk_mobile`
                     WHERE
                         `mobiles`.`fk_company` = {$fk_company}
                     GROUP BY
-                        `mobile_data`.`imei`
+                        `mobile_data`.`fk_mobile`
                 ) `ultima_pos`
                     INNER JOIN
                         `mobile_data`
@@ -163,7 +129,6 @@ class mobile
             foreach ($query as $value) {
                 $md = new mobile_dataL;
                 $md->id = $value['idMobil'];
-                $md->imei = $value['imeiMobil'];
                 $md->name = $value['name'];
                 $md->latitude = $value['latitude'];
                 $md->longitude = $value['longitude'];
@@ -188,11 +153,10 @@ class mobile
         }
     }
 
-    function getLastDataByImei($idUsers, $idletime, $inactivetime){
+    function getLastDataByIds($idUsers, $idletime, $inactivetime){
         $query = $this->con->genericQuery("
             SELECT
                 `ultima_pos`.`idMobil`,
-                `ultima_pos`.`imeiMobil`,
                 `ultima_pos`.`name`,
                 `mobile_data`.`latitude`,
                 `mobile_data`.`longitude`,
@@ -207,18 +171,17 @@ class mobile
                         STRAIGHT_JOIN Max(`mobile_data`.`id`) AS `id`,
                         Max(`mobile_data`.`date`) AS `date`,
                         `mobiles`.`id` AS `idMobil`,
-                        `mobiles`.`imei` AS `imeiMobil`,
                         `mobiles`.`name`
                     FROM
                         `mobiles`
                             INNER JOIN
                                 `mobile_data`
                                     ON
-                                        `mobiles`.`imei` = `mobile_data`.`imei`
+                                        `mobiles`.`id` = `mobile_data`.`fk_mobile`
                     WHERE
-                        `mobiles`.`imei` in ({$idUsers})
+                        `mobiles`.`id` in ({$idUsers})
                     GROUP BY
-                        `mobile_data`.`imei`
+                        `mobile_data`.`fk_mobile`
                 ) `ultima_pos`
                     INNER JOIN
                         `mobile_data`
@@ -236,7 +199,6 @@ class mobile
             foreach ($query as $value) {
                 $md = new mobile_dataL;
                 $md->id = $value['idMobil'];
-                $md->imei = $value['imeiMobil'];
                 $md->name = $value['name'];
                 $md->latitude = $value['latitude'];
                 $md->longitude = $value['longitude'];
@@ -262,11 +224,12 @@ class mobile
         }
     }
 
-    function getRoutesByImeiData($idUsers,$dtStart,$dtEnd){
+    function getRoutesByIdsData($idUsers,$dtStart,$dtEnd){
         
-        $query = $this->con->genericQuery("select id, fk_user, date, points 
-                                            from route_map 
-                                            where fk_user in ({$idUsers}) 
+        $query = $this->con->genericQuery("select r.id, r.fk_mobile,m.name, r.date, r.points 
+                                            from route_map r inner join mobiles m 
+                                            on r.fk_mobile = m.id
+                                            where fk_mobile in ({$idUsers}) 
                                             and (date between STR_TO_DATE(  '".$dtStart."',  '%d-%m-%Y' ) 
                                                 and STR_TO_DATE(  '".$dtEnd."',  '%d-%m-%Y' ))");
         if (count($query) == 0)
@@ -278,7 +241,36 @@ class mobile
             foreach ($query as $value) {
                 $mr = new mobile_dataR;
                 $mr->id = $value['id'];
-                $mr->fk_user = $value['fk_user'];   
+                $mr->fk_user = $value['fk_mobile'];   
+                $mr->name = $value['name'];
+                $mr->date = $value['date'];
+                $mr->points = explode(';',$value['points']);
+
+                $objReturn[] = $mr;
+            }
+            return $objReturn;
+        }
+    }
+
+    function getRoutesByIdsDataOne($id,$dtStart,$dtEnd){
+        
+        $query = $this->con->genericQuery("select r.id, r.fk_mobile,m.name, r.date, r.points 
+                                            from route_map r inner join mobiles m 
+                                            on r.fk_mobile = m.id
+                                            where fk_mobile = ".$id."  
+                                            and (date between STR_TO_DATE(  '".$dtStart."',  '%d-%m-%Y' ) 
+                                                and STR_TO_DATE(  '".$dtEnd."',  '%d-%m-%Y' ))");
+        if (count($query) == 0)
+        {
+            return false;
+        }
+        else 
+        { 
+            foreach ($query as $value) {
+                $mr = new mobile_dataR;
+                $mr->id = $value['id'];
+                $mr->fk_user = $value['fk_mobile'];   
+                $mr->name = $value['name'];
                 $mr->date = $value['date'];
                 $mr->points = explode(';',$value['points']);
 
@@ -290,12 +282,12 @@ class mobile
     
     public function getSettings() {
         
-        return $this->con->genericQuery(" select imei, wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, about from mobile_settings where imei='" . $this->imei . "'");
+        return $this->con->genericQuery(" select fk_mobile, wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, about from mobile_settings where fk_mobile=" . $this->id);
     }
 
-    public function getSettingsImei($imei) {
+    public function getSettingsId($fk_mobile) {
         
-        return $this->con->genericQuery(" select imei, wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, about from mobile_settings where imei='" . $imei . "'");
+        return $this->con->genericQuery(" select fk_mobile, wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, about from mobile_settings where fk_mobile=" . $fk_mobile);
     }
 
     function setSettings($options)
@@ -324,9 +316,7 @@ class mobile
         if (isset($options['accessibilitychk'])) $accessibility = '1';
         if (isset($options['aboutchk'])) $about = '1';
 
-
-
-        $query = "update mobile_settings set wifi=" . $wifi . ", screen=" . $screen . ", localsafety=" . $localsafety . ", apps=" . $apps . ", accounts=" . $accounts . ", privacy=" . $privacy . ", storage=" . $storage . ", keyboard=" . $keyboard . ", voice=" . $voice . ", accessibility=" . $accessibility . ", about=" . $about . " where imei='" . $this->imei . "'";
+        $query = "update mobile_settings set wifi=" . $wifi . ", screen=" . $screen . ", localsafety=" . $localsafety . ", apps=" . $apps . ", accounts=" . $accounts . ", privacy=" . $privacy . ", storage=" . $storage . ", keyboard=" . $keyboard . ", voice=" . $voice . ", accessibility=" . $accessibility . ", about=" . $about . " where fk_mobile=" . $this->id;
         $this->con->genericQuery($query);
 
     }
@@ -334,24 +324,24 @@ class mobile
     function setApps($apps)
     {
 
-        $query = "update mobile_applications set allowed=0 where imei='" . $this->imei . "'";
+        $query = "update mobile_applications set allowed=0 where fk_mobile=" . $this->id;
         $this->con->genericQuery($query);
 
         foreach ($apps as $value) {
-            $query = "update mobile_applications set allowed=1 where id='" . $value . "'";
+            $query = "update mobile_applications set allowed=1 where id=" . $value;
             $this->con->genericQuery($query);
         }
     }
 
     function getApps()
     {
-        $query = $this->con->genericQuery("select * from mobile_applications where imei = '" . $this->imei . "' order by name asc");
+        $query = $this->con->genericQuery("select * from mobile_applications where fk_mobile =" . $this->id . " order by name asc");
         return $query;
     }
 
-    function getAppsImei($imei)
+    function getAppsId($fk_mobile)
     {
-        $query = $this->con->genericQuery("select * from mobile_applications where imei = '" . $imei . "' order by name asc");
+        $query = $this->con->genericQuery("select * from mobile_applications where fk_mobile =" . $fk_mobile . " order by name asc");
         return $query;
     }
 
@@ -409,9 +399,9 @@ class mobile
         return "$d/$m/$Y at $G:$i:$s";
     }
 
-    function getUnlockCode($imei)
+    function getUnlockCode($id)
     {
-        $div = substr($imei, 12, 3);
+        $div = substr($id, 12, 3);
         $current_date = date("dmhi");
         $current_date = strrev($current_date);
 

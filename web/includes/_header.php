@@ -191,7 +191,7 @@ if ($_POST['action'] == 'SaveCompany') {
         </header>
 
         <!-- Modal-->
-        <div id="myModalConfiguration" style="height:580px;" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div id="myModalConfiguration" style="height:550px;" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3>Company</h3>
@@ -199,9 +199,6 @@ if ($_POST['action'] == 'SaveCompany') {
             <div style="position: relative;overflow-y: auto;padding: 15px;max-height:490px;" class="content-modal">
                 <form class="form-horizontal" style="height:470px;" id="form-validate-company" action="" method="post" />
                     <table>
-                        <tr>
-                            <td colspan="2" style="text-align:center"><h4>Activation code:&nbsp;<?php echo $company->code ?></h4></td>
-                        </tr>
                         <tr>
                             <td>Name</td>
                             <td>
@@ -229,8 +226,8 @@ if ($_POST['action'] == 'SaveCompany') {
                                     <input  type="text" id="txtCompanyGps_time" onKeyPress="return soloNumeros(event)" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="txtCompanyGps_time" style="border: 0; color: #f6931f; font-weight: bold; width: 50px !important;" value="<?php echo $company->gps_time ?>"/>
                                     <span for="amount-max" class="helper-font-small">Max. 100:</span>
                                 </p>
-                                <div style="width:300px !important;" id="slider-CompanyGps_time" class="slider-orange"></div>
-                                <span style="color:#999;" class="helper-font-small">In seconds</span>
+                                <div style="width:300px !important;" id="slider-CompanyGps_time" class="slider-blue"></div>
+                                <span style="color:#999;" class="helper-font-small">In minutes</span>
                             </td>
                         </tr>
                         <tr>
@@ -240,7 +237,7 @@ if ($_POST['action'] == 'SaveCompany') {
                                     <input  type="text" id="txtCompanyGps_distance" onKeyPress="return soloNumeros(event)" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="txtCompanyGps_distance" style="border: 0; color: #f6931f; font-weight: bold; width: 50px !important;" value="<?php echo $company->gps_distance ?>"/>
                                     <span for="amount-max" class="helper-font-small">Max. 100:</span>
                                 </p>
-                                <div style="width:300px !important;" id="slider-CompanyGps_distance" class="slider-orange"></div>
+                                <div style="width:300px !important;" id="slider-CompanyGps_distance" class="slider-blue"></div>
                                 <span style="color:#999;" class="helper-font-small">In meters</span>
                             </td>
                         </tr>
@@ -251,7 +248,7 @@ if ($_POST['action'] == 'SaveCompany') {
                                     <input type="text" id="txtCompanyIdle_time" onKeyPress="return soloNumeros(event)" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="txtCompanyIdle_time" style="border: 0; color: #f6931f; font-weight: bold; width: 50px !important;" value="<?php echo $company->idle_time ?>" />
                                     <span for="amount-max" class="helper-font-small">Max. 100:</span>
                                 </p>
-                                <div style="width:300px !important;" id="slider-CompanyIdle_time" class="slider-orange"></div>
+                                <div style="width:300px !important;" id="slider-CompanyIdle_time" class="slider-blue"></div>
                                 <span style="color:#999;" class="helper-font-small">User marked in yellow on the map, in minutes</span>
                             </td>
                         </tr>
@@ -262,7 +259,7 @@ if ($_POST['action'] == 'SaveCompany') {
                                     <input type="text" id="txtCompanyInactive_time" onKeyPress="return soloNumeros(event)" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="txtCompanyInactive_time" style="border: 0; color: #f6931f; font-weight: bold; width: 50px !important;" value="<?php echo $company->inactive_time ?>" />
                                     <span for="amount-max" class="helper-font-small">Max. 100:</span>
                                 </p>
-                                <div style="width:300px !important;" id="slider-CompanyInactive_time" class="slider-orange"></div>
+                                <div style="width:300px !important;" id="slider-CompanyInactive_time" class="slider-blue"></div>
                                 <span style="color:#999;" class="helper-font-small">User marked in red on the map, in minutes</span>
                             </td>
                         </tr>
@@ -281,9 +278,9 @@ if ($_POST['action'] == 'SaveCompany') {
 
                 // slider with max
                 $("#slider-CompanyGps_time").slider({
-                    range: "max",
+                    range: "min",
                     min: 1,
-                    max: 100,
+                    max: 100,	
                     value: $("#txtCompanyGps_time").val(),
                     slide: function( event, ui ) {
                         $( "#txtCompanyGps_time" ).val( ui.value );
@@ -291,7 +288,7 @@ if ($_POST['action'] == 'SaveCompany') {
                 });
                 //$( "#txtCompanyGps_time" ).val( $( "#slider-CompanyGps_time" ).slider( "value" ) );
                 $("#slider-CompanyGps_distance").slider({
-                    range: "max",
+                    range: "min",
                     min: 1,
                     max: 100,
                     value: $("#txtCompanyGps_distance").val(),
@@ -301,7 +298,7 @@ if ($_POST['action'] == 'SaveCompany') {
                 });
                 //$( "#txtCompanyGps_distance" ).val( $( "#slider-CompanyGps_distance" ).slider( "value" ) );
                 $("#slider-CompanyIdle_time").slider({
-                    range: "max",
+                    range: "min",
                     min: 1,
                     max: 100,
                     value: $( "#txtCompanyIdle_time" ).val(),
@@ -311,7 +308,7 @@ if ($_POST['action'] == 'SaveCompany') {
                 });
                 //$( "#txtCompanyIdle_time" ).val( $( "#slider-CompanyIdle_time" ).slider( "value" ) );
                 $("#slider-CompanyInactive_time").slider({
-                    range: "max",
+                    range: "min",
                     min: 1,
                     max: 100,
                     value: $( "#txtCompanyInactive_time" ).val(),

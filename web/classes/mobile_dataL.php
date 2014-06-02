@@ -12,7 +12,6 @@ class mobile_dataL
 {
 
     public $id = 0;
-    public $imei;
     public $name;
     public $date;
     public $phonenumber;

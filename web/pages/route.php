@@ -7,7 +7,6 @@ $list_categories = $category->list_categories($company->id);
 $point = new point();
 $list_points = $point->list_points($company->id);
 
-
 ?>
 
 <!DOCTYPE html>
@@ -267,20 +266,19 @@ $list_points = $point->list_points($company->id);
                 var markersPoint = [];
                 var markersRoute = [];
                 var infowindow = null;
-                var examples = [{
-                    latlngs: [
-                      [37.801000, -122.426499],
-                      [37.802051, -122.419418],
-                      [37.802729, -122.413989]
-                    ],
-                    mapType: google.maps.MapTypeId.ROADMAP,
-                    travelMode: 'driving'
-                }];
                 var iconBase = '../img/';
                 var icons = {
                   points: {
                     name: 'Points',
                     icon: iconBase + 'point.png'
+                  },
+                  startroute: {
+                    name: 'Start Route',
+                    icon: iconBase + 'start-route.png'
+                  },
+                  finishroute: {
+                    name: 'Finish Route',
+                    icon: iconBase + 'finish-route.png'
                   }
                 };
                 var legend = document.getElementById('legend');
@@ -304,17 +302,55 @@ $list_points = $point->list_points($company->id);
                 var polyline = null;
                 var elevations = null;
 
-
-
-
                 map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
                 map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 
                 elevationService = new google.maps.ElevationService();
                 directionsService = new google.maps.DirectionsService();
+                
 
-                loadExample(0);
+                // Validar si estoy viendo la ruta por mobile enviado desde Map
+                var idMobile = getUrlParameters('user','',true);
+                var dtMobile = getUrlParameters('date','',true);
+                if(idMobile && dtMobile) {
+                    var id = idMobile;
+                    var dt = dtMobile;
+                    var action = "getRouteByIdDt";
+                    jQuery.ajax({
+                        url: "/ajax/actions.php",
+                        type: "POST",
+                        data: {id: id, dt: dt, action: action }
+                    }).done(function (resp) {
+                        var data = jQuery.parseJSON(resp);
+                        deleteMarkersPoints();
+                        deleteMarkersUserRoute();
+                        $("#isCategories").select2("val", data.mobile.fk_category);
+                        $("#ismUsers").val('').trigger("change");
+                        $("#ismUsers").select2({
+                            data:{ results: data.mobiles, text: 'name' },
+                            multiple: true,
+                            formatSelection: format,
+                            placeholder: "Select users...",
+                            formatResult: format,
+                            initSelection : function (element, callback) {
+                                callback(data.mobiles);
+                            }
+                        }).select2('val', data.mobile.id);
+                        $('#dvFrom').data({date: dtMobile}).datepicker('update').children("input").val(dtMobile);
+                        $('#dvTo').data({date: dtMobile}).datepicker('update').children("input").val(dtMobile);
 
+                        if(data.route.length > 0){
+                            for (var i = 0;i < data.route.length; i += 1) {
+                                addRoutes(data.route[i]);
+                            }
+                        }
+                        infowindow = new google.maps.InfoWindow({
+                            content: 'loading...',
+                        });
+                        $( "#dvDivConUsers" ).show();
+                        $( "#dvFilterUsers" ).show();
+                    });
+                }
 
                 // try your js
 
@@ -411,8 +447,7 @@ $list_points = $point->list_points($company->id);
                         $("#chkAllUsers").parent().removeAttr( "checked" );
                         $("#chkAllUsers").parent().removeClass( "checked" );
                     }
-                    // Delete Marker Route user
-                    //deleteMarkersUserRoute();
+                    deleteMarkersUserRoute();
                 });
 
                 $("#chkAllPoints").click(function(){
@@ -443,11 +478,6 @@ $list_points = $point->list_points($company->id);
                     var dtEnd = $("#dvTo").find("input").val();
                     var action = "showRoutesPointsInMap";
 
-                    console.log(dtStart);
-                    console.log(dtEnd);
-                    console.log(idUsers);
-                    console.log(idPoints);
-
                     jQuery.ajax({
                         url: "/ajax/actions.php",
                         type: "POST",
@@ -455,8 +485,7 @@ $list_points = $point->list_points($company->id);
                     }).done(function (resp) {
                         var data = jQuery.parseJSON(resp);
                         deleteMarkersPoints();
-                        // Delete Marker Route user    
-                        //deleteMarkersUserRoute();
+                        deleteMarkersUserRoute();
                         if(data.points.length > 0){
                             for (var i = 0;i < data.points.length; i += 1) {
                                 addMarkerPoints(data.points[i]);
@@ -464,8 +493,7 @@ $list_points = $point->list_points($company->id);
                         }
                         if(data.routes.length > 0){
                             for (var i = 0;i < data.routes.length; i += 1) {
-                                //addMarkerRoutes(data.routes)
-                                console.log(data.routes);
+                                addRoutes(data.routes[i]);
                             }
                         }
                         infowindow = new google.maps.InfoWindow({
@@ -485,12 +513,12 @@ $list_points = $point->list_points($company->id);
                             '</div>'+
                             '<h2 id="firstHeading" class="firstHeading">'+ data.name +'</h2>'+
                             '<div id="bodyContent">'+
-                                '<p><b>Street: </b>'+data.addr_street+'</p>'+
-                                '<p><b>Number: </b>'+data.addr_number+'</p>'+
-                                '<p><b>District: </b>'+data.addr_district+'</p>'+
-                                '<p><b>City: </b>'+data.addr_city+'</p>'+
-                                '<p><b>state: </b>'+data.addr_state+'</p>'+
-                                '<p><b>Postal Code: </b>'+data.addr_postalcode+'</p>'+
+                                '<p><b>Street : </b>'+data.addr_street+'</p>'+
+                                '<p><b>Number : </b>'+data.addr_number+'</p>'+
+                                '<p><b>District : </b>'+data.addr_district+'</p>'+
+                                '<p><b>City : </b>'+data.addr_city+'</p>'+
+                                '<p><b>state : </b>'+data.addr_state+'</p>'+
+                                '<p><b>Postal Code : </b>'+data.addr_postalcode+'</p>'+
                             '</div>'+
                         '</div>';
                     var marker = new google.maps.Marker({
@@ -521,6 +549,24 @@ $list_points = $point->list_points($company->id);
                   markersPoint = [];
                 }
 
+                function setAllMapRoutes(map) {
+                  for (var i = 0; i < markersRoute.length; i++) {
+                    markersRoute[i].setMap(map);
+                  }
+                }
+                function clearMarkersRoutes() {
+                  setAllMapRoutes(null);
+                  if(polyline){
+                    polyline.setMap(null);
+                  }
+                }
+                function deleteMarkersUserRoute() {
+                  clearMarkersRoutes();
+                  markersRoute = [];
+                }
+
+
+
                 var d = new Date();
                 var year = d.getFullYear();
                 var month = d.getMonth()+1;
@@ -531,22 +577,6 @@ $list_points = $point->list_points($company->id);
 
                 $('#dvFrom').data({date: startDate}).datepicker('update').children("input").val(startDate);
                 $('#dvTo').data({date: startDate}).datepicker('update').children("input").val(startDate);
-
-                function loadExample(n) {
-                    //reset();
-                    map.setMapTypeId(examples[n].mapType);
-                    var bounds = new google.maps.LatLngBounds();
-                    for (var i = 0; i < examples[n].latlngs.length; i++) {
-                      var latlng = new google.maps.LatLng(
-                        examples[n].latlngs[i][0],
-                        examples[n].latlngs[i][1]
-                      );
-                      addMarkerRoutes(latlng, false);
-                      bounds.extend(latlng);
-                    }
-                    map.fitBounds(bounds);
-                    updateElevation();
-                }
 
                 function calcRoute(travelMode) {
                     var origin = markersRoute[0].getPosition();
@@ -593,35 +623,81 @@ $list_points = $point->list_points($company->id);
                 }
 
 
-                function addMarkerRoutes(latlng, doQuery) {
-                    if (markersRoute.length < 10) {
-                      
-                      var marker = new google.maps.Marker({
+                function addMarkerRoutes(name, date, latlng, imgMarker, isSE, doQuery) {
+                    var marker = new google.maps.Marker({
                         position: latlng,
                         map: map,
-                        draggable: true
-                      })
-                      
-                      google.maps.event.addListener(marker, 'dragend', function(e) {
-                        updateElevation();
+                        icon: imgMarker,
+                        draggable: false
                       });
-                      
-                      markersRoute.push(marker);
-                      
-                      if (doQuery) {
-                        updateElevation();
-                      }
-                      if (markersRoute.length == 10) {
-                        document.getElementById('address').disabled = true;
-                      }
-                    } else {
-                      alert("No more than 10 points can be added");
+
+                    if (isSE == 1){
+                        var contentString = 
+                        '<div style="line-height:1.35;overflow:hidden !important;white-space:nowrap;" id="content">'+
+                            '<div id="siteNotice">'+
+                            '</div>'+
+                            '<h2 id="firstHeading" class="firstHeading">'+ name +'</h2>'+
+                            '<div id="bodyContent">'+
+                                '<p><b>Date : </b>'+ date +'</p>'+
+                            '</div>'+
+                        '</div>';
+
+                        marker.info = new google.maps.InfoWindow({
+                        content: contentString
+                        });
+                        google.maps.event.addListener(marker, "click", function () {
+                            marker.info.open(map, marker);
+                        });    
+                    }else {
+                        marker.setVisible(false);
                     }
+                    
+                      //Evento para mover los markers y pintar la alteracion de la ruta
+                      /*google.maps.event.addListener(marker, 'dragend', function(e) {
+                        updateElevation();
+                      });*/
+                      
+                    markersRoute.push(marker);
+                    if (doQuery) {
+                        updateElevation(doQuery);
+                    }
+
+                }
+
+                function addRoutes(data) {
+
+                    map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+                    var bounds = new google.maps.LatLngBounds();
+                    var routeLength = data.points.length-2;
+                    var isSE;
+                    for (var i = 0; i < data.points.length; i++) {
+                        if (data.points[i]){
+                            var latlng = new google.maps.LatLng(
+                            parseFloat(data.points[i].substr(0, data.points[i].indexOf(','))),
+                            parseFloat(data.points[i].split(",").pop())
+                            );
+                            var imgMarker = iconBase;
+                            if(i == 0){
+                                imgMarker = imgMarker + "start-route.png";
+                                isSE = 1;
+                            }else if (i == routeLength){
+                                imgMarker = imgMarker + "finish-route.png";
+                                isSE = 1;
+                            } else{
+                                imgMarker = imgMarker + "marker-point.png";
+                                isSE = 0;
+                            }
+                            addMarkerRoutes(data.name,data.date,latlng,imgMarker,isSE,false);   
+                            bounds.extend(latlng);
+                        }
+                    }
+                    map.fitBounds(bounds);
+                    updateElevation();
                 }
 
                 function updateElevation() {
                     if (markersRoute.length > 1) {
-                        var travelMode = examples[0].travelMode;
+                        var travelMode = "driving";
                         if (travelMode != 'direct') {
                             calcRoute(travelMode);
                         } else {
@@ -679,6 +755,32 @@ $list_points = $point->list_points($company->id);
                     });*/
                 }
 
+                function getUrlParameters(parameter, staticURL, decode){
+                   /*
+                    Function: getUrlParameters
+                    Description: Get the value of URL parameters either from 
+                                 current URL or static URL
+                    Author: Tirumal
+                    URL: www.code-tricks.com
+                   */
+                    if(window.location.search){
+                        var currLocation = (staticURL.length)? staticURL : window.location.search;
+                        var parArr = currLocation.split("?")[1].split("&");
+                        var returnBool = true;
+                       
+                        for(var i = 0; i < parArr.length; i++){
+                            parr = parArr[i].split("=");
+                            if(parr[0] == parameter){
+                                return (decode) ? decodeURIComponent(parr[1]) : parr[1];
+                                returnBool = true;
+                            }else{
+                                returnBool = false;            
+                            }
+                        }
+                       
+                        if(!returnBool) return false;
+                    }
+                }
             });
       
         </script>

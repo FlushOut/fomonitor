@@ -449,12 +449,12 @@ $list_points = $point->list_points($company->id);
                             '</div>'+
                             '<h2 id="firstHeading" class="firstHeading">'+ data.name +'</h2>'+
                             '<div id="bodyContent">'+
-                                '<p><b>Street: </b>'+data.addr_street+'</p>'+
-                                '<p><b>Number: </b>'+data.addr_number+'</p>'+
-                                '<p><b>District: </b>'+data.addr_district+'</p>'+
-                                '<p><b>City: </b>'+data.addr_city+'</p>'+
-                                '<p><b>state: </b>'+data.addr_state+'</p>'+
-                                '<p><b>Postal Code: </b>'+data.addr_postalcode+'</p>'+
+                                '<p><b>Street : </b>'+data.addr_street+'</p>'+
+                                '<p><b>Number : </b>'+data.addr_number+'</p>'+
+                                '<p><b>District : </b>'+data.addr_district+'</p>'+
+                                '<p><b>City : </b>'+data.addr_city+'</p>'+
+                                '<p><b>state : </b>'+data.addr_state+'</p>'+
+                                '<p><b>Postal Code : </b>'+data.addr_postalcode+'</p>'+
                             '</div>'+
                         '</div>';
                     var marker = new google.maps.Marker({
@@ -475,20 +475,21 @@ $list_points = $point->list_points($company->id);
                 function addMarkerUsers(data){
                     var iconBase = '../img/';
                     var latlng = new google.maps.LatLng(data.latitude,data.longitude);
+                    var dateFormat = data.date.substr(0, 10).replace(/\//g, '-');
+
                     var contentString = 
                         '<div style="line-height:1.35;overflow:hidden !important;white-space:nowrap;" id="content">'+
                             '<div id="siteNotice">'+
                             '</div>'+
                             '<h2 id="firstHeading" class="firstHeading">'+ data.name +'</h2>'+
                             '<div id="bodyContent">'+
-                                '<p><b>IMEI : </b>'+data.imei+'</p>'+
                                 '<p><b>Battery : </b>'+data.batterylevel+' %</p>'+
                                 '<p><b>Signal : </b>&nbsp;&nbsp;<img src="../img/signal-'+data.gsm_strength_param+'.png"></p>'+
                                 '<p><b>Accuracy : </b>'+data.accuracy+' m</p>'+
                                 '<p><b>Speed : </b>'+data.speed+' km/h</p>'+
                                 '<p><b>Last Update : </b>'+data.date+'</p>'+
                             '</div>'+
-                            '<button type="button" class="btn btn-primary" id="btnShowRoute" onclick=location.href=&#39;/pages/route.php?user='+data.imei+'&#39; name="btnShowRoute">Route</button>'+
+                            '<button type="button" class="btn btn-primary" id="btnShowRoute" onclick=location.href=&#39;/pages/route.php?user='+data.id+'&date='+dateFormat+'&#39; name="btnShowRoute">Route</button>'+
                         '</div>';
                     var marker = new google.maps.Marker({
                     position: latlng,
