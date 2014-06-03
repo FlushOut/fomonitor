@@ -21,7 +21,7 @@ if (isset($_POST['login_username'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+    <head>  
         <meta charset="utf-8" />
         <title>Logn In - Stilearn Admin Bootstrap</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -29,7 +29,7 @@ if (isset($_POST['login_username'])) {
         <meta name="author" content="stilearning" />
 
         <!-- google font -->
-        <link href="http://fonts.googleapis.com/css?family=Aclonica:regular" rel="stylesheet" type="text/css" />
+        <link href="http://fonts.googleapis.com/css?family=Aclonica:regular" rel="stylesheet prefetch" type="text/css" />
         
         <!-- styles -->
         <link href="css/bootstrap.css" rel="stylesheet" />
