@@ -11,7 +11,7 @@
                                 </div>
                                 <div class="sr-header-left">
                                     <p class="bold">Balance</p>
-                                    <small class="muted">Dec 30 2012</small>
+                                    <small class="muted">Dec 2012</small>
                                 </div>
                             </div><!--/sidebar-right-header-->
                             <!--sidebar-right-control-->

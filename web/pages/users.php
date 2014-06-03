@@ -83,22 +83,15 @@ if ($_POST['action'] == 'SaveProfiles') {
                             <ul class="content-header-action pull-right">
                                 <li>
                                     <a href="#">
-                                        <div class="badge-circle grd-green color-white"><i class="icofont-plus-sign"></i></div>
-                                        <div class="action-text color-green">8765 <span class="helper-font-small color-silver-dark">Visits</span></div>
+                                        <div class="badge-circle grd-green color-white"><i class="typicn-mobile"></i></div>
+                                        <div class="action-text color-green">8765 <span class="helper-font-small color-silver-dark">Users Mobile</span></div>
                                     </a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
                                     <a href="#">
-                                        <div class="badge-circle grd-teal color-white"><i class="icofont-user-md"></i></div>
-                                        <div class="action-text color-teal">1437 <span class="helper-font-small color-silver-dark">Users</span></div>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <a href="#">
-                                        <div class="badge-circle grd-orange color-white">$</div>
-                                        <div class="action-text color-orange">4367 <span class="helper-font-small color-silver-dark">Orders</span></div>
+                                        <div class="badge-circle grd-teal color-white"><i class="typicn-user"></i></div>
+                                        <div class="action-text color-teal">1437 <span class="helper-font-small color-silver-dark">Users Web</span></div>
                                     </a>
                                 </li>
                             </ul>

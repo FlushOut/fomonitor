@@ -40,6 +40,7 @@ if (isset($_POST['login_username'])) {
         <link href="css/stilearn-icon.css" rel="stylesheet" />
         <link href="css/font-awesome.css" rel="stylesheet" />
         <link href="css/animate.css" rel="stylesheet" />
+        <link href="css/pricing-table.css" rel="stylesheet" />
         <link href="css/uniform.default.css" rel="stylesheet" />
         
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -90,17 +91,15 @@ if (isset($_POST['login_username'])) {
                                         </div>
                                     </div>
                                     <div class="control-group">
-                                        <div class="pull-right helper-font-32">
-                                            <a href="#" rel="tooltip-left" title="Sign in using twitter account"><i class="socialico-twitter-sign color-blue"></i></a>
-                                            <a href="#" rel="tooltip-left" title="Sign in using facebook account"><i class="socialico-facebook-sign color-sky"></i></a>
-                                        </div>
+                                        
                                         <label class="checkbox">
                                             <input type="checkbox" data-form="uniform" name="remember_me" id="remember_me_yes" value="yes" /> Remember me
                                         </label>
+                                        <p class="recover-account">Not have an account yet? <a href="#modal-pricing" class="link" data-toggle="modal">See our plan!</a></p>
                                     </div>
                                     <div class="form-actions">
                                         <input type="submit" class="btn btn-block btn-large btn-primary" value="Sign into account" />
-                                        <p class="recover-account">Recover your <a href="#modal-recover" class="link" data-toggle="modal">username or password</a></p>
+                                        <p class="recover-account">Recover your <a href="#modal-recover" class="link" data-toggle="modal">password</a></p>
                                     </div>
                                 </form>
                             </div>
@@ -110,7 +109,7 @@ if (isset($_POST['login_username'])) {
                     <div class="span5">
                         <div class="box corner-all">
                             <div class="box-header grd-green color-white corner-top">
-                                <span>Create an free account for a month!</span>
+                                <span>Create a free account for a month!</span>
                             </div>
                             <div class="box-body bg-white">
                                 <form id="sign-up" method="post" />
@@ -164,14 +163,14 @@ if (isset($_POST['login_username'])) {
             <div id="modal-recover" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal-recoverLabel" aria-hidden="true">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3 id="modal-recoverLabel">Reset password <small>Username Or Email Address</small></h3>
+                    <h3 id="modal-recoverLabel">Reset password <small>Email Address</small></h3>
                 </div>
                 <div class="modal-body">
                     <form id="form-recover" method="post" />
                         <div class="control-group">
                             <div class="controls">
                                 <input type="text" data-validate="{required: true, email:true, messages:{required:'Please enter field email', email:'Please enter a valid email address'}}" name="recover" />
-                                <p class="help-block helper-font-small">Enter your username or email address and we will send you a link to reset your password.</p>
+                                <p class="help-block helper-font-small">Enter your email address and we will send you a link to reset your password.</p>
                             </div>
                         </div>
                     </form>
@@ -181,6 +180,38 @@ if (isset($_POST['login_username'])) {
                     <input type="submit" form="form-recover" class="btn btn-primary" value="Send reset link" />
                 </div>
             </div><!-- /modal recover-->
+            <!-- modal pricing -->
+            <div id="modal-pricing" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal-recoverLabel" aria-hidden="true" style="height:550px !important;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 id="modal-recoverLabel">It's too easy!</h3>
+                </div>
+                <div class="modal-body" style="height:500px !important;max-height:500px;">
+                    <form id="form-recover" method="post" />
+                        <ul class="thumbnails pricing-table color-white" style="margin-top: 5px;">
+                            <li class="span4 grd-teal" style="width: 100%;margin: 0 auto;">
+                                <h3>Only One (*)</h3>
+                                <div class="price-body bg-white color-teal">
+                                    <div class="price">
+                                        <span class="price-figure">$6.90</span>
+                                        <span class="price-term">per user mobile/month</span>
+                                    </div>
+                                </div>
+                                <div class="price-body bg-white color-teal">
+                                    <div class="price">
+                                        <span class="price-figure">$9.90</span>
+                                        <span class="price-term">per user &nbsp;&nbsp;web/month</span>
+                                    </div>
+                                </div>
+                                <p>(*) We have special discounts for companies.</p>
+                                <div class="footer grd-teal">
+                                    <a href="#" class="btn btn-block btn-info">Get Started</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div><!-- /modal recover-->
         </section>
 
         <!-- javascript
@@ -188,6 +219,7 @@ if (isset($_POST['login_username'])) {
         <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.js"></script>
+        <script src="js/pricing-table/prefixfree.js"></script>
         <script src="js/uniform/jquery.uniform.js"></script>
         
         <script src="js/validate/jquery.metadata.js"></script>
