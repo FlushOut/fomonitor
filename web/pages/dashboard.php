@@ -77,13 +77,13 @@ require_once("../config.php");
                                         <a data-box="collapse"><i class="icofont-caret-up"></i></a>
                                     </div>
                                     <ul class="nav nav-tabs" id="tab-stat">
-                                        <li class="active"><a data-toggle="tab" href="#system-stat">System Stat</a></li>
-                                        <li><a data-toggle="tab" href="#server-stat">Server Stat</a></li>
+                                        <li class="active"><a data-toggle="tab" href="#account-stat">Account Stat</a></li>
+                                        <li><a data-toggle="tab" href="#umobile-stat">Users Mobile Stat</a></li>
                                     </ul>
                                 </div>
                                 <div class="box-body">
                                     <div class="tab-content">
-                                        <div class="tab-pane fade in active" id="system-stat">
+                                        <div class="tab-pane fade in active" id="account-stat">
                                             <div class="row-fluid">
                                                 <div class="span4">
                                                     <div class="dashboard-stat">
@@ -105,7 +105,7 @@ require_once("../config.php");
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="server-stat">
+                                        <div class="tab-pane fade" id="umobile-stat">
                                             <div class="row-fluid">
                                                 <div class="span4">
                                                     <div class="dashboard-stat" rel="tooltip" title="usage 2465kb of 5000kb">
