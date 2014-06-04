@@ -89,7 +89,7 @@ if ($_POST['action'] == 'SaveApps') {
                 <!-- end left_menu -->
                 
                 <!-- span content -->
-                <div class="span9">
+                <div class="span11">
                     <!-- content -->
                     <div class="content">
                         <!-- start left_menu -->

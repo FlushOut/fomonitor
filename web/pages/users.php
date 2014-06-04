@@ -75,7 +75,7 @@ if ($_POST['action'] == 'SaveProfiles') {
                 <!-- end left_menu -->
                 
                 <!-- span content -->
-                <div class="span9">
+                <div class="span11">
                     <!-- content -->
                     <div class="content">
 

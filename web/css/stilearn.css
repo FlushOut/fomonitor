@@ -1020,7 +1020,8 @@ ul.dropdown-notification > li.dropdown-header:hover{
 /* content */
 .content{
     margin-top: 60px;
-    margin-left: -3.4%;
+    /*margin-left: -3.4%;*/
+    margin-left: -2.8%;
     margin-bottom: -62px;
     display: block;
     background: #EDEDED url('../img/bg-content.jpg');

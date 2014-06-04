@@ -1,21 +1,6 @@
 <?php
 require_once("../config.php");
 
-$category = new category();
-$cat = new category();
-$list_categories = $category->list_categories(1);
-
-
-if ($_POST['action'] == 'Save') {
-        if (isset($_POST['hdIdAct'])) {
-            $cat->open($_POST['hdIdAct']);
-        }
-        if ($_POST['txtDescription']){
-            $cat->save(1, $_POST['txtDescription']);
-            header("Location: ". $_SERVER['REQUEST_URI']);
-            exit;
-        }
-}
 ?>
 
 <!DOCTYPE html>
@@ -79,7 +64,7 @@ if ($_POST['action'] == 'Save') {
                         <div class="content-breadcrumb">
                             <!--breadcrumb-->
                             <ul class="breadcrumb">
-                                <li><a href="index.html"><i class="icofont-home"></i> Categories</a> <span class="divider">&rsaquo;</span></li>
+                                <li><a href="index.html"><i class="icofont-home"></i> Stays</a> <span class="divider">&rsaquo;</span></li>
                                 <li class="active">List</li>
                             </ul><!--/breadcrumb-->
                         </div><!-- /content-breadcrumb -->
@@ -96,55 +81,27 @@ if ($_POST['action'] == 'Save') {
                                                 <a data-box="collapse"><i class="icofont-caret-up"></i></a>
                                                 <a data-box="close" data-hide="bounceOutRight">&times;</a>
                                             </div>
-                                            <span>Categories&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                            <a href="#myModal" role="button" class="btn" data-toggle="modal" id="aAdd">Add</a>
-                                                    <!-- Modal-->
-                                                    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                            <h3 id="myModalLabel">Information</h3>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <form class="form-horizontal" id="form-validate" action="" method="post" />
-                                                                    <table>
-                                                                        <tr>
-                                                                            <td>Description</td>
-                                                                            <td>
-                                                                                <input name="hdIdAct" id="hdIdAct" type="hidden"/>
-                                                                                <input type="text" id="txtDescription" name="txtDescription" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
-                                                                            </td>    
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td></td>
-                                                                            <td><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                                                                            <button class="btn btn-primary" id="btnSave" name="action" value="Save">Save</button></td>
-                                                                        </tr>
-                                                                    </table>
-                                                            </form>
-                                                        </div>
-                                                    </div>
+                                            <span>Stays</span>
                                         </div>
                                         <div class="box-body">
                                             <table id="datatables" class="table table-bordered table-striped responsive">
                                                 <thead>
                                                     <tr>
-                                                        <th class="head0">Id</th>
-                                                        <th class="head1">Description</th>
-                                                        <th class="head0">Actions</th>
+                                                        <th class="head0">User</th>
+                                                        <th class="head1">Point</th>
+                                                        <th class="head0">In</th>
+                                                        <th class="head0">Out</th>
+                                                        <th class="head0">Time Stay</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php foreach ($list_categories as $item) { ?>
-                                                        <tr src="category">
-                                                            <td><?php echo $item->id; ?><input name="hdId" type="hidden" value="<?php echo $item->id; ?>"/></td>
-                                                            <td><?php echo $item->description; ?><input name="hdDesc" type="hidden" value="<?php echo $item->description; ?>"/></td>
-                                                            <td>
-                                                                <a href="#myModal" role="button" class="btn btn-link" data-toggle="modal" id="aEdit">Edit</a>
-                                                                <!-- <button name="btnUpdate" type="button" class="btn btn-link">Edit</button> -->
-                                                                <button name="btnDelete" type="button" class="btn btn-link">Delete</button>
-                                                            </td>
+                                                        <tr src="stays">
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
                                                         </tr>
-                                                    <?php } ?>
                                                 </tbody>
                                             </table>
                                         </div><!-- /box-body -->
@@ -190,49 +147,6 @@ if ($_POST['action'] == 'Save') {
         <script type="text/javascript">
             $(document).ready(function() {
                 // try your js
-
-                $('#myModal').on('shown', function () {
-                    $('#txtDescription').focus();
-                });
-               
-                //delete individual row
-                $('button[name="btnDelete"]').click(function(){
-                    var c = confirm('Continue delete?');
-                    if (c) jQuery(this).parents('tr').fadeOut(function () {
-                        var id = jQuery('input[name="hdId"]', this).val();
-                        var src = jQuery(this).attr("src");
-
-                        jQuery.ajax({
-                            url: "/ajax/delete.php",
-                            type: "POST",
-                            data: {id: id, source: src }
-                        }).done(function (resp) {
-                                jQuery(this).remove();
-                            });
-                    });
-                    return false;
-                });
-
-                //update individual row
-                $('a#aEdit').bind('click',function(){
-                    jQuery(this).parents('tr').map(function () {
-                        var id = jQuery('input[name="hdId"]', this).val();
-                        var desc = jQuery('input[name="hdDesc"]', this).val();
-                        $("#hdIdAct").val(id);
-                        $("#txtDescription").val(desc);                       
-                    });
-                    return true;
-                });
-
-                // validate form
-                $("a#aAdd").bind('click', function () {
-                    $("#hdIdAct").val('');
-                    $("#txtDescription").val('');
-
-                    var validator = $( "#form-validate" ).validate();
-                    validator.resetForm();
-                    
-                });
 
                 $('#form-validate').validate();
                 

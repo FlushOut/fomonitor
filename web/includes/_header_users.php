@@ -14,6 +14,14 @@
                                         <div class="action-text color-teal">1437 <span class="helper-font-small color-silver-dark">Users Web</span></div>
                                     </a>
                                 </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#">
+                                        <div class="badge-circle grd-orange color-white"></i>$</div>
+                                        <div class="action-text color-orange">1,785.00 <span class="helper-font-small color-silver-dark">Invoice</span></div>
+                                    </a>
+                                </li>
+
                             </ul>
-                            <h2><i class="icofont-table"></i> Users</h2>
+                            <h2><i class="icofont-bookmark"></i> Monitor</h2>
                         </div><!-- /content-header -->

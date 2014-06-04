@@ -1,10 +1,10 @@
-<!-- span side-right -->
+<!-- span side-right
                 <div class="span2">
-                    <!-- side-right -->
+                    
                     <aside class="side-right">
-                        <!-- sidebar-right -->
+                        
                         <div class="sidebar-right">
-                            <!--sidebar-right-header-->
+                            
                             <div class="sidebar-right-header">
                                 <div class="sr-header-right">
                                     <h2><span class="label label-info">$26,875</span></h2>
@@ -13,20 +13,20 @@
                                     <p class="bold">Balance</p>
                                     <small class="muted">Dec 2012</small>
                                 </div>
-                            </div><!--/sidebar-right-header-->
-                            <!--sidebar-right-control-->
+                            </div>
+                            
                             <div class="sidebar-right-control">
                                 <ul class="sr-control-item">
                                     <li class="active"><a href="#contact" data-toggle="tab" title="contacts"><i class="icofont-group"></i></a></li>
                                 </ul>
-                            </div><!-- /sidebar-right-control-->
-                            <!-- sidebar-right-content -->
+                            </div>
+                            
                             <div class="sidebar-right-content">
                                 <div class="tab-content">
-                                    <!--contact-->
+                                    
                                     <div class="tab-pane fade active in" id="contact">
                                         <div class="side-contact">
-                                            <!--contact-control-->
+                                            
                                             <div class="contact-control">
                                                 <div class="btn-group pull-right">
                                                     <button class="dropdown-toggle bg-transparent no-border" data-toggle="dropdown">
@@ -40,8 +40,8 @@
                                                     </ul>
                                                 </div>
                                                 <h5><i class="icofont-comment color-green"></i> John Doe</h5>
-                                            </div><!--/contact-control-->
-                                            <!--contact-search-->
+                                            </div>
+                                            
                                             <div class="contact-search">
                                                 <div class="input-icon-prepend">
                                                     <div class="icon">
@@ -51,13 +51,13 @@
                                                     </div>
                                                     <input class="input-block-level grd-white" maxlength="11" type="text" name="contact-search" placeholder="chat with..." />
                                                 </div>
-                                            </div><!--/contact-search-->
-                                            <!--contact-list, we set this max-height:380px, you can set this if you want-->
+                                            </div>
+                                            
                                             <ul class="contact-list">
                                                 <li class="contact-alt grd-white">
-                                                    <!--we use data toggle tab for navigate this action-->
+                                                    
                                                     <a href="#chat" data-toggle="tab" data-id="iin@mail.com">
-                                                        <!--we use contact-item structure like the component media in bootstrap-->
+                                                        
                                                         <div class="contact-item">
                                                             <div class="pull-left">
                                                                 <img class="contact-item-object" style="width: 32px;height: 32px;" src="../img/user-thumb-mini.jpg" />
@@ -71,7 +71,7 @@
                                                     </a>
                                                 </li>
                                                 <li class="contact-alt grd-white">
-                                                    <!--we use data toggle tab for navigate this action-->
+                                                    
                                                     <a href="#chat" data-toggle="tab" data-id="sungep@mail.com">
                                                         <div class="contact-item">
                                                             <div class="pull-left">
@@ -86,7 +86,7 @@
                                                     </a>
                                                 </li>
                                                 <li class="contact-alt grd-white">
-                                                    <!--we use data toggle tab for navigate this action-->
+                                                    
                                                     <a href="#chat" data-toggle="tab" data-id="harab@mail.com">
                                                         <div class="contact-item">
                                                             <div class="pull-left">
@@ -100,8 +100,8 @@
                                                         </div>
                                                     </a>
                                                 </li>
-                                                <li class="contact-alt grd-white active"> <!-- you can use this for active contact or your self status-->
-                                                    <!--we use data toggle tab for navigate this action-->
+                                                <li class="contact-alt grd-white active"> 
+                                                    
                                                     <a href="#chat" data-toggle="tab" data-id="janesmith@mail.com">
                                                         <div class="contact-item">
                                                             <div class="pull-left">
@@ -116,7 +116,7 @@
                                                     </a>
                                                 </li>
                                                 <li class="contact-alt grd-white">
-                                                    <!--we use data toggle tab for navigate this action-->
+                                                    
                                                     <a href="#chat" data-toggle="tab" data-id="mahardika@mail.com">
                                                         <div class="contact-item">
                                                             <div class="pull-left">
@@ -131,7 +131,7 @@
                                                     </a>
                                                 </li>
                                                 <li class="contact-alt grd-white">
-                                                    <!--we use data toggle tab for navigate this action-->
+                                                    
                                                     <a href="#chat" data-toggle="tab" data-id="opytama@mail.com">
                                                         <div class="contact-item">
                                                             <div class="pull-left">
@@ -145,18 +145,17 @@
                                                         </div>
                                                     </a>
                                                 </li>
-                                            </ul><!--/contact-list-->
+                                            </ul>
                                         </div>
-                                    </div><!--/contact-->
+                                    </div>
                                     
-                                    <!--chat-->
                                     <div class="tab-pane fade" id="chat">
                                         <div class="side-chat">
-                                            <!--header part-->
+                                            
                                             <div class="chat-header">
                                                 <div class="chat-action">
                                                     <div class="btn-group pull-right">
-                                                        <!--we use data toggle tab for navigate this action-->
+                                            
                                                         <a class="bg-transparent no-border" href="#contact" data-toggle="tab" title="minimize"><i class="icofont-minus"></i></a>
                                                         <a class="bg-transparent no-border" title="pop out"><i class="icofont-resize-full"></i></a>
                                                         <a class="bg-transparent no-border" href="#contact" data-toggle="tab" title="close"><i class="icofont-remove-sign"></i></a>
@@ -164,7 +163,7 @@
                                                 </div>
                                                 <h5><i class="icofont-certificate color-green"></i> Jane smith</h5>
                                             </div>
-                                            <!--content part-->
+                                            
                                             <div class="chat-content">
                                                 <div class="chat-in">
                                                     <span class="chat-time">10:45am</span>
@@ -187,19 +186,19 @@
                                                     <div class="chat-text">massa massa quisque sodales id dictumst.</div>
                                                 </div>
                                             </div>
-                                            <!--status typed part-->
+                                            
                                             <div class="chat-typed"><i class="typicn-chat"></i> Jane smith is typing...</div>
-                                            <!--input part-->
+                                            
                                             <div class="chat-input">
                                                 <div class="chat-desc muted">Lorem ipsum dolor sit amet.</div>
                                                 <textarea class="input-block-level" placeholder="chat here..."></textarea>
                                             </div>
                                         </div>
                                         <div class="divider-content"><span></span></div>
-                                    </div><!--chat-->
+                                    </div>
                                 </div>
-                            </div><!-- /sidebar-right-content -->
-                        </div><!-- /sidebar-right -->
-                    </aside><!-- /side-right -->
+                            </div>
+                        </div>
+                    </aside>
                 </div>
-<!-- /span side-right -->
+-->

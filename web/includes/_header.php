@@ -120,10 +120,6 @@ if ($_POST['action'] == 'SaveCompany') {
                                 <a class="btn btn-inverse btn-small dropdown-toggle" data-toggle="dropdown" href="#">
                                     <?php echo $user->name ?>
                                 </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <li><a tabindex="-1" href="/pages/underconstruction.php">Invoice</a></li>
-                                    <li><a tabindex="-1" href="/pages/underconstruction.php">Messages</a></li>
-                                </ul>
                             </div>
                             <div class="btn-group user-group">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
