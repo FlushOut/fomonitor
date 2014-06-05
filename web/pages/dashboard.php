@@ -29,6 +29,9 @@ require_once("../config.php");
         <link href="../css/fullcalendar.css" rel="stylesheet" />
         <link href="../css/bootstrap-wysihtml5.css" rel="stylesheet" />
 
+        <script src="../js/jquery.js"></script>
+        <script src="../js/jquery-ui.min.js"></script>
+
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -79,6 +82,7 @@ require_once("../config.php");
                                     <ul class="nav nav-tabs" id="tab-stat">
                                         <li class="active"><a data-toggle="tab" href="#account-stat">Account Stat</a></li>
                                         <li><a data-toggle="tab" href="#umobile-stat">Users Mobile Stat</a></li>
+                                        <li><a data-toggle="tab" href="#mobile-inf">Mobiles Information</a></li>
                                     </ul>
                                 </div>
                                 <div class="box-body">
@@ -124,6 +128,20 @@ require_once("../config.php");
                                                         <input data-chart="knob" type="text" data-readonly="true" data-width="120" data-height="120" data-fgcolor="#AC193D" value="70" data-min="0" data-max="100" />
                                                         <div class="stat-label grd-red color-white">Server Health</div>
                                                     </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="mobile-inf">
+                                            <div class="row-fluid">
+                                                <div class="span4">
+                                                    <!-- You have to set the width of an element using pixel for pie charts -->
+                                                    <div id="chart-pie1" class="chart" style="width: 200px;"></div>
+                                                </div>
+                                                <div class="span4">
+                                                    <div id="chart-pie2" class="chart" style="width: 200px;"></div>
+                                                </div>
+                                                <div class="span4">
+                                                    <div id="chart-pie3" class="chart" style="width: 200px;"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -348,8 +366,6 @@ require_once("../config.php");
         <!-- javascript
         ================================================== -->
         <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-        <script src="../js/jquery.js"></script>
-        <script src="../js/jquery-ui.min.js"></script>
         <script src="../js/bootstrap.js"></script>
         <script src="../js/uniform/jquery.uniform.js"></script>
         <script src="../js/peity/jquery.peity.js"></script>
@@ -357,10 +373,18 @@ require_once("../config.php");
         <script src="../js/select2/select2.js"></script>
         <script src="../js/knob/jquery.knob.js"></script>
         <script src="../js/flot/jquery.flot.js"></script>
+        <script src="../js/flot/jquery.flot.pie.js"></script>
         <script src="../js/flot/jquery.flot.resize.js"></script>
         <script src="../js/flot/jquery.flot.categories.js"></script>
+
         <script src="../js/wysihtml5/wysihtml5-0.3.0.js"></script>
         <script src="../js/wysihtml5/bootstrap-wysihtml5.js"></script>
+
+        <script src="../js/validate/jquery.validate.js"></script>
+        <script src="../js/validate/jquery.metadata.js"></script>
+
+        <script src="../js/flot/jquery.flot.demo.js"></script>
+
         <script src="../js/calendar/fullcalendar.js"></script> <!-- this plugin required jquery ui-->
 
         <!-- required stilearn template js, for full feature-->
@@ -380,9 +404,6 @@ require_once("../config.php");
                     }
                 });
                 
-                // peity chart
-                $("span[data-chart=peity-bar]").peity("bar");
-                
                 // Input tags with select2
                 $('input[name=reseiver]').select2({
                     tags:[]
@@ -392,7 +413,8 @@ require_once("../config.php");
                 $('[data-form=uniform]').uniform();
                 
                 // wysihtml5
-                $('[data-form=wysihtml5]').wysihtml5()
+                //$('[data-form=wysihtml5]').wysihtml5();
+
                 toolbar = $('[data-form=wysihtml5]').prev();
                 btn = toolbar.find('.btn');
                 
