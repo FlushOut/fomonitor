@@ -89,8 +89,8 @@ require_once("../config.php");
                                                     <tr>
                                                         <th class="head0">User</th>
                                                         <th class="head1">Point</th>
-                                                        <th class="head0">Data In</th>
-                                                        <th class="head0">Data Out</th>
+                                                        <th class="head0">Date In</th>
+                                                        <th class="head0">Date Out</th>
                                                         <th class="head0">Time Stay</th>
                                                     </tr>
                                                 </thead>
