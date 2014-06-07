@@ -70,8 +70,6 @@ class point
         $dados["longitude"] = $longitude;
         $dados["radius"] = $radius;
 
-        echo $this->id;
-
        if ($this->id > 0) {
             $dados["id"] = $this->id;
             return $this->con->update($this->table,$dados);
