@@ -40,7 +40,7 @@ if ($_POST['action'] == 'SaveCompany') {
                                 <!--notification-->
                                 <a class="btn btn-danger btn-small" data-toggle="dropdown" href="#" title="3 notification">3</a>
                                 <ul class="dropdown-menu dropdown-notification">
-                                    <li class="dropdown-header grd-white"><a href="#">View All Notifications</a></li>
+                                    <li class="dropdown-header grd-white"><a href="/pages/dashboard.php#recent-umobile">View All Recent Users Mobile</a></li>
                                     <li class="new">
                                         <a href="#">
                                             <div class="notification"><?php echo $user->name ?> commented on a post</div>

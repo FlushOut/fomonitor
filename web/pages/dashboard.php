@@ -112,29 +112,22 @@ require_once("../config.php");
                                         <div class="tab-pane fade" id="umobile-stat">
                                             <div class="row-fluid">
                                                 <div class="span4">
-                                                    <div class="dashboard-stat" rel="tooltip" title="usage 2465kb of 5000kb">
-                                                        <input data-chart="knob" type="text" data-readonly="true" data-width="120" data-height="120" data-fgcolor="#00A600" value="2465" data-min="0" data-max="5000" />
-                                                        <div class="stat-label grd-green color-white">Monthly Bandwidth</div>
-                                                    </div>
+                                                    <div id="umobile-battery" class="chart"></div>
+                                                    <div class="stat-label grd-green color-white">Battery</div>
                                                 </div>
                                                 <div class="span4">
-                                                    <div class="dashboard-stat" rel="tooltip" title="usage 8795kb of 10000kb">
-                                                        <input data-chart="knob" type="text" data-readonly="true" data-width="120" data-height="120" data-fgcolor="#00A0B1" value="8795" data-min="0" data-max="10000" />
-                                                        <div class="stat-label grd-teal color-white">Disk Space</div>
-                                                    </div>
+                                                    <div id="umobile-signal" class="chart"></div>
+                                                    <div class="stat-label grd-teal color-white">Signal</div>
                                                 </div>
                                                 <div class="span4">
-                                                    <div class="dashboard-stat" rel="tooltip" title="server condition 70%, it's good!">
-                                                        <input data-chart="knob" type="text" data-readonly="true" data-width="120" data-height="120" data-fgcolor="#AC193D" value="70" data-min="0" data-max="100" />
-                                                        <div class="stat-label grd-red color-white">Server Health</div>
-                                                    </div>
+                                                    <div id="umobile-speed" class="chart"></div>
+                                                    <div class="stat-label grd-red color-white">Speed</div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="mobile-inf">
                                             <div class="row-fluid">
                                                 <div class="span4">
-                                                    <!-- You have to set the width of an element using pixel for pie charts -->
                                                     <div id="chart-pie1" class="chart" style="width: 200px;"></div>
                                                 </div>
                                                 <div class="span4">
@@ -162,15 +155,15 @@ require_once("../config.php");
                                             </div>
                                             <ul class="nav nav-pills">
                                                 <!--tab menus-->
-                                                <li class="active"><a data-toggle="tab" href="#recent-orders">Recent Orders</a></li>
-                                                <li><a data-toggle="tab" href="#recent-posts">Recent Posts</a></li>
-                                                <li><a data-toggle="tab" href="#recent-comments">Recent Comments</a></li><!--/tab menus-->
+                                                <li class="active"><a data-toggle="tab" href="#recent-umobile">Recent Users Mobile</a></li>
+                                                <li><a data-toggle="tab" href="#disapproved-users">Disapproved Users</a></li>
+                                                <li><a data-toggle="tab" href="#approved-users">Approved Users</a></li><!--/tab menus-->
                                             </ul>
                                         </div>
                                         <div class="box-body">
                                             <!-- widgets-tab-body -->
                                             <div class="tab-content">
-                                                <div class="tab-pane fade in active" id="recent-orders">
+                                                <div class="tab-pane fade in active" id="recent-umobile">
                                                     <div class="media">
                                                         <a class="pull-left" href="#">
                                                             <img class="media-object" data-src="js/holder.js/64x64" />
@@ -179,131 +172,40 @@ require_once("../config.php");
                                                             <h4 class="media-heading"><a href="#">Lorem ipsum </a><small class="helper-font-small">by john doe on 22 aug 2012, ip 192.168.56.7</small></h4>
                                                             <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
                                                             <div class="btn-group pull-right">
-                                                                <a href="#" class="btn btn-mini">Approve</a>
-                                                                <a href="#" class="btn btn-mini">Invoice</a>
-                                                                <a href="#" class="btn btn-mini btn-danger">Delete</a>
+                                                                <a href="#" class="btn btn-mini btn-success">Approve</a>
+                                                                <a href="#" class="btn btn-mini btn-danger">Disapprove</a>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="media">
-                                                        <a class="pull-left" href="#">
-                                                            <img class="media-object" data-src="js/holder.js/64x64" />
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <h4 class="media-heading"><a href="#">Lorem ipsum </a><small class="helper-font-small">by jane smith on 18 aug 2012, ip 192.168.56.7</small></h4>
-                                                            <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
-                                                            <div class="btn-group pull-right">
-                                                                <a href="#" class="btn btn-mini">Approve</a>
-                                                                <a href="#" class="btn btn-mini">Invoice</a>
-                                                                <a href="#" class="btn btn-mini btn-danger">Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="media">
-                                                        <a class="pull-left" href="#">
-                                                            <img class="media-object" data-src="js/holder.js/64x64" />
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <h4 class="media-heading"><a href="#">Lorem ipsum </a><small class="helper-font-small">by john smith on 18 aug 2012, ip 192.168.56.7</small></h4>
-                                                            <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade.</p>
-                                                            <div class="btn-group pull-right">
-                                                                <a href="#" class="btn btn-mini">Approve</a>
-                                                                <a href="#" class="btn btn-mini">Invoice</a>
-                                                                <a href="#" class="btn btn-mini btn-danger">Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <a href="#" class="btn btn-small btn-link pull-right">View all &rarr;</a>
                                                 </div>
-                                                <div class="tab-pane fade" id="recent-posts">
+                                                <div class="tab-pane fade" id="disapproved-users">
                                                     <div class="media">
                                                         <a class="pull-left" href="#">
                                                             <img class="media-object" data-src="js/holder.js/64x64" />
                                                         </a>
                                                         <div class="media-body">
-                                                            <h4 class="media-heading"><a href="#">Tortor dapibus </a><small class="helper-font-small">by jane smith on 11 aug 2012, ip 192.168.56.7</small></h4>
-                                                            <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade.</p>
-                                                            <div class="btn-group pull-right">
-                                                                <a href="#" class="btn btn-mini">Edit</a>
-                                                                <a href="#" class="btn btn-mini">Draft</a>
-                                                                <a href="#" class="btn btn-mini btn-danger">Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="media">
-                                                        <a class="pull-left" href="#">
-                                                            <img class="media-object" data-src="js/holder.js/64x64" />
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <h4 class="media-heading"><a href="#">Tortor dapibus </a><small class="helper-font-small">by john doe on 10 aug 2012, ip 192.168.56.7</small></h4>
-                                                            <p>Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel.</p>
-                                                            <div class="btn-group pull-right">
-                                                                <a href="#" class="btn btn-mini">Edit</a>
-                                                                <a href="#" class="btn btn-mini">Draft</a>
-                                                                <a href="#" class="btn btn-mini btn-danger">Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="media">
-                                                        <a class="pull-left" href="#">
-                                                            <img class="media-object" data-src="js/holder.js/64x64" />
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <h4 class="media-heading"><a href="#">Tortor dapibus </a><small class="helper-font-small">by jane doe on 9 aug 2012, ip 192.168.56.7</small></h4>
-                                                            <p>Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</p>
-                                                            <div class="btn-group pull-right">
-                                                                <a href="#" class="btn btn-mini">Edit</a>
-                                                                <a href="#" class="btn btn-mini">Draft</a>
-                                                                <a href="#" class="btn btn-mini btn-danger">Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <a href="#" class="btn btn-small btn-link pull-right">View all &rarr;</a>
-                                                </div>
-                                                <div class="tab-pane fade" id="recent-comments">
-                                                    <div class="media">
-                                                        <a class="pull-left" href="#">
-                                                            <img class="media-object" data-src="js/holder.js/64x64" />
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <h4 class="media-heading"><a href="#">Lacinia non </a><small class="helper-font-small">by jane smith on 20 aug 2012, ip 192.168.56.7</small></h4>
+                                                            <h4 class="media-heading"><a href="#">Lorem ipsum </a><small class="helper-font-small">by john doe on 22 aug 2012, ip 192.168.56.7</small></h4>
                                                             <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
                                                             <div class="btn-group pull-right">
-                                                                <a href="#" class="btn btn-mini">Approve</a>
-                                                                <a href="#" class="btn btn-mini">Spam</a>
-                                                                <a href="#" class="btn btn-mini btn-danger">Delete</a>
+                                                                <a href="#" class="btn btn-mini btn-success">Approve</a>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="approved-users">
                                                     <div class="media">
                                                         <a class="pull-left" href="#">
                                                             <img class="media-object" data-src="js/holder.js/64x64" />
                                                         </a>
                                                         <div class="media-body">
-                                                            <h4 class="media-heading"><a href="#">Lacinia non </a><small class="helper-font-small">by john smith on 19 aug 2012, ip 192.168.56.7</small></h4>
-                                                            <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
+                                                            <h4 class="media-heading"><a href="#">Lorem ipsum </a><small class="helper-font-small">by john doe on 22 aug 2012, ip 192.168.56.7</small></h4>
+                                                            <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
                                                             <div class="btn-group pull-right">
-                                                                <a href="#" class="btn btn-mini">Approve</a>
-                                                                <a href="#" class="btn btn-mini">Spam</a>
-                                                                <a href="#" class="btn btn-mini btn-danger">Delete</a>
+                                                                <a href="#" class="btn btn-mini btn-danger">Disapprove</a>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="media">
-                                                        <a class="pull-left" href="#">
-                                                            <img class="media-object" data-src="js/holder.js/64x64" />
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <h4 class="media-heading"><a href="#">Lacinia non </a><small class="helper-font-small">by john doe on 17 aug 2012, ip 192.168.56.7</small></h4>
-                                                            <p>Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</p>
-                                                            <div class="btn-group pull-right">
-                                                                <a href="#" class="btn btn-mini">Approve</a>
-                                                                <a href="#" class="btn btn-mini">Spam</a>
-                                                                <a href="#" class="btn btn-mini btn-danger">Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <a href="#" class="btn btn-small btn-link pull-right">View all &rarr;</a>
+                                                
                                                 </div>
                                             </div><!--/widgets-tab-body-->
                                         </div><!--/box-body-->

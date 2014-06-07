@@ -35,19 +35,122 @@ $(function(){
     for (var i = 0; i <= 10; i += 1)
         d9.push([i, parseInt(Math.random() * 30)]);
 
-                
-    
-                
-                
-    
-    
-                
-    
-    
-                
-                
-    
-                
+     // users mobile stats bars
+    var umbattery_bars = $("#umobile-battery"),
+    umbattery_data_bars = [[10,0], [8,1], [4,2], [13,3], [17,4], [17,5]];
+
+    var umsignal_bars = $("#umobile-signal"),
+    umsignal_data_bars = [[10,0], [8,1], [4,2], [13,3], [17,4], [9,5]];
+
+    var umspeed_bars = $("#umobile-speed"),
+    umspeed_data_bars = [[10,0], [8,1], [4,2], [13,3], [17,4], [9,5]];
+
+    var umbattery_dataSet = [
+        { label: "Battery", data: umbattery_data_bars, color: "#00a600" }
+    ];
+    var umsignal_dataSet = [
+        { label: "Signal", data: umsignal_data_bars, color: "#00a0b1" }
+    ];
+    var umspeed_dataSet = [
+        { label: "Speed", data: umspeed_data_bars, color: "#bf1e4b" }
+    ];
+
+    var umbattery_ticks = [
+        [0, "January"], [1, "February"], [2, "March"], [3, "April"], [4, "May"], [5, "June"]
+    ];
+    var umsignal_ticks = [
+        [0, "January"], [1, "February"], [2, "March"], [3, "April"], [4, "May"], [5, "June"]
+    ];
+    var umspeed_ticks = [
+        [0, "January"], [1, "February"], [2, "March"], [3, "April"], [4, "May"], [5, "June"]
+    ];
+
+    umbattery_options_bars = {
+        series: {
+            bars: {
+                show: true
+            }
+        },
+        bars: {
+            align: "center",
+            barWidth: 0.3,
+            horizontal: true
+        },
+        yaxis: {       
+            ticks: umbattery_ticks,
+            tickLength: 0
+        },
+        legend: {
+            show: false
+        },
+        grid: {
+            backgroundColor: '#FFFFFF',
+            borderWidth: 1,
+            borderColor: '#D7D7D7',
+            hoverable: true,
+            clickable: true
+        }
+    };
+
+    umsignal_options_bars = {
+        series: {
+            bars: {
+                show: true
+            }
+        },
+        bars: {
+            align: "center",
+            barWidth: 0.3,
+            horizontal: true
+        },
+        yaxis: {       
+            ticks: umsignal_ticks,
+            tickLength: 0
+        },
+        legend: {
+            show:false
+        },
+        grid: {
+            backgroundColor: '#FFFFFF',
+            borderWidth: 1,
+            borderColor: '#D7D7D7',
+            hoverable: true,
+            clickable: true
+        }
+    };
+
+    umspeed_options_bars = {
+        series: {
+            bars: {
+                show: true
+            }
+        },
+        bars: {
+            align: "center",
+            barWidth: 0.3,
+            horizontal: true
+        },
+        yaxis: {       
+            ticks: umspeed_ticks,
+            tickLength: 0
+        },
+        legend: {
+           show: false
+        },
+        grid: {
+            backgroundColor: '#FFFFFF',
+            borderWidth: 1,
+            borderColor: '#D7D7D7',
+            hoverable: true,
+            clickable: true
+        }
+    };
+
+    // rendering plot bars
+    var umbattery_chart_bars = $.plot(umbattery_bars, umbattery_dataSet, umbattery_options_bars);
+    var umbattery_chart_bars = $.plot(umsignal_bars, umsignal_dataSet, umsignal_options_bars);
+    var umbattery_chart_bars = $.plot(umspeed_bars, umspeed_dataSet, umspeed_options_bars);
+
     $(".stackControls input").click(function (e) {
         e.preventDefault();
         stack = $(this).val() == "With stacking" ? true : null;
