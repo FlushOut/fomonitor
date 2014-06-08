@@ -402,12 +402,13 @@ class mobile
     function getUnlockCode($id)
     {
         $div = substr($id, 12, 3);
-        $current_date = date("dmhi");
-        $current_date = strrev($current_date);
+        $current_date = date("Hi");
 
-        $division = $current_date / $div;
+        $hour = substr($current_date, 0, 2);
+        $min = substr($current_date, 2, 4);
+        $code = substr($min, 0, 1) . substr($hour, 1, 2) . substr($min, 1, 2) . substr($hour, 0, 1);
 
-        return substr($division, 0, 4);
+        return $code;
     }
 
 }
