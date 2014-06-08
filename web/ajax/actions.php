@@ -412,7 +412,7 @@ function showStaysByDate($fk_company,$dtStart,$dtEnd){
     $html.= '           <td>'.$value->point.'</td>';
     $html.= '           <td>'.$value->date_in.'</td>';
     $html.= '           <td>'.$value->date_out.'</td>';
-    $html.= '           <td>'.$value->time_permanence.'</td>';
+    $html.= '           <td>'.gmdate("H:i:s", $value->time_permanence).'</td>';
     $html.= '       </tr>';
                 }
     $html.= '   </tbody>';
