@@ -130,6 +130,7 @@ if ($_POST['action'] == 'Save') {
                                                     <tr>
                                                         <th class="head0">Id</th>
                                                         <th class="head1">Description</th>
+                                                        <th class="head1">Code</th>
                                                         <th class="head0">Actions</th>
                                                     </tr>
                                                 </thead>
@@ -138,6 +139,7 @@ if ($_POST['action'] == 'Save') {
                                                         <tr src="category">
                                                             <td><?php echo $item->id; ?><input name="hdId" type="hidden" value="<?php echo $item->id; ?>"/></td>
                                                             <td><?php echo $item->description; ?><input name="hdDesc" type="hidden" value="<?php echo $item->description; ?>"/></td>
+                                                            <td><?php echo $item->code; ?></td>
                                                             <td>
                                                                 <a href="#myModal" role="button" class="btn btn-link" data-toggle="modal" id="aEdit">Edit</a>
                                                                 <!-- <button name="btnUpdate" type="button" class="btn btn-link">Edit</button> -->

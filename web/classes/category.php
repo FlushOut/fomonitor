@@ -15,6 +15,7 @@ class category
     public $id = 0;
     public $fk_company;
     public $description;
+    public $code;
     public $status;
   
     function category(){
@@ -35,6 +36,7 @@ class category
             $this->fk_company = $query['fk_company'];
             $this->description = $query['description'];
             $this->status = $query['status'];
+            $this->code = $query['code'];
             return true;
         }
     }
@@ -43,6 +45,7 @@ class category
     {
         $dados["fk_company"] = $fk_company;
         $dados["description"] = addslashes($description);
+        $dados["code"] = substr(strtoupper($description),0,1). substr(strtoupper($description), -1) . rand(100, 999); 
         $dados["status"] = 1;
         
         if ($this->id > 0) {
