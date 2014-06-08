@@ -100,7 +100,7 @@ if ($_POST['action'] == 'SaveApps') {
                         <div class="content-breadcrumb">
                             <!--breadcrumb-->
                             <ul class="breadcrumb">
-                                <li><a href="index.html"><i class="icofont-home"></i> Mobil</a> <span class="divider">&rsaquo;</span></li>
+                                <li><a href="index.html"><i class="icofont-home"></i> Mobile</a> <span class="divider">&rsaquo;</span></li>
                                 <li class="active">List</li>
                             </ul><!--/breadcrumb-->
                         </div><!-- /content-breadcrumb -->
@@ -117,7 +117,7 @@ if ($_POST['action'] == 'SaveApps') {
                                                 <a data-box="collapse"><i class="icofont-caret-up"></i></a>
                                                 <a data-box="close" data-hide="bounceOutRight">&times;</a>
                                             </div>
-                                            <span>Mobil&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                            <span>Mobile&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                                 <!-- Modal -->
                                                 <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height:550px !important;">
                                                     <div class="modal-header">

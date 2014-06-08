@@ -73,21 +73,17 @@ require_once("../config.php");
                         <!-- content-body -->
                         <div class="content-body">
                             <!-- dashboard -->
-                            <!-- tab stat -->
-                            <div class="box-tab corner-all">
-                                <div class="box-header corner-top">
-                                    <div class="header-control pull-right">
-                                        <a data-box="collapse"><i class="icofont-caret-up"></i></a>
-                                    </div>
-                                    <ul class="nav nav-tabs" id="tab-stat">
-                                        <li class="active"><a data-toggle="tab" href="#account-stat">Account Stat</a></li>
-                                        <li><a data-toggle="tab" href="#umobile-stat">Users Mobile Stat</a></li>
-                                        <li><a data-toggle="tab" href="#mobile-inf">Mobiles Information</a></li>
-                                    </ul>
-                                </div>
-                                <div class="box-body">
-                                    <div class="tab-content">
-                                        <div class="tab-pane fade in active" id="account-stat">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="box corner-all">
+                                        <div class="box-header grd-white corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close" data-hide="rotateOut">&times;</a>
+                                            </div>
+                                            <span>Account Stat</span>
+                                        </div>
+                                        <div class="box-body">
                                             <div class="row-fluid">
                                                 <div class="span4">
                                                     <div class="dashboard-stat">
@@ -109,9 +105,23 @@ require_once("../config.php");
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="umobile-stat">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="box corner-all">
+                                        <div class="box-header grd-white corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close" data-hide="rotateOut">&times;</a>
+                                            </div>
+                                            <span>Users Mobile Stat</span>
+                                        </div>
+                                        <div class="box-body">
                                             <div class="row-fluid">
-                                                <div class="span4">
+                                               <div class="span4">
                                                     <div id="umobile-battery" class="chart"></div>
                                                     <div class="stat-label grd-green color-white">Battery</div>
                                                 </div>
@@ -125,9 +135,23 @@ require_once("../config.php");
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="mobile-inf">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="box corner-all">
+                                        <div class="box-header grd-white corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close" data-hide="rotateOut">&times;</a>
+                                            </div>
+                                            <span>Mobiles Information</span>
+                                        </div>
+                                        <div class="box-body">
                                             <div class="row-fluid">
-                                                <div class="span4">
+                                               <div class="span4">
                                                     <div id="chart-pie1" class="chart" style="width: 200px;"></div>
                                                 </div>
                                                 <div class="span4">
@@ -140,115 +164,7 @@ require_once("../config.php");
                                         </div>
                                     </div>
                                 </div>
-                            </div><!-- /tab stat -->
-
-                            <!-- tab resume content -->
-                            <div class="row-fluid">
-                                <!-- tab resume update -->
-                                <div class="span6">
-                                    <div class="box-tab corner-all">
-                                        <div class="box-header corner-top">
-                                            <!--tab action-->
-                                            <div class="header-control pull-right">
-                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
-                                                <a data-box="close" data-hide="rotateOutDownLeft">&times;</a>
-                                            </div>
-                                            <ul class="nav nav-pills">
-                                                <!--tab menus-->
-                                                <li class="active"><a data-toggle="tab" href="#recent-umobile">Recent Users Mobile</a></li>
-                                                <li><a data-toggle="tab" href="#disapproved-users">Disapproved Users</a></li>
-                                                <li><a data-toggle="tab" href="#approved-users">Approved Users</a></li><!--/tab menus-->
-                                            </ul>
-                                        </div>
-                                        <div class="box-body">
-                                            <!-- widgets-tab-body -->
-                                            <div class="tab-content">
-                                                <div class="tab-pane fade in active" id="recent-umobile">
-                                                    <div class="media">
-                                                        <a class="pull-left" href="#">
-                                                            <img class="media-object" data-src="js/holder.js/64x64" />
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <h4 class="media-heading"><a href="#">Lorem ipsum </a><small class="helper-font-small">by john doe on 22 aug 2012, ip 192.168.56.7</small></h4>
-                                                            <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
-                                                            <div class="btn-group pull-right">
-                                                                <a href="#" class="btn btn-mini btn-success">Approve</a>
-                                                                <a href="#" class="btn btn-mini btn-danger">Disapprove</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="tab-pane fade" id="disapproved-users">
-                                                    <div class="media">
-                                                        <a class="pull-left" href="#">
-                                                            <img class="media-object" data-src="js/holder.js/64x64" />
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <h4 class="media-heading"><a href="#">Lorem ipsum </a><small class="helper-font-small">by john doe on 22 aug 2012, ip 192.168.56.7</small></h4>
-                                                            <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
-                                                            <div class="btn-group pull-right">
-                                                                <a href="#" class="btn btn-mini btn-success">Approve</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="tab-pane fade" id="approved-users">
-                                                    <div class="media">
-                                                        <a class="pull-left" href="#">
-                                                            <img class="media-object" data-src="js/holder.js/64x64" />
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <h4 class="media-heading"><a href="#">Lorem ipsum </a><small class="helper-font-small">by john doe on 22 aug 2012, ip 192.168.56.7</small></h4>
-                                                            <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
-                                                            <div class="btn-group pull-right">
-                                                                <a href="#" class="btn btn-mini btn-danger">Disapprove</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                
-                                                </div>
-                                            </div><!--/widgets-tab-body-->
-                                        </div><!--/box-body-->
-                                    </div><!--/box-tab-->
-                                </div><!-- tab resume update -->
-                                <div class="span6">
-                                    <div class="box corner-all">
-                                        <div class="box-header corner-top grd-white">
-                                            <div class="header-control">
-                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
-                                                <a data-box="close" data-hide="rotateOutDownRight">&times;</a>
-                                            </div>
-                                            <span><i class="icofont-envelope"></i> Quick Mail</span>
-                                        </div>
-                                        <div class="box-body">
-                                            <form />
-                                                <div class="control-group">
-                                                    <label class="control-label">To</label>
-                                                    <div class="controls">
-                                                        <input type="hidden" class="input-block-level" name="reseiver" value="johndoe@mail.com, janedoe@mail.com, johnsmith@mail.com, janesmith@mail.com" />
-                                                    </div>
-                                                </div>
-                                                <div class="control-group">
-                                                    <label class="control-label">Subject</label>
-                                                    <div class="controls">
-                                                        <input type="text" class="input-block-level grd-white" name="subject" />
-                                                    </div>
-                                                </div>
-                                                <div class="control-group">
-                                                    <label class="control-label">Message</label>
-                                                    <div class="controls">
-                                                        <textarea name="message" data-form="wysihtml5" rows="6" class="span11"></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="form-actions">
-                                                    <input type="reset" class="btn" value="Reset" />
-                                                    <input type="submit" class="btn btn-primary" value="Submit" />
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!-- tab stat -->
+                            </div>
                             <!--/dashboard-->
                         </div><!--/content-body -->
                     </div><!-- /content -->
@@ -324,8 +240,6 @@ require_once("../config.php");
                     $(v).addClass('btn-mini')
                 });
                 
-                // Server stat circular by knob
-                $("input[data-chart=knob]").knob();
                 
                 // system stat flot
                 d1 = [ ['jan', 231], ['feb', 243], ['mar', 323], ['apr', 352], ['maj', 354], ['jun', 467], ['jul', 429] ];
@@ -384,6 +298,214 @@ require_once("../config.php");
                 $.plot(visitor, data_visitor, options_lines);
                 $.plot(order, data_order, options_lines);
                 $.plot(user, data_user, options_lines);
+
+                var action = "getLastDataByIdCompany";
+
+                jQuery.ajax({
+                        url: "/ajax/actions.php",
+                        type: "POST",
+                        data: {action: action }
+                    }).done(function (resp) {
+                        var data = jQuery.parseJSON(resp);
+                        console.log(data);
+                        drawAccountStat(data);
+                    });
+
+                function drawAccountStat(data) {
+                    var umbattery_bars = $("#umobile-battery"),
+                    umbattery_data_bars = [],
+                    umbattery_ticks = [];
+
+                    var umsignal_bars = $("#umobile-signal"),
+                    umsignal_data_bars = [],
+                    umsignal_ticks = [];
+
+                    var umspeed_bars = $("#umobile-speed"),
+                    umspeed_data_bars = [],
+                    umspeed_ticks = [];
+
+                    for (var i = 0; i < data.users.length; i++) {
+                        umbattery_data_bars[i] = [(data.users[i].batterylevel*100).toFixed(2),i];
+                        umsignal_data_bars[i] = [(data.users[i].gsmstrength*100/31).toFixed(2),i];
+                        umspeed_data_bars[i] = [(data.users[i].speed* 3.6).toFixed(2),i];
+
+                        umbattery_ticks[i] = [i,data.users[i].name];
+                        umsignal_ticks[i] = [i,data.users[i].name];
+                        umspeed_ticks[i] = [i,data.users[i].name];
+                    }
+
+                    var umbattery_dataSet = [
+                        { label: "Battery", data: umbattery_data_bars, color: "#00a600" }
+                    ];
+                    var umsignal_dataSet = [
+                        { label: "Signal", data: umsignal_data_bars, color: "#00a0b1" }
+                    ];
+                    var umspeed_dataSet = [
+                        { label: "Speed", data: umspeed_data_bars, color: "#bf1e4b" }
+                    ];
+
+                    umbattery_options_bars = {
+                        series: {
+                            bars: {
+                                show: true
+                            }
+                        },
+                        bars: {
+                            align: "center",
+                            barWidth: 0.3,
+                            horizontal: true
+                        },
+                        yaxis: {       
+                            ticks: umbattery_ticks,
+                            tickLength: 0
+                        },
+                        legend: {
+                            show: false
+                        },
+                        grid: {
+                            backgroundColor: '#FFFFFF',
+                            borderWidth: 1,
+                            borderColor: '#D7D7D7',
+                            hoverable: true,
+                            clickable: true
+                        }
+                    };
+
+                    umsignal_options_bars = {
+                        series: {
+                            bars: {
+                                show: true
+                            }
+                        },
+                        bars: {
+                            align: "center",
+                            barWidth: 0.3,
+                            horizontal: true
+                        },
+                        yaxis: {       
+                            ticks: umsignal_ticks,
+                            tickLength: 0
+                        },
+                        legend: {
+                            show:false
+                        },
+                        grid: {
+                            backgroundColor: '#FFFFFF',
+                            borderWidth: 1,
+                            borderColor: '#D7D7D7',
+                            hoverable: true,
+                            clickable: true
+                        }
+                    };
+
+                    umspeed_options_bars = {
+                        series: {
+                            bars: {
+                                show: true
+                            }
+                        },
+                        bars: {
+                            align: "center",
+                            barWidth: 0.3,
+                            horizontal: true
+                        },
+                        yaxis: {       
+                            ticks: umspeed_ticks,
+                            tickLength: 0
+                        },
+                        legend: {
+                           show: false
+                        },
+                        grid: {
+                            backgroundColor: '#FFFFFF',
+                            borderWidth: 1,
+                            borderColor: '#D7D7D7',
+                            hoverable: true,
+                            clickable: true
+                        }
+                    };
+
+                    // rendering plot bars
+                    var umbattery_chart_bars = $.plot(umbattery_bars, umbattery_dataSet, umbattery_options_bars);
+                    var umbattery_chart_bars = $.plot(umsignal_bars, umsignal_dataSet, umsignal_options_bars);
+                    var umbattery_chart_bars = $.plot(umspeed_bars, umspeed_dataSet, umspeed_options_bars);
+                }
+
+                // variable pie
+                var pie1 = $("#chart-pie1"),
+                pie2 = $("#chart-pie2"),
+                pie3 = $("#chart-pie3"),
+                data_pie = [],
+                series = Math.floor(Math.random()*6)+3;
+                for( var i = 0; i<series; i++){
+                        data_pie[i] = { label: "Series"+(i+1), data: Math.floor(Math.random()*100)+1 }
+                }
+                options_pie1 = {
+                    series: {
+                        pie: { 
+                            show: true
+                        }
+                    },
+                    grid: {
+                        backgroundColor: '#FFFFFF',
+                        borderWidth: 1,
+                        borderColor: '#D7D7D7',
+                        hoverable: true,
+                        clickable: true
+                    }
+                };
+                options_pie2 = {
+                    series: {
+                        pie: { 
+                            show: true
+                        }
+                    },
+                    grid: {
+                        backgroundColor: '#FFFFFF',
+                        borderWidth: 1,
+                        borderColor: '#D7D7D7',
+                        hoverable: true,
+                        clickable: true
+                    },
+                    legend: {
+                        show: false
+                    }
+                };
+                options_pie3 = {
+                    series: {
+                        pie: {
+                            show: true,
+                            radius: 1,
+                            tilt: 0.5,
+                            label: {
+                                show: true,
+                                radius: 1,
+                                formatter: function(label, series){
+                                    return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+                                },
+                                background: { opacity: 0.8 }
+                            },
+                            combine: {
+                                color: '#999',
+                                threshold: 0.1
+                            }
+                        }
+                    },
+                    grid: {
+                        backgroundColor: '#FFFFFF',
+                        borderWidth: 1,
+                        borderColor: '#D7D7D7',
+                        hoverable: true,
+                        clickable: true
+                    },
+                    legend: {
+                        show: false
+                    }
+                };
+                // rendering plot pie
+                $.plot(pie1, data_pie, options_pie1);
+                $.plot(pie2, data_pie, options_pie2);
+                $.plot(pie3, data_pie, options_pie3);
                 
                 // tootips chart
                 function showTooltip(x, y, contents) {

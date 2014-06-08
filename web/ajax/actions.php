@@ -43,6 +43,9 @@ switch ($_POST['action']) {
     case 'getRouteByIdDt':
         getRouteByIdDt($id,$dt);
         break;
+    case 'getLastDataByIdCompany':
+        getLastDataByIdCompany($company->id);
+        break;
 	default:
         # code...
         break;
@@ -375,7 +378,13 @@ function getRouteByIdDt($id,$dt){
     echo json_encode($data);
 }
 
-
+function getLastDataByIdCompany($fk_company){
+    
+    $data = array();
+    $dashboard = new dashboard();
+    $data['users'] = $dashboard->getLastData($fk_company);
+    echo json_encode($data);
+}
 
 
 
