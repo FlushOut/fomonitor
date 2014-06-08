@@ -406,15 +406,15 @@ function showStaysByDate($fk_company,$dtStart,$dtEnd){
     $html.= '       </tr>';
     $html.= '   </thead>';
     $html.= '   <tbody>';
+                foreach($list_stays as $value){
     $html.= '       <tr src="stays">';
-                foreach($list_stays as $value){                            
     $html.= '           <td>'.$value->user.'</td>';
     $html.= '           <td>'.$value->point.'</td>';
     $html.= '           <td>'.$value->date_in.'</td>';
     $html.= '           <td>'.$value->date_out.'</td>';
     $html.= '           <td>'.$value->time_permanence.'</td>';
-                }
     $html.= '       </tr>';
+                }
     $html.= '   </tbody>';
     $html.= '</table>';
 
