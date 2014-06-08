@@ -1,6 +1,16 @@
 <?php
 require_once("../config.php");
 
+$date_ini = isset($_POST['date_ini']) ? $_POST['date_ini'] : date('d/m/Y');
+$date_end = isset($_POST['date_end']) ? $_POST['date_end'] : date('d/m/Y');
+
+if(!empty($data_ini) && !empty($data_end)){
+    $date_ini_formatada = implode('-', array_reverse(explode('/', $date_ini))).' 00:00:00';
+    $date_end_formatada = implode('-', array_reverse(explode('/', $date_end))).' 23:59:59';
+
+    $stay = new stay();
+    $list_stays = $stay->getByDate($company->id,$date_ini_formatada,$date_end_formatada);
+
 ?>
 
 <!DOCTYPE html>

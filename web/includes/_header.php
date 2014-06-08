@@ -3,9 +3,7 @@
 $company->open($company->id);
 
 if ($_POST['action'] == 'SaveCompany') {
-    echo "SaveCompany";
      if (isset($_POST['txtCompanyName'])){
-        echo "txtCompanyName";
         $company->save($_POST['txtCompanyName'], $_FILES["txtCompanyLogo"]["tmp_name"],$_FILES["txtCompanyLogo"]["type"],$_POST['txtCompanyGps_time'], $_POST['txtCompanyGps_distance'], $_POST['txtCompanyInactive_time'], $_POST['txtCompanyIdle_time']);
         $company->open($company->id);
     }
