@@ -281,9 +281,10 @@ $list_points = $point->list_points($company->id);
                             placeholder: "Select users...",
                             formatResult: format,
                             initSelection : function (element, callback) {
-                                callback(data.mobiles);
+                                callback(data.mobile);
                             }
                         }).select2('val', data.mobile.id);
+
                         $('#dvFrom').data({date: dtMobile}).datepicker('update').children("input").val(dtMobile);
                         $('#dvTo').data({date: dtMobile}).datepicker('update').children("input").val(dtMobile);
 
