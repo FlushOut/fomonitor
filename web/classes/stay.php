@@ -53,7 +53,7 @@ class stay
     }
 
     function getByDate($fk_company,$dtIni,$dtEnd){
-        $query = $this->con->genericQuery("select * from stay_point where fk_company = {$fk_company} and ('$dtIni' >= date_in and date_out <= '$dtEnd' order by date_time");
+        $query = $this->con->genericQuery("select * from stay_point where fk_company = {$fk_company} and (date_in between STR_TO_DATE('".$dtIni."','%d-%m-%Y') and STR_TO_DATE('".$dtEnd."','%d-%m-%Y')) order by date_in");
 
         $objReturn = array();
 

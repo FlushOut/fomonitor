@@ -246,6 +246,7 @@ if ($_POST['action'] == 'SaveApps') {
                                                             <td>
                                                             <input name="hdId" type="hidden" value="<?php echo $item->id; ?>"/>
                                                             <input name="hdName" type="hidden" value="<?php echo $item->name; ?>"/>
+                                                            <input name="hdEmail" type="hidden" value="<?php echo $item->email; ?>"/>
                                                             <input name="hdBatLev" type="hidden" value="<?php echo number_format(($item->batterylevel * 100), 1, ",", ""); ?>"/>
                                                             <input name="hdGsmStr" type="hidden" value="<?php echo $item->gsm_strength_param; ?>"/>
                                                             <input name="hdAcc" type="hidden" value="<?php echo number_format($item->accuracy, 2, ",", ""); ?>"/>
@@ -446,6 +447,7 @@ if ($_POST['action'] == 'SaveApps') {
                 $('a#aUnlock').bind('click',function(){
                     jQuery(this).parents('tr').map(function () {
                         var id = jQuery('input[name="hdId"]', this).val();
+                        var email = jQuery('input[name="hdEmail"]', this).val();
                         var action = "getUnlockCode";
 
                         $("#hdIdUnl").val(id);
@@ -453,7 +455,7 @@ if ($_POST['action'] == 'SaveApps') {
                         jQuery.ajax({
                             url: "/ajax/actions.php",
                             type: "POST",
-                            data: {id: id, action: action }
+                            data: {data: email, action: action }
                         }).done(function (resp) {
                             $("#UnlockControl").html(resp);
                             });

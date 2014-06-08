@@ -1,16 +1,6 @@
 <?php
 require_once("../config.php");
 
-$date_ini = isset($_POST['date_ini']) ? $_POST['date_ini'] : date('d/m/Y');
-$date_end = isset($_POST['date_end']) ? $_POST['date_end'] : date('d/m/Y');
-
-if(!empty($data_ini) && !empty($data_end)){
-    $date_ini_formatada = implode('-', array_reverse(explode('/', $date_ini))).' 00:00:00';
-    $date_end_formatada = implode('-', array_reverse(explode('/', $date_end))).' 23:59:59';
-
-    $stay = new stay();
-    $list_stays = $stay->getByDate($company->id,$date_ini_formatada,$date_end_formatada);
-
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +26,8 @@ if(!empty($data_ini) && !empty($data_end)){
         <link href="../css/animate.css" rel="stylesheet" />
         <link href="../css/uniform.default.css" rel="stylesheet" />
         
+        <link href="../css/datepicker.css" rel="stylesheet" />
+
         <link href="../css/DT_bootstrap.css" rel="stylesheet" />
         <link href="../css/responsive-tables.css" rel="stylesheet" />
         
@@ -94,6 +86,20 @@ if(!empty($data_ini) && !empty($data_end)){
                                             <span>Stays</span>
                                         </div>
                                         <div class="box-body">
+                                            <div class="controls form-inline">
+                                                From &nbsp;
+                                                <div id="dvFrom" name ="dvFrom" class="input-append date" data-form="datepicker" data-date-format="dd-mm-yyyy" style="width:150px">
+                                                    <input id="inFrom" name ="inFrom" class="grd-white" data-form="datepicker" size="16" type="text" style="width:100px"/>
+                                                    <span class="add-on"><i class="icon-th"></i></span>
+                                                </div>
+                                                To &nbsp;
+                                                <div id="dvTo" name="dvTo" class="input-append date" data-form="datepicker" data-date-format="dd-mm-yyyy" style="width:150px">
+                                                    <input id="inTo" name="inTo" class="grd-white" data-form="datepicker" size="16" type="text" style="width:100px"/>
+                                                    <span class="add-on"><i class="icon-th"></i></span>
+                                                </div>
+                                                &nbsp;&nbsp;
+                                                <button type="button" class="btn btn-primary" id="bntShow">Show</button>
+                                            </div><br>
                                             <table id="datatables" class="table table-bordered table-striped responsive">
                                                 <thead>
                                                     <tr>
@@ -143,6 +149,8 @@ if(!empty($data_ini) && !empty($data_end)){
 
         <script src="../js/validate/jquery.validate.js"></script>
         <script src="../js/validate/jquery.metadata.js"></script>
+
+        <script src="../js/datepicker/bootstrap-datepicker.js"></script>
         
         <script src="../js/datatables/jquery.dataTables.min.js"></script>
         <script src="../js/datatables/extras/ZeroClipboard.js"></script>
@@ -162,6 +170,9 @@ if(!empty($data_ini) && !empty($data_end)){
                 
                 // uniform
                 $('[data-form=uniform]').uniform();
+
+                // datepicker
+                $('[data-form=datepicker]').datepicker({format:'dd-mm-yyyy'});
                 
                 // datatables
                 $('#datatables').dataTable( {
@@ -196,6 +207,32 @@ if(!empty($data_ini) && !empty($data_end)){
                         "sSwfPath": "../js/datatables/swf/copy_csv_xls_pdf.swf"
                     }
                 });
+
+                var d = new Date();
+                var year = d.getFullYear();
+                var month = d.getMonth()+1;
+                var day = d.getDate();
+                var startDate = ((''+day).length<2 ? '0' : '') + day +'-'+ 
+                                ((''+month).length<2 ? '0' : '') + month +'-'+  
+                                year; 
+
+                $('#dvFrom').data({date: startDate}).datepicker('update').children("input").val(startDate);
+                $('#dvTo').data({date: startDate}).datepicker('update').children("input").val(startDate);
+
+                $("#bntShow").click(function(){
+                    var dtStart = $("#dvFrom").find("input").val();
+                    var dtEnd = $("#dvTo").find("input").val();
+                    var action = "showStaysByDate";
+
+                    jQuery.ajax({
+                        url: "/ajax/actions.php",
+                        type: "POST",
+                        data: {dtStart: dtStart, dtEnd: dtEnd, action: action}
+                    }).done(function (resp) {
+                        $("#datatables").html(resp);
+                    });
+                });
+
             });
       
         </script>

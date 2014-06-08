@@ -8,6 +8,7 @@ if (isset($_POST['dtEnd'])) $dtEnd = $_POST['dtEnd'];
 if (isset($_POST['dt'])) $dt = $_POST['dt'];
 if (isset($_POST['idletime'])) $idletime = $_POST['idletime'];
 if (isset($_POST['inactivetime'])) $inactivetime = $_POST['inactivetime'];
+if (isset($_POST['data'])) $data = $_POST['data'];
 
 switch ($_POST['action']) {
 	case 'getProfiles':
@@ -38,7 +39,7 @@ switch ($_POST['action']) {
         showRoutesPointsInMap($idUsers,$idPoints,$dtStart,$dtEnd);
         break;
     case 'getUnlockCode':
-        getUnlockCode($id);
+        getUnlockCode($data);
         break;
     case 'getRouteByIdDt':
         getRouteByIdDt($id,$dt);
@@ -46,6 +47,10 @@ switch ($_POST['action']) {
     case 'getLastDataByIdCompany':
         getLastDataByIdCompany($company->id);
         break;
+    case 'showStaysByDate':
+        showStaysByDate($company->id,$dtStart,$dtEnd);
+        break;
+        
 	default:
         # code...
         break;
@@ -219,12 +224,12 @@ function getDetails($id){
         echo $html;
 }
 
-function getUnlockCode($id){
+function getUnlockCode($email){
         $mobile = new mobile();
         $html = "";
         $html.= '<div class="control-group">';
         $html.= '<label class="control-label"><b>Unlock Code :<b> </label>';
-        $html.= '<label class="control-label">'.$mobile->getUnlockCode($id).'</label>';
+        $html.= '<label class="control-label">'.$mobile->getUnlockCode($email).'</label>';
         $html.= '</div>';
         
         echo $html;
@@ -386,6 +391,36 @@ function getLastDataByIdCompany($fk_company){
     echo json_encode($data);
 }
 
+function showStaysByDate($fk_company,$dtStart,$dtEnd){
+
+    $stay = new stay();
+    $list_stays = $stay->getByDate($fk_company,$dtStart,$dtEnd);
+    $html.= '<table id="datatables" class="table table-bordered table-striped responsive">';
+    $html.= '   <thead>';
+    $html.= '       <tr>';
+    $html.= '           <th class="head0">User</th>';
+    $html.= '           <th class="head1">Point</th>';
+    $html.= '           <th class="head0">Date In</th>';
+    $html.= '           <th class="head0">Date Out</th>';
+    $html.= '           <th class="head0">Time Stay</th>';
+    $html.= '       </tr>';
+    $html.= '   </thead>';
+    $html.= '   <tbody>';
+    $html.= '       <tr src="stays">';
+                foreach($list_stays as $value){                            
+    $html.= '           <td>'.$value->user.'</td>';
+    $html.= '           <td>'.$value->point.'</td>';
+    $html.= '           <td>'.$value->date_in.'</td>';
+    $html.= '           <td>'.$value->date_out.'</td>';
+    $html.= '           <td>'.$value->time_permanence.'</td>';
+                }
+    $html.= '       </tr>';
+    $html.= '   </tbody>';
+    $html.= '</table>';
+
+    echo $html;
+                
+}
 
 
 

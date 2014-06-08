@@ -87,6 +87,7 @@ class mobile
             SELECT
                 `ultima_pos`.`idMobil`,
                 `ultima_pos`.`name`,
+                `ultima_pos`.`email`,
                 `mobile_data`.`latitude`,
                 `mobile_data`.`longitude`,
                 `mobile_data`.`batterylevel`,
@@ -100,7 +101,8 @@ class mobile
                         STRAIGHT_JOIN Max(`mobile_data`.`id`) AS `id`,
                         Max(`mobile_data`.`date`) AS `date`,
                         `mobiles`.`id` AS `idMobil`,
-                        `mobiles`.`name`
+                        `mobiles`.`name`,
+                        `mobiles`.`email`
                     FROM
                         `mobiles`
                             INNER JOIN
@@ -130,6 +132,7 @@ class mobile
                 $md = new mobile_dataL;
                 $md->id = $value['idMobil'];
                 $md->name = $value['name'];
+                $md->email = $value['email'];
                 $md->latitude = $value['latitude'];
                 $md->longitude = $value['longitude'];
                 $md->batterylevel = $value['batterylevel'];
@@ -399,14 +402,17 @@ class mobile
         return "$d/$m/$Y at $G:$i:$s";
     }
 
-    function getUnlockCode($id)
+    function getUnlockCode($email)
     {
         $div = substr($id, 12, 3);
         $current_date = date("Hi");
 
         $hour = substr($current_date, 0, 2);
         $min = substr($current_date, 2, 4);
-        $code = substr($min, 0, 1) . substr($hour, 1, 2) . substr($min, 1, 2) . substr($hour, 0, 1);
+
+        $email_lenght = (strlen($email)<2 ? '0' : '') + strlen($email);
+
+        $code = substr($email_lenght, 0, 1) . substr($min, 0, 1) . substr($hour, 1, 2) . substr($min, 1, 2) . substr($hour, 0, 1). substr($email_lenght, 1, 2);
 
         return $code;
     }

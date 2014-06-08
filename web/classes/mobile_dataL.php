@@ -13,6 +13,7 @@ class mobile_dataL
 
     public $id = 0;
     public $name;
+    public $email;
     public $date;
     public $phonenumber;
     public $latitude;
