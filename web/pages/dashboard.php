@@ -1,6 +1,11 @@
 <?php
 require_once("../config.php");
 
+$dashboard = new dashboard();
+$model = $dashboard->get_model_count($company->id);
+$manufacturer = $dashboard->get_manufacturer_count($company->id);
+$category = $dashboard->get_category_count($company->id);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +36,11 @@ require_once("../config.php");
 
         <script src="../js/jquery.js"></script>
         <script src="../js/jquery-ui.min.js"></script>
+        <script type="text/javascript">
+        var model = <?php echo json_encode($model); ?>;
+        var manufacturer = <?php echo json_encode($manufacturer); ?>;
+        var category = <?php echo json_encode($category); ?>;
+        </script>
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -151,14 +161,17 @@ require_once("../config.php");
                                         </div>
                                         <div class="box-body">
                                             <div class="row-fluid">
-                                               <div class="span4">
-                                                    <div id="chart-pie1" class="chart" style="width: 200px;"></div>
+                                                <div class="span4">
+                                                    <h3>Models</h3>
+                                                    <div id="chart-models" class="chart" style="width: 350px;"></div>
                                                 </div>
                                                 <div class="span4">
-                                                    <div id="chart-pie2" class="chart" style="width: 200px;"></div>
+                                                    <h3>Brands</h3>
+                                                    <div id="chart-brands" class="chart" style="width: 350px;"></div>
                                                 </div>
                                                 <div class="span4">
-                                                    <div id="chart-pie3" class="chart" style="width: 200px;"></div>
+                                                    <h3>Categories</h3>
+                                                    <div id="chart-categories" class="chart" style="width: 350px;"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -431,47 +444,16 @@ require_once("../config.php");
                     var umbattery_chart_bars = $.plot(umspeed_bars, umspeed_dataSet, umspeed_options_bars);
                 }
 
-                // variable pie
-                var pie1 = $("#chart-pie1"),
-                pie2 = $("#chart-pie2"),
-                pie3 = $("#chart-pie3"),
-                data_pie = [],
-                series = Math.floor(Math.random()*6)+3;
-                for( var i = 0; i<series; i++){
-                        data_pie[i] = { label: "Series"+(i+1), data: Math.floor(Math.random()*100)+1 }
-                }
-                options_pie1 = {
-                    series: {
-                        pie: { 
-                            show: true
-                        }
-                    },
-                    grid: {
-                        backgroundColor: '#FFFFFF',
-                        borderWidth: 1,
-                        borderColor: '#D7D7D7',
-                        hoverable: true,
-                        clickable: true
-                    }
-                };
-                options_pie2 = {
-                    series: {
-                        pie: { 
-                            show: true
-                        }
-                    },
-                    grid: {
-                        backgroundColor: '#FFFFFF',
-                        borderWidth: 1,
-                        borderColor: '#D7D7D7',
-                        hoverable: true,
-                        clickable: true
-                    },
-                    legend: {
-                        show: false
-                    }
-                };
-                options_pie3 = {
+                /**PIE CHART Model**/
+                var data = [];
+                //var colors = [];
+                jQuery(model).each(function(i, val){
+                    data[i] = { label: val.model, data: Math.floor(val.qntd) };
+                    //colors[i] = get_random_color();
+                });
+
+                jQuery.plot(jQuery("#chart-models"), data, {
+                    //colors: colors,
                     series: {
                         pie: {
                             show: true,
@@ -480,7 +462,8 @@ require_once("../config.php");
                             label: {
                                 show: true,
                                 radius: 1,
-                                formatter: function(label, series){
+                                tilt: 0.5,
+                                formatter: function (label, series) {
                                     return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
                                 },
                                 background: { opacity: 0.8 }
@@ -489,23 +472,105 @@ require_once("../config.php");
                                 color: '#999',
                                 threshold: 0.1
                             }
+                        },
+                        grid: {
+                            backgroundColor: '#FFFFFF',
+                            borderWidth: 1,
+                            borderColor: '#D7D7D7',
+                            hoverable: true,
+                            clickable: true
+                        },
+                        legend: {
+                            show: false
                         }
-                    },
-                    grid: {
-                        backgroundColor: '#FFFFFF',
-                        borderWidth: 1,
-                        borderColor: '#D7D7D7',
-                        hoverable: true,
-                        clickable: true
-                    },
-                    legend: {
-                        show: false
                     }
-                };
-                // rendering plot pie
-                $.plot(pie1, data_pie, options_pie1);
-                $.plot(pie2, data_pie, options_pie2);
-                $.plot(pie3, data_pie, options_pie3);
+                });
+
+                /**PIE CHART Brands**/
+                var data = [];
+                //var colors = [];
+                jQuery(manufacturer).each(function(i, val){
+                    data[i] = { label: val.manufacturer, data: Math.floor(val.qntd) };
+                    //colors[i] = get_random_color();
+                });
+
+                jQuery.plot(jQuery("#chart-brands"), data, {
+                    //colors: colors,
+                    series: {
+                        pie: {
+                            show: true,
+                            radius: 1,
+                            tilt: 0.5,
+                            label: {
+                                show: true,
+                                radius: 1,
+                                tilt: 0.5,
+                                formatter: function (label, series) {
+                                    return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+                                },
+                                background: { opacity: 0.8 }
+                            },
+                            combine: {
+                                color: '#999',
+                                threshold: 0.1
+                            }
+                        },
+                        grid: {
+                            backgroundColor: '#FFFFFF',
+                            borderWidth: 1,
+                            borderColor: '#D7D7D7',
+                            hoverable: true,
+                            clickable: true
+                        },
+                        legend: {
+                            show: false
+                        }
+                    }
+                });
+
+                /**PIE CHART Categories**/
+                var data = [];
+                //var colors = [];
+                jQuery(category).each(function(i, val){
+                    data[i] = { label: val.category, data: Math.floor(val.qntd) };
+                    //colors[i] = get_random_color();
+                });
+
+                jQuery.plot(jQuery("#chart-categories"), data, {
+                    //colors: colors,
+                    series: {
+                        pie: {
+                            show: true,
+                            radius: 1,
+                            tilt: 0.5,
+                            label: {
+                                show: true,
+                                radius: 1,
+                                tilt: 0.5,
+                                formatter: function (label, series) {
+                                    return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+                                },
+                                background: { opacity: 0.8 }
+                            },
+                            combine: {
+                                color: '#999',
+                                threshold: 0.1
+                            }
+                        },
+                        grid: {
+                            backgroundColor: '#FFFFFF',
+                            borderWidth: 1,
+                            borderColor: '#D7D7D7',
+                            hoverable: true,
+                            clickable: true
+                        },
+                        legend: {
+                            show: false
+                        }
+                    }
+                });
+
+
                 
                 // tootips chart
                 function showTooltip(x, y, contents) {

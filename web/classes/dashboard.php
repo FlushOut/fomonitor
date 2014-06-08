@@ -94,5 +94,81 @@ class dashboard
         return "$d/$m/$Y at $G:$i:$s";
     }
 
+    function get_manufacturer_count($fk_company){
+        $query = $this->con->genericQuery(
+        "
+            SELECT
+                manufacturer,
+                COUNT(*) AS 'qntd'
+            FROM
+                mobiles
+            WHERE
+                fk_company = {$fk_company}
+
+            GROUP BY
+                manufacturer
+        "
+        );
+
+        return $query;
+    }
+
+    function get_model_count($fk_company){
+        $query = $this->con->genericQuery(
+            "
+            SELECT
+                model,
+                COUNT(*) AS 'qntd'
+            FROM
+                mobiles
+            WHERE
+                fk_company = {$fk_company}
+            GROUP BY
+                model
+        "
+        );
+
+        return $query;
+    }
+
+    function get_category_count($fk_company){
+        $query = $this->con->genericQuery(
+
+            "
+            SELECT
+               categories.description AS category,
+               COUNT(*) AS qntd
+            FROM
+               mobiles
+               INNER JOIN categories ON mobiles.fk_category = categories.id
+            WHERE
+               mobiles.fk_company = {$fk_company}
+            GROUP BY categories.description"
+        );
+
+        return $query;
+    }
+
+    function get_status_count($fk_company){
+        $query = $this->con->genericQuery(
+
+            "
+            SELECT
+               CASE fk_status when 1 then 'In use'
+                      when 2 then 'Idle'
+                      when 3 then 'Broken'
+                      when 4 then 'Stolen'
+                      ELSE 'Lost' END,
+               COUNT(*) AS qntd
+            FROM
+               mobiles
+            WHERE
+               mobiles.fk_company = {$fk_company}
+            GROUP BY fk_status"
+        );
+
+        return $query;
+    }
+
 }
 
