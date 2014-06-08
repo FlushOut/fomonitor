@@ -50,7 +50,6 @@ class company
 
     function save($name, $foto, $type, $gps_time, $gps_distance, $inactive_time, $idle_time)
     {
-        echo "save";
         $pont = fopen($foto, "rb");
         $fotoFinal = fread($pont,filesize($foto));
         fclose($pont);
