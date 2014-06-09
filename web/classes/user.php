@@ -85,13 +85,14 @@ class user
 
     function save($fk_company, $name, $email,$password)
     {
+        $now = new DateTime();
         $dados["fk_company"] = $fk_company;
         $dados["name"] = addslashes($name);
         $dados["email"] = addslashes($email);
         $dados["password"] = md5($password);
+        $dados["create_date"] = addslashes($now->format('Y-m-d H:i:s'));
         $dados["status"] = 1;
 
-       
         if ($this->id > 0) {
             $dados["id"] = $this->id;
             return $this->con->update($this->table,$dados);
@@ -142,6 +143,23 @@ class user
     function list_profiles()
     {
         return $query = $this->con->genericQuery("select * from profiles where status = 1");        
+    }
+
+    function createAdmin($fk_company, $name, $email,$password)
+    {
+        $now = new DateTime();
+        $dados["fk_company"] = $fk_company;
+        $dados["name"] = addslashes($name);
+        $dados["email"] = addslashes($email);
+        $dados["password"] = md5($password);
+        $dados["create_date"] = addslashes($now->format('Y-m-d H:i:s'));
+        $dados["status"] = 1;
+
+        $idUser = $this->con->insert($this->table,$dados);
+        $admin = array(1); 
+        $this->saveProfiles($idUser,$admin);
+
+        return $idUser;
     }
 
 }

@@ -85,16 +85,20 @@ class DataBase extends PDO{
             $fieldsSQL[] = $field;
             $valuesSQL[] = $value;
         }
+
         $array = array_combine($fieldsSQL,$valuesSQL);
         $key = implode(',', array_keys($array));
         $val = ':' . str_replace(',', ',:', $key);
         $insert = $this->connect()->prepare("INSERT INTO {$table} ({$key}) VALUES({$val})");
         $insert->execute($array);
+        
+        return $this->db->lastInsertId();   
 
         self::__destruct();
         if($insert->rowCount() == 0){
             return 0;
         }
+        
     }
 
     public function update($table,$values)

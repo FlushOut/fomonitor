@@ -69,7 +69,19 @@ class company
         } else {
             return $this->con->insert($this->table,$dados);
         }
-        
+    }
+
+    function create($name, $fk_country)
+    {
+        $dados["fk_country"] = $fk_country;
+        $dados["name"] = $name;
+        $dados["gps_time"] = 5;
+        $dados["gps_distance"] = 20;
+        $dados["idle_time"] = 10;
+        $dados["inactive_time"] = 20;
+        $dados["status"] = 1;
+
+        return $this->con->insert($this->table,$dados);
     }
 
 }

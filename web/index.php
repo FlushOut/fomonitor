@@ -4,6 +4,9 @@
 
 if (isset($_SESSION['loginsession'])) redirect("/pages/menu.php");
 
+$country = new country();
+$list_countries = $country->list_countries();
+
 $error = false;
 if (isset($_POST['login_username'])) {
     $user = new user();
@@ -18,6 +21,25 @@ if (isset($_POST['login_username'])) {
         $error = true;
     }
 }
+
+if (isset($_POST['name'])) {
+    $company = new company();
+    $idCompany = $company->create($_POST['company'], $_POST['country']);
+    echo "$idCompany" . $idCompany;
+    if ($idCompany) {
+        $user = new user();
+        $idUser = $user->createAdmin($idCompany,$_POST['name'], $_POST['email'], $_POST['password']);
+        if($idUser){
+            $user->sendCode($_POST['email']);
+            redirect("/pages/verifyemail.php?user=".$idUser);    
+        }else{
+            $error = true;    
+        }        
+    }else{
+        $error = true;
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,6 +65,9 @@ if (isset($_POST['login_username'])) {
         <link href="css/pricing-table.css" rel="stylesheet" />
         <link href="css/uniform.default.css" rel="stylesheet" />
         
+        <link href="css/select2.css" rel="stylesheet" />
+        <link href="css/bootstrap-wysihtml5.css" rel="stylesheet" />
+
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -81,7 +106,7 @@ if (isset($_POST['login_username'])) {
                                     <div class="control-group">
                                         <label class="control-label">Email</label>
                                         <div class="controls">
-                                            <input type="text" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field username'}}" name="login_username" id="login_username" autocomplete="on" />
+                                            <input type="text" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field email'}}" name="login_username" id="login_username" autocomplete="on" />
                                         </div>
                                     </div>
                                     <div class="control-group">
@@ -114,9 +139,19 @@ if (isset($_POST['login_username'])) {
                             <div class="box-body bg-white">
                                 <form id="sign-up" method="post" />
                                     <div class="control-group">
+                                        <label class="control-label" for="inputSelect">Country</label>
+                                        <div class="controls">
+                                            <select id="country" name="country" data-form="select2" style="width:200px" data-placeholder="Select your country">
+                                             <?php   foreach($list_countries as $item){ ?>
+                                                        <option value="<?php echo $item->id; ?>"><?php echo $item->name; ?></option>            
+                                                <?php  } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
                                         <label class="control-label">Name</label>
                                         <div class="controls">
-                                            <input type="text" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field username'}}" name="username" id="username" autocomplete="off" />
+                                            <input type="text" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field name'}}" name="name" id="name" autocomplete="off" />
                                             <p class="help-block muted helper-font-small">May contain letters, digits, dashes and underscores, and should be between 2 and 20 characters long.</p>
                                         </div>
                                     </div>
@@ -125,6 +160,13 @@ if (isset($_POST['login_username'])) {
                                         <div class="controls">
                                             <input type="text" class="input-block-level" data-validate="{required: true, email:true, messages:{required:'Please enter field email', email:'Please enter a valid email address'}}" name="email" id="email" autocomplete="off" />
                                             <p class="help-block muted helper-font-small"><strong>Type carefully.</strong> You will be sent a confirmation email.</p>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label">Company</label>
+                                        <div class="controls">
+                                            <input type="text" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field company'}}" name="company" id="company" autocomplete="off" />
+                                            <p class="help-block muted helper-font-small">May contain letters, digits, dashes and underscores, and should be between 2 and 20 characters long.</p>
                                         </div>
                                     </div>
                                     <div class="control-group">
@@ -221,6 +263,7 @@ if (isset($_POST['login_username'])) {
         <script src="js/bootstrap.js"></script>
         <script src="js/pricing-table/prefixfree.js"></script>
         <script src="js/uniform/jquery.uniform.js"></script>
+        <script src="js/select2/select2.js"></script>
         
         <script src="js/validate/jquery.metadata.js"></script>
         <script src="js/validate/jquery.validate.js"></script>
@@ -237,6 +280,10 @@ if (isset($_POST['login_username'])) {
                 
                 // uniform
                 $('[data-form=uniform]').uniform();
+
+                 // select2
+                $('[data-form=select2]').select2();
+
                 
                 // validate
                 $('#sign-in').validate();
