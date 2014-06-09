@@ -1,10 +1,8 @@
-<?php
+<?php require_once("autoload2.php");
 
-$error = false;
 
 if (isset($_GET['user'])) {
     $user = $_GET['user'];
-    echo $user;
 }
 
 ?>
@@ -12,7 +10,7 @@ if (isset($_GET['user'])) {
 <html lang="en">
     <head>  
         <meta charset="utf-8" />
-        <title>Verify your Email</title>
+        <title>Verify your Email | FOMonitor</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="" />
         <meta name="author" content="stilearning" />
@@ -59,10 +57,43 @@ if (isset($_GET['user'])) {
         <section class="section">
             <div class="container">
                 <div class="signin-form row-fluid">
-                    
+                    <!--Sign In-->
+                    <div class="span5 offset1">
+                        <div class="box corner-all">
+                            <div class="box-header grd-teal color-white corner-top">
+                                <span>Sign in:</span>
+                            </div>
+                            <div class="box-body bg-white">
+                                <form id="sign-in" method="post" />
+                                    <div class="control-group">
+                                        <label class="control-label">Email</label>
+                                        <div class="controls">
+                                            <input type="text" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field email'}}" name="login_username" id="login_username" autocomplete="on" />
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label">Password</label>
+                                        <div class="controls">
+                                            <input type="password" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field password'}}" name="login_password" id="login_password" autocomplete="off" />
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        
+                                        <label class="checkbox">
+                                            <input type="checkbox" data-form="uniform" name="remember_me" id="remember_me_yes" value="yes" /> Remember me
+                                        </label>
+                                        <p class="recover-account">Not have an account yet? <a href="#modal-pricing" class="link" data-toggle="modal">See our plan!</a></p>
+                                    </div>
+                                    <div class="form-actions">
+                                        <input type="submit" class="btn btn-block btn-large btn-primary" value="Sign into account" />
+                                        <p class="recover-account">Recover your <a href="#modal-recover" class="link" data-toggle="modal">password</a></p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div><!--/Sign In-->
                 </div><!-- /row -->
             </div><!-- /container -->
-        </section>
 
         <!-- javascript
         ================================================== -->

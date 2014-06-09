@@ -11,7 +11,7 @@ $category = $dashboard->get_category_count($company->id);
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Dashboard - Stilearn Admin Bootstrap</title>
+        <title>Dashboard | FOMonitor</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="" />
         <meta name="author" content="stilearning" />

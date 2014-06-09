@@ -13,7 +13,7 @@ $list_points = $point->list_points($company->id);
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Tables - Stilearn Admin Bootstrap</title>
+        <title>Map | FOMonitor</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="" />
         <meta name="author" content="stilearning" />

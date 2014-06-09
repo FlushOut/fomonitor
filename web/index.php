@@ -45,7 +45,7 @@ if (isset($_POST['name'])) {
 <html lang="en">
     <head>  
         <meta charset="utf-8" />
-        <title>Logn In - Stilearn Admin Bootstrap</title>
+        <title>Logn In | FOMonitor</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="" />
         <meta name="author" content="stilearning" />
