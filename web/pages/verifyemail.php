@@ -1,8 +1,22 @@
-<?php require_once("autoload2.php");
+<?php require_once("../autoload2.php");
 
 
 if (isset($_GET['user'])) {
     $user = $_GET['user'];
+}
+
+if (isset($_POST['code'])) {
+    $user = new user();
+    if($user){
+        $email = $user->verifyEmail($user, ($_POST['code']);    
+    }
+    if ($email) {
+        $_SESSION['emailsession'] = $email;
+        $_SESSION['loginsession'] = $user;
+        redirect("/pages/menu.php");
+    } else {
+        $error = true;
+    }
 }
 
 ?>
@@ -58,35 +72,24 @@ if (isset($_GET['user'])) {
             <div class="container">
                 <div class="signin-form row-fluid">
                     <!--Sign In-->
-                    <div class="span5 offset1">
+                    <div class="span4 offset4">
                         <div class="box corner-all">
                             <div class="box-header grd-teal color-white corner-top">
-                                <span>Sign in:</span>
+                                <span>Insert your confirmation code:</span>
                             </div>
                             <div class="box-body bg-white">
-                                <form id="sign-in" method="post" />
+                                <form id="confirmation-code" method="post">
                                     <div class="control-group">
-                                        <label class="control-label">Email</label>
+                                        <label class="control-label">Code:</label>
                                         <div class="controls">
-                                            <input type="text" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field email'}}" name="login_username" id="login_username" autocomplete="on" />
+                                            <input type="text" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field code'}}" name="code" id="code" autocomplete="on" />
                                         </div>
                                     </div>
                                     <div class="control-group">
-                                        <label class="control-label">Password</label>
-                                        <div class="controls">
-                                            <input type="password" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field password'}}" name="login_password" id="login_password" autocomplete="off" />
-                                        </div>
-                                    </div>
-                                    <div class="control-group">
-                                        
-                                        <label class="checkbox">
-                                            <input type="checkbox" data-form="uniform" name="remember_me" id="remember_me_yes" value="yes" /> Remember me
-                                        </label>
-                                        <p class="recover-account">Not have an account yet? <a href="#modal-pricing" class="link" data-toggle="modal">See our plan!</a></p>
+                                        <p class="recover-account">(*)The confirmation code was sent to your email</p>
                                     </div>
                                     <div class="form-actions">
-                                        <input type="submit" class="btn btn-block btn-large btn-primary" value="Sign into account" />
-                                        <p class="recover-account">Recover your <a href="#modal-recover" class="link" data-toggle="modal">password</a></p>
+                                        <input type="submit" class="btn btn-block btn-large btn-primary" value="Verify" />
                                     </div>
                                 </form>
                             </div>
@@ -120,7 +123,7 @@ if (isset($_GET['user'])) {
                 $('[data-form=uniform]').uniform();
                 
                 // validate
-                $('#sign-in').validate();
+                $('#confirmation-code').validate();
                 $('#sign-up').validate();
                 $('#form-recover').validate();
           });

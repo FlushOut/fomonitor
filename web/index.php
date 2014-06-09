@@ -14,9 +14,15 @@ if (isset($_POST['login_username'])) {
     $returnLogin = $user->login($_POST['login_username'], $_POST['login_password']);
 
     if ($returnLogin) {
-        $_SESSION['emailsession'] = $_POST['login_username'];
-        $_SESSION['loginsession'] = $returnLogin;
-        redirect("/pages/menu.php");
+        $status_conf = $returnLogin->status_conf;
+        $id = $returnLogin->id;
+        if ($status_conf == 1) {
+            $_SESSION['emailsession'] = $_POST['login_username'];
+            $_SESSION['loginsession'] = $id;
+            redirect("/pages/menu.php");    
+        }else{
+            redirect("/pages/verifyemail.php?user=".$id);    
+        }
     } else {
         $error = true;
     }
@@ -25,13 +31,16 @@ if (isset($_POST['login_username'])) {
 if (isset($_POST['name'])) {
     $company = new company();
     $idCompany = $company->create($_POST['company'], $_POST['country']);
-    echo "$idCompany" . $idCompany;
     if ($idCompany) {
         $user = new user();
         $idUser = $user->createAdmin($idCompany,$_POST['name'], $_POST['email'], $_POST['password']);
         if($idUser){
-            $user->sendCode($_POST['email']);
-            redirect("/pages/verifyemail.php?user=".$idUser);    
+            $response = $user->sendCode($_POST['email']);
+            if($response){
+                redirect("/pages/verifyemail.php?user=".$idUser);        
+            }else{
+                $error = true;        
+            }
         }else{
             $error = true;    
         }        

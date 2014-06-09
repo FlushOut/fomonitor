@@ -13,10 +13,12 @@ class user
     protected $table = "users";
 
     public $id = 0;
+    public $code_conf;
     public $name;
     public $email;
     public $password;
     public $status;
+    public $status_conf;
     public $fk_company;
 
     public $create_date;
@@ -38,7 +40,9 @@ class user
         if (count($query) == 0)
             return false;
         else {
-            return $query[0]['id'];
+            $u = new user();
+            $u = $this->open($query[0]['id']);
+            return $u;
         }
     }
 
@@ -145,8 +149,9 @@ class user
         return $query = $this->con->genericQuery("select * from profiles where status = 1");        
     }
 
-    function createAdmin($fk_company, $name, $email,$password)
+    function createAdmin($fk_company, $name, $email, $password)
     {
+
         $now = new DateTime();
         $dados["fk_company"] = $fk_company;
         $dados["name"] = addslashes($name);
@@ -154,12 +159,55 @@ class user
         $dados["password"] = md5($password);
         $dados["create_date"] = addslashes($now->format('Y-m-d H:i:s'));
         $dados["status"] = 1;
+        $dados["status_conf"] = 0;
 
         $idUser = $this->con->insert($this->table,$dados);
         $admin = array(1); 
         $this->saveProfiles($idUser,$admin);
 
         return $idUser;
+    }
+
+    function verifyEmail($id, $code)
+    {
+        $query = $this->con->genericQuery("select * from " . $this->table . " where id=" .$id. " and $code_conf='" . $code . "'");
+        if (count($query) == 0){
+            return false;
+        }else{
+            $dados["status_conf"] = 1;
+            $up = $this->con->update($this->table,$dados);        
+            if($up){
+                return $query[0]['email'];    
+            }else{
+                return false;
+            }
+        }
+    }
+    
+    function sendCode($email)
+    {
+        $fromName = "FlushOut Contact"
+        $fromEmail = "contact@flushoutsolutions.com";
+        $code =  rand(1000,9999);
+         
+        $headers = "From: $fromName $fromEmail\r\n";
+        $headers .= "X-Mailer: PHP5\n";
+        $headers .= 'MIME-Version: 1.0' . "\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+         
+        $subject = "Code Confirmation";
+        $body = "<strong>Code:</strong> ".$code."<br>";
+
+        if ($email != '' && $code > 999){
+            if (mail($email,$subject,$body,$headers)){
+                $dados["code_conf"] = $code;
+                return $this->con->update($this->table,$dados);        
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }   
     }
 
 }
