@@ -35,8 +35,8 @@ if (isset($_POST['name'])) {
         $user = new user();
         $idUser = $user->createAdmin($idCompany,$_POST['name'], $_POST['email'], $_POST['password']);
         if($idUser){
-            $response = $user->sendCode($_POST['email']);
-            if($response){
+            $response = $user->sendCode($idUser, $_POST['email']);
+            if($response > 0){
                 redirect("/pages/verifyemail.php?user=".$idUser);        
             }else{
                 $error = true;        

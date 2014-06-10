@@ -180,8 +180,9 @@ class user
         if (count($query) == 0){
             return false;
         }else{
+            $dadosV["id"] = $id;
             $dadosV["status_conf"] = 1;
-            $up = $this->con->update($this->table,$dadosV);        
+            $up = $this->con->update($this->table,$dadosV);     
             if($up){
                 return $query[0]['email'];    
             }else{
@@ -190,8 +191,9 @@ class user
         }
     }
     
-    function sendCode($email)
+    function sendCode($idUser, $email)
     {   
+
         $fromName = "FlushOut Contact";
         $fromEmail = "contact@flushoutsolutions.com";
         $code =  rand(1000,9999);
@@ -205,8 +207,8 @@ class user
         $body = "<strong>Code:</strong> ".$code."<br>";
 
         if ($email != '' && $code > 999){
-                echo "entro if"; 
             if (mail($email,$subject,$body,$headers)){
+                $dadosSE["id"] = $idUser;
                 $dadosSE["code_conf"] = $code;
                 return $this->con->update($this->table,$dadosSE);        
             } else {

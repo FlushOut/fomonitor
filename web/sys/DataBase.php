@@ -116,11 +116,13 @@ class DataBase extends PDO{
         $update = $this->connect()->prepare("UPDATE " . $table . " SET " . $updateSQL . " WHERE id=" . $id);
         try{
             $update->execute();
+            return $update->rowCount();
+            
         }catch (Exception $e){
             return $e->getMessage();
         }
             self::__destruct();
-            return $update->rowCount();
+            
 
     }
     public function genericQuery($query)
