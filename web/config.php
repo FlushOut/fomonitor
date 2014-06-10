@@ -4,7 +4,8 @@ define('USE_PCONNECT', 'false');
 error_reporting(1);
 date_default_timezone_set($_COOKIE['timezone']);
 require('autoload.php');
-$config['debug'] = FALSE;
+$config['debug'] = TRUE;
+
 if ($_SERVER['SCRIPT_NAME'] != "/index.php") {
      if (!isset($_SESSION['loginsession'])) redirect("/index.php");
 }

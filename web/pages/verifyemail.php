@@ -8,7 +8,7 @@ if (isset($_GET['user'])) {
 if (isset($_POST['code'])) {
     $user = new user();
     if($user){
-        $email = $user->verifyEmail($user, ($_POST['code']);    
+        $email = $user->verifyEmail($user, ($_POST['code']));    
     }
     if ($email) {
         $_SESSION['emailsession'] = $email;

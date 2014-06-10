@@ -35,15 +35,20 @@ class user
     {
         $email = addslashes($email);
         $password = md5($password);
+        $us = NULL;
 
-        $query = $this->con->genericQuery("select * from " . $this->table . " where status=1 and email='$email' and password='" . $password . "'");
-        if (count($query) == 0)
+        $query = $this->con->genericQuery("select * from " . $this->table . " where status=1 and email='". $email ."' and password='" . $password . "'");
+
+        if (count($query) == 0){
             return false;
+        }
         else {
             $u = new user();
-            $u = $this->open($query[0]['id']);
-            return $u;
+            $u->open($query[0]['id']);
+            $us = $u;
         }
+
+        return $us;
     }
 
      function open($query)
@@ -51,7 +56,7 @@ class user
         if(!is_array($query)){
 
             if(is_numeric($query))
-                $result = $this->con->genericQuery("select * from " . $this->table . " where id = '$query'");    
+                $result = $this->con->genericQuery("select * from " . $this->table . " where id = $query");    
             else
                 $result = $this->con->genericQuery("select * from " . $this->table . " where email = '$query'");
 
@@ -62,9 +67,11 @@ class user
             return false;
         else {
             $this->id = $query['id'];
+            $this->code_conf = $query['code_conf'];
             $this->name = $query['name'];
             $this->email = $query['email'];
             $this->status = $query['status'];
+            $this->status_conf = $query['status_conf'];
             $this->fk_company = $query['fk_company'];
 
             $this->create_date = $query['create_date'];
@@ -90,18 +97,18 @@ class user
     function save($fk_company, $name, $email,$password)
     {
         $now = new DateTime();
-        $dados["fk_company"] = $fk_company;
-        $dados["name"] = addslashes($name);
-        $dados["email"] = addslashes($email);
-        $dados["password"] = md5($password);
-        $dados["create_date"] = addslashes($now->format('Y-m-d H:i:s'));
-        $dados["status"] = 1;
+        $dadosS["fk_company"] = $fk_company;
+        $dadosS["name"] = addslashes($name);
+        $dadosS["email"] = addslashes($email);
+        $dadosS["password"] = md5($password);
+        $dadosS["create_date"] = addslashes($now->format('Y-m-d H:i:s'));
+        $dadosS["status"] = 1;
 
         if ($this->id > 0) {
             $dados["id"] = $this->id;
-            return $this->con->update($this->table,$dados);
+            return $this->con->update($this->table,$dadosS);
         } else {
-            return $this->con->insert($this->table,$dados);
+            return $this->con->insert($this->table,$dadosS);
         }
         
     }
@@ -151,17 +158,16 @@ class user
 
     function createAdmin($fk_company, $name, $email, $password)
     {
-
         $now = new DateTime();
-        $dados["fk_company"] = $fk_company;
-        $dados["name"] = addslashes($name);
-        $dados["email"] = addslashes($email);
-        $dados["password"] = md5($password);
-        $dados["create_date"] = addslashes($now->format('Y-m-d H:i:s'));
-        $dados["status"] = 1;
-        $dados["status_conf"] = 0;
+        $dadosC["fk_company"] = $fk_company;
+        $dadosC["name"] = addslashes($name);
+        $dadosC["email"] = addslashes($email);
+        $dadosC["password"] = md5($password);
+        $dadosC["create_date"] = addslashes($now->format('Y-m-d H:i:s'));
+        $dadosC["status"] = 1;
+        $dadosC["status_conf"] = 0;
 
-        $idUser = $this->con->insert($this->table,$dados);
+        $idUser = $this->con->insert($this->table,$dadosC);
         $admin = array(1); 
         $this->saveProfiles($idUser,$admin);
 
@@ -174,8 +180,8 @@ class user
         if (count($query) == 0){
             return false;
         }else{
-            $dados["status_conf"] = 1;
-            $up = $this->con->update($this->table,$dados);        
+            $dadosV["status_conf"] = 1;
+            $up = $this->con->update($this->table,$dadosV);        
             if($up){
                 return $query[0]['email'];    
             }else{
@@ -185,11 +191,11 @@ class user
     }
     
     function sendCode($email)
-    {
-        $fromName = "FlushOut Contact"
+    {   
+        $fromName = "FlushOut Contact";
         $fromEmail = "contact@flushoutsolutions.com";
         $code =  rand(1000,9999);
-         
+
         $headers = "From: $fromName $fromEmail\r\n";
         $headers .= "X-Mailer: PHP5\n";
         $headers .= 'MIME-Version: 1.0' . "\n";
@@ -199,9 +205,10 @@ class user
         $body = "<strong>Code:</strong> ".$code."<br>";
 
         if ($email != '' && $code > 999){
+                echo "entro if"; 
             if (mail($email,$subject,$body,$headers)){
-                $dados["code_conf"] = $code;
-                return $this->con->update($this->table,$dados);        
+                $dadosSE["code_conf"] = $code;
+                return $this->con->update($this->table,$dadosSE);        
             } else {
                 return false;
             }
