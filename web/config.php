@@ -7,7 +7,7 @@ require('autoload.php');
 $config['debug'] = TRUE;
 
 if ($_SERVER['SCRIPT_NAME'] != "/index.php") {
-     if (!isset($_SESSION['loginsession'])) redirect("/index.php");
+     if (!isset($_SESSION['loginsession']) && (!$ve)) redirect("/index.php");
 }
 
 function curPageURL()

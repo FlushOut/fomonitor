@@ -3,7 +3,7 @@ require_once("../config.php");
 
 $category = new category();
 $cat = new category();
-$list_categories = $category->list_categories(1);
+$list_categories = $category->list_categories($company->id);
 
 
 if ($_POST['action'] == 'Save') {

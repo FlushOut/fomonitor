@@ -174,16 +174,17 @@ class user
         return $idUser;
     }
 
-    function verifyEmail($id, $code)
+    function vEmail($id, $code)
     {
-        $query = $this->con->genericQuery("select * from " . $this->table . " where id=" .$id. " and $code_conf='" . $code . "'");
+        $query = $this->con->genericQuery("select * from " . $this->table . " where id=" . $id . " and code_conf=" . $code);
+
         if (count($query) == 0){
             return false;
         }else{
             $dadosV["id"] = $id;
             $dadosV["status_conf"] = 1;
             $up = $this->con->update($this->table,$dadosV);     
-            if($up){
+            if($up > 0){
                 return $query[0]['email'];    
             }else{
                 return false;

@@ -2,7 +2,7 @@
 require_once("../config.php");
 
 $newUser = new user();
-$list_users = $newUser->list_users(1);
+$list_users = $newUser->list_users($company->id);
 
 if ($_POST['action'] == 'Save') {
         if (isset($_POST['hdIdAct'])) {

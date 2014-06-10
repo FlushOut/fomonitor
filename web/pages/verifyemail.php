@@ -1,19 +1,22 @@
-<?php require_once("../autoload2.php");
-
+<?php 
+$ve = true;
+require_once("../config.php");
 
 if (isset($_GET['user'])) {
-    $user = $_GET['user'];
+    $u = $_GET['user'];
 }
 
 if (isset($_POST['code'])) {
     $user = new user();
-    if($user){
-        $email = $user->verifyEmail($user, ($_POST['code']));    
-    }
-    if ($email) {
-        $_SESSION['emailsession'] = $email;
-        $_SESSION['loginsession'] = $user;
-        redirect("/pages/menu.php");
+    if($u){
+        $email = $user->vEmail($u, ($_POST['code']));
+        if ($email) {
+            $_SESSION['emailsession'] = $email;
+            $_SESSION['loginsession'] = $u;
+            redirect("/pages/menu.php");
+        } else {
+            $error = true;
+        }    
     } else {
         $error = true;
     }

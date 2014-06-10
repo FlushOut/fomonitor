@@ -320,7 +320,6 @@ $category = $dashboard->get_category_count($company->id);
                         data: {action: action }
                     }).done(function (resp) {
                         var data = jQuery.parseJSON(resp);
-                        console.log(data);
                         drawAccountStat(data);
                     });
 
