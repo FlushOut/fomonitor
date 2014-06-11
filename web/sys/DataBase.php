@@ -82,7 +82,7 @@ class DataBase extends PDO{
         $fieldsSQL = array();
         $valuesSQL = array();
         foreach ($values as $field => $value) {
-            $fieldsSQL[] = $field;
+            $fieldsSQL[] = $field;            
             $valuesSQL[] = $value;
         }
 
@@ -91,9 +91,8 @@ class DataBase extends PDO{
         $val = ':' . str_replace(',', ',:', $key);
         $insert = $this->connect()->prepare("INSERT INTO {$table} ({$key}) VALUES({$val})");
         $insert->execute($array);
-        
         return $this->db->lastInsertId();   
-
+        
         self::__destruct();
         if($insert->rowCount() == 0){
             return 0;

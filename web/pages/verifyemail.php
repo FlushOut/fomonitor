@@ -9,11 +9,17 @@ if (isset($_GET['user'])) {
 if (isset($_POST['code'])) {
     $user = new user();
     if($u){
-        $email = $user->vEmail($u, ($_POST['code']));
-        if ($email) {
-            $_SESSION['emailsession'] = $email;
-            $_SESSION['loginsession'] = $u;
-            redirect("/pages/menu.php");
+        $uvc = $user->vEmail($u, ($_POST['code']));
+        if ($uvc) {
+            $payment = new payment();
+            $ins = $payment->createFree($uvc->fk_company);
+            if($ins){
+                $_SESSION['emailsession'] = $uvc->email;
+                $_SESSION['loginsession'] = $uvc->id;
+                redirect("/pages/menu.php");
+            } else {
+                $error = true;
+            }
         } else {
             $error = true;
         }    
