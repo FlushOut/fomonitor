@@ -50,7 +50,9 @@ switch ($_POST['action']) {
     case 'showStaysByDate':
         showStaysByDate($company->id,$dtStart,$dtEnd);
         break;
-        
+    case 'getDashboardAccountStat':
+        getDashboardAccountStat($company->id);
+        break;
 	default:
         # code...
         break;
@@ -388,6 +390,13 @@ function getLastDataByIdCompany($fk_company){
     $data = array();
     $dashboard = new dashboard();
     $data['users'] = $dashboard->getLastData($fk_company);
+    echo json_encode($data);
+}
+
+function getDashboardAccountStat($fk_company){
+    $data = array();
+    $payment = new payment();
+    $data = $payment->getDashboardAccountStat($fk_company);
     echo json_encode($data);
 }
 

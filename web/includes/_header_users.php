@@ -1,24 +1,34 @@
+<?php
+require_once("../config.php");
+
+$payment = new payment();
+$payment->paymentByCompany($company->id);
+setlocale(LC_MONETARY, 'en_US');
+$totalPrice = money_format('%i', (($payment->u_mobile * $priceUserMobile) + ($payment->u_web * $priceUserWeb)));
+
+?>
+
 <!-- content-header -->
                         <div class="content-header">
                             <ul class="content-header-action pull-right">
                                 <li>
                                     <a href="/pages/mobile.php">
                                         <div class="badge-circle grd-green color-white"><i class="typicn-mobile"></i></div>
-                                        <div class="action-text color-green">8765 <span class="helper-font-small color-silver-dark">Users Mobile</span></div>
+                                        <div class="action-text color-green"><?php echo $payment->u_mobile; ?> <span class="helper-font-small color-silver-dark">Users Mobile</span></div>
                                     </a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
                                     <a href="/pages/users.php">
                                         <div class="badge-circle grd-teal color-white"><i class="typicn-user"></i></div>
-                                        <div class="action-text color-teal">1437 <span class="helper-font-small color-silver-dark">Users Web</span></div>
+                                        <div class="action-text color-teal"><?php echo $payment->u_web; ?> <span class="helper-font-small color-silver-dark">Users Web</span></div>
                                     </a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
                                     <a href="/pages/invoice.php">
                                         <div class="badge-circle grd-orange color-white"></i>$</div>
-                                        <div class="action-text color-orange">1,785.00 <span class="helper-font-small color-silver-dark">Invoice</span></div>
+                                        <div class="action-text color-orange"><?php echo $totalPrice; ?> <span class="helper-font-small color-silver-dark">Invoice</span></div>
                                     </a>
                                 </li>
 

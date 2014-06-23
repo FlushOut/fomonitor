@@ -253,64 +253,101 @@ $category = $dashboard->get_category_count($company->id);
                     $(v).addClass('btn-mini')
                 });
                 
+                var action = "getDashboardAccountStat";
+
+                jQuery.ajax({
+                        url: "/ajax/actions.php",
+                        type: "POST",
+                        data: {action: action }
+                    }).done(function (resp) {
+                        var data = jQuery.parseJSON(resp);
+                        drawAccountStat1(data);
+                    });
                 
-                // system stat flot
-                d1 = [ ['jan', 231], ['feb', 243], ['mar', 323], ['apr', 352], ['maj', 354], ['jun', 467], ['jul', 429] ];
-                d2 = [ ['jan', 87], ['feb', 67], ['mar', 96], ['apr', 105], ['maj', 98], ['jun', 53], ['jul', 87] ];
-                d3 = [ ['jan', 34], ['feb', 27], ['mar', 46], ['apr', 65], ['maj', 47], ['jun', 79], ['jul', 95] ];
-                
-                var visitor = $("#visitor-stat"),
-                order = $("#order-stat"),
-                user = $("#user-stat"),
-                
-                data_visitor = [{
-                        data: d1,
-                        color: '#00A600'
-                    }],
-                data_order = [{
-                        data: d2,
-                        color: '#2E8DEF'
-                    }],
-                data_user = [{
-                        data: d3,
-                        color: '#DC572E'
-                    }],
-                 
-                
-                options_lines = {
-                    series: {
-                        lines: {
-                            show: true,
-                            fill: true
-                        },
-                        points: {
-                            show: true
-                        },
-                        hoverable: true
-                    },
-                    grid: {
-                        backgroundColor: '#FFFFFF',
-                        borderWidth: 1,
-                        borderColor: '#CDCDCD',
-                        hoverable: true
-                    },
-                    legend: {
-                        show: false
-                    },
-                    xaxis: {
-                        mode: "categories",
-                        tickLength: 0
-                    },
-                    yaxis: {
-                        autoscaleMargin: 2
+                function drawAccountStat1(data){
+                    
+                    var meses = ["","jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+                    var priceUserWeb = 5, priceUserMobile = 9; cantMonthView = 7;
+                    var d1 = new Array(), d2 = new Array(), d3 = new Array();
+                    
+                    if(data.length < cantMonthView){
+                        var cantReg = data.length;
+                        var firstMonth = data[0]["dateMonth"];
+                        for (var i = cantMonthView-cantReg; i >= 0; i--) {
+                            if((firstMonth-1) == 0) firstMonth = 13; firstMonth--;
+                        }
+                        for (var i = cantMonthView-cantReg; i >= 0; i--) {
+                            d1.push([ meses[firstMonth], 0 ]);
+                            d2.push([ meses[firstMonth], 0 ]);
+                            d3.push([ meses[firstMonth], 0 ]);
+                            if((firstMonth+1) == 13) firstMonth = 0;
+                            firstMonth++;
+                        }
                     }
-        
-                };
-                
-                // render stat flot
-                $.plot(visitor, data_visitor, options_lines);
-                $.plot(order, data_order, options_lines);
-                $.plot(user, data_user, options_lines);
+                    
+                    for (var i = data.length-1; i >= 0 ; i--) {
+                        d1.push([ meses[data[i]["dateMonth"]], data[i]["u_mobile"] ]);
+                        d2.push([ meses[data[i]["dateMonth"]], data[i]["u_web"] ]);
+                        d3.push([ meses[data[i]["dateMonth"]], (data[i]["u_web"] * priceUserWeb) + (data[i]["u_mobile"] * priceUserMobile) ]);
+                    }
+
+                    // system stat flot
+                    //d1 = [ ['jan', 231], ['feb', 243], ['mar', 323], ['apr', 352], ['maj', 354], ['jun', 467], ['jul', 429] ];
+                    //d2 = [ ['jan', 87], ['feb', 67], ['mar', 96], ['apr', 105], ['maj', 98], ['jun', 53], ['jul', 87] ];
+                    //d3 = [ ['jan', 34], ['feb', 27], ['mar', 46], ['apr', 65], ['maj', 47], ['jun', 79], ['jul', 95] ];
+                    
+                    var visitor = $("#visitor-stat"),
+                    order = $("#order-stat"),
+                    user = $("#user-stat"),
+                    
+                    data_visitor = [{
+                            data: d1,
+                            color: '#00A600'
+                        }],
+                    data_order = [{
+                            data: d2,
+                            color: '#2E8DEF'
+                        }],
+                    data_user = [{
+                            data: d3,
+                            color: '#DC572E'
+                        }],
+                     
+                    
+                    options_lines = {
+                        series: {
+                            lines: {
+                                show: true,
+                                fill: true
+                            },
+                            points: {
+                                show: true
+                            },
+                            hoverable: true
+                        },
+                        grid: {
+                            backgroundColor: '#FFFFFF',
+                            borderWidth: 1,
+                            borderColor: '#CDCDCD',
+                            hoverable: true
+                        },
+                        legend: {
+                            show: false
+                        },
+                        xaxis: {
+                            mode: "categories",
+                            tickLength: 0
+                        },
+                        yaxis: {
+                            autoscaleMargin: 2
+                        }
+            
+                    };
+                    // render stat flot
+                    $.plot(visitor, data_visitor, options_lines);
+                    $.plot(order, data_order, options_lines);
+                    $.plot(user, data_user, options_lines);
+                }
 
                 var action = "getLastDataByIdCompany";
 
