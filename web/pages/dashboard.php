@@ -266,8 +266,8 @@ $category = $dashboard->get_category_count($company->id);
                 
                 function drawAccountStat1(data){
                     
-                    var meses = ["","jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-                    var priceUserWeb = 5, priceUserMobile = 9; cantMonthView = 7;
+                    var meses = ["","jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+                    var priceUserWeb = 9.9, priceUserMobile = 6.9; cantMonthView = 7;
                     var d1 = new Array(), d2 = new Array(), d3 = new Array();
                     
                     if(data.length < cantMonthView){

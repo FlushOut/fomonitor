@@ -7,8 +7,8 @@ require('autoload.php');
 $config['debug'] = TRUE;
 
 //Variable local de precios
-$priceUserWeb = 5;
-$priceUserMobile = 9;
+$priceUserWeb = 9.9;
+$priceUserMobile = 6.9;
 
 if ($_SERVER['SCRIPT_NAME'] != "/index.php") {
      if (!isset($_SESSION['loginsession']) && (!$ve)) redirect("/index.php");
