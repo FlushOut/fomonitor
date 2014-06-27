@@ -3,8 +3,9 @@ require_once("../config.php");
 
 $payment = new payment();
 $payment->paymentByCompany($company->id);
-setlocale(LC_MONETARY, 'en_US');
-$totalPrice = money_format('%i', (($payment->u_mobile * $priceUserMobile) + ($payment->u_web * $priceUserWeb)));
+//setlocale(LC_MONETARY, 'en_US');
+//$totalPrice = money_format('%i', (($payment->u_mobile * $priceUserMobile) + ($payment->u_web * $priceUserWeb)));
+$totalPrice = number_format((($payment->u_mobile * $priceUserMobile) + ($payment->u_web * $priceUserWeb)),2,",",".");
 
 ?>
 
