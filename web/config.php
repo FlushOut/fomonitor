@@ -100,6 +100,7 @@ function verify_access(){
     }
 }
 
+/*
 function money_format($format, $number) 
 { 
     $regex  = '/%((?:[\^!\-]|\+|\(|\=.)*)([0-9]+)?'. 
@@ -186,7 +187,7 @@ function money_format($format, $number)
     } 
     return $format; 
 } 
-
+*/
 /*function convertDateToTimezone($date, $format="Y-m-d H:i:s", $timezone="America/Sao_Paulo")
 {
     date_default_timezone_set('Europe/London');
