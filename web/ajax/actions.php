@@ -53,6 +53,9 @@ switch ($_POST['action']) {
     case 'getDashboardAccountStat':
         getDashboardAccountStat($company->id);
         break;
+    case 'showInvoices':
+        showInvoices($company->id,$dtStart,$dtEnd);
+        break;
 	default:
         # code...
         break;
@@ -430,6 +433,41 @@ function showStaysByDate($fk_company,$dtStart,$dtEnd){
     echo $html;
                 
 }
+
+function showInvoices($fk_company,$dtStart,$dtEnd){
+
+    $pay = new payment();
+    $list_invoices = $pay->getByDate($fk_company,$dtStart,$dtEnd);
+    $html.= '<table id="datatables" class="table table-bordered table-striped responsive">';
+    $html.= '   <thead>';
+    $html.= '       <tr>';
+    $html.= '           <th class="head0">Invoice Number</th>';
+    $html.= '           <th class="head1">Date Start</th>';
+    $html.= '           <th class="head0">Date End</th>';
+    $html.= '           <th class="head0">Users Mobile</th>';
+    $html.= '           <th class="head0">Users Web</th>';
+    $html.= '           <th class="head0">Actions</th>';
+    $html.= '       </tr>';
+    $html.= '   </thead>';
+    $html.= '   <tbody>';
+                foreach($list_invoices as $value){
+    $html.= '       <tr src="stays">';
+    $html.= '           <td>'.$value->sequence.'</td>';
+    $html.= '           <td>'.date('Y-m-d', strtotime($value->date_start)).'</td>';
+    $html.= '           <td>'.date('Y-m-d', strtotime($value->date_end)).'</td>';
+    $html.= '           <td>'.$value->u_mobile.'</td>';
+    $html.= '           <td>'.$value->u_web.'</td>';
+    $html.= '           <td><a href="/pages/invoice-detail.php?id='.$value->id.'" role="button" class="btn btn-link">View</a></td>';
+    $html.= '       </tr>';
+                }
+    $html.= '   </tbody>';
+    $html.= '</table>';
+
+    echo $html;
+                
+}
+
+
 
 
 

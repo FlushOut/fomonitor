@@ -67,7 +67,7 @@ require_once("../config.php");
                         <div class="content-breadcrumb">
                             <!--breadcrumb-->
                             <ul class="breadcrumb">
-                                <li><a href="index.html"><i class="icofont-home"></i> Stays</a> <span class="divider">&rsaquo;</span></li>
+                                <li><a href="index.html"><i class="icofont-home"></i> Invoices</a> <span class="divider">&rsaquo;</span></li>
                                 <li class="active">List</li>
                             </ul><!--/breadcrumb-->
                         </div><!-- /content-breadcrumb -->
@@ -84,7 +84,7 @@ require_once("../config.php");
                                                 <a data-box="collapse"><i class="icofont-caret-up"></i></a>
                                                 <a data-box="close" data-hide="bounceOutRight">&times;</a>
                                             </div>
-                                            <span>Stays</span>
+                                            <span>Invoices</span>
                                         </div>
                                         <div class="box-body">
                                             <div class="controls form-inline">
@@ -104,15 +104,17 @@ require_once("../config.php");
                                             <table id="datatables" class="table table-bordered table-striped responsive">
                                                 <thead>
                                                     <tr>
-                                                        <th class="head0">User</th>
-                                                        <th class="head1">Point</th>
-                                                        <th class="head0">Date In</th>
-                                                        <th class="head0">Date Out</th>
-                                                        <th class="head0">Time Stay</th>
+                                                        <th class="head0">Invoice Number</th>
+                                                        <th class="head1">Date Start</th>
+                                                        <th class="head0">Date End</th>
+                                                        <th class="head1">Users Mobile</th>
+                                                        <th class="head0">Users Web</th>
+                                                        <th class="head1">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                         <tr src="stays">
+                                                            <td></td>
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>
@@ -173,7 +175,11 @@ require_once("../config.php");
                 $('[data-form=uniform]').uniform();
 
                 // datepicker
-                $('[data-form=datepicker]').datepicker({format:'dd-mm-yyyy'});
+                $('[data-form=datepicker]').datepicker({
+                    format:'mm-yyyy', 
+                    viewMode: "months", 
+                    minViewMode: "months"
+                });
                 
                 // datatables
                 $('#datatables').dataTable( {
@@ -213,8 +219,7 @@ require_once("../config.php");
                 var year = d.getFullYear();
                 var month = d.getMonth()+1;
                 var day = d.getDate();
-                var startDate = ((''+day).length<2 ? '0' : '') + day +'-'+ 
-                                ((''+month).length<2 ? '0' : '') + month +'-'+  
+                var startDate = ((''+month).length<2 ? '0' : '') + month +'-'+  
                                 year; 
 
                 $('#dvFrom').data({date: startDate}).datepicker('update').children("input").val(startDate);
@@ -223,7 +228,7 @@ require_once("../config.php");
                 $("#bntShow").click(function(){
                     var dtStart = $("#dvFrom").find("input").val();
                     var dtEnd = $("#dvTo").find("input").val();
-                    var action = "showStaysByDate";
+                    var action = "showInvoices";
 
                     jQuery.ajax({
                         url: "/ajax/actions.php",

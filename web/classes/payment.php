@@ -13,6 +13,7 @@ class payment
     protected $table = "payment";
 
     public $id = 0;
+    public $sequence;
     public $fk_company;
     public $date_start;
     public $date_end;
@@ -36,6 +37,7 @@ class payment
             return false;
         else {
             $this->id = $query['id'];
+            $this->sequence = $query['sequence'];
             $this->fk_company = $query['fk_company'];
             $this->date_start = $query['date_start'];
             $this->date_end = $query['date_end'];
@@ -56,6 +58,7 @@ class payment
             return false;
         }else {
             $this->id = $query['id'];
+            $this->sequence = $query['sequence'];
             $this->fk_company = $query['fk_company'];
             $this->date_start = $query['date_start'];
             $this->date_end = $query['date_end'];
@@ -79,6 +82,7 @@ class payment
         $stE = strtotime($dtS ."+ 30 days");
         $dtE = date("Y-m-d",$stE); 
 
+        $dados["sequence"] = 1;
         $dados["fk_company"] = $fk_company;
         $dados["date_start"] = addslashes($dtS);
         $dados["date_end"] = addslashes($dtE);
@@ -93,4 +97,37 @@ class payment
         
     }
 
+    function addUWeb()
+    {   
+        $sumUW = $this->u_web;
+        $dadosA["id"] = $this->id;
+        $dadosA["u_web"] = $sumUW + 1;
+        return $this->con->update($this->table,$dadosA);
+    }
+
+    function delUWeb()
+    {   
+        $sumUW = $this->u_web;
+        $dadosD["id"] = $this->id;
+        if($sumUW > 0){
+            $dadosD["u_web"] = $sumUW - 1;    
+        }else{
+            $dadosD["u_web"] = 0;  
+        }
+        return $this->con->update($this->table,$dadosD);
+    }
+
+    function getByDate($fk_company,$dtIni,$dtEnd){
+        $query = $this->con->genericQuery("select * from " . $this->table . " where fk_company = {$fk_company} and (date_start between STR_TO_DATE('".$dtIni."','%m-%Y') and STR_TO_DATE('".$dtEnd."','%m-%Y')) order by date_start");
+        $objReturn = array();
+
+       foreach ($query as $value) {
+            $py = new payment();
+            $py->open($value);
+            $objReturn[] = $py;
+        }
+
+        return $objReturn;
+
+    }    
 }

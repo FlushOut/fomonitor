@@ -6,12 +6,19 @@ $list_users = $newUser->list_users($company->id);
 
 if ($_POST['action'] == 'Save') {
         if (isset($_POST['hdIdAct'])) {
-            $newUser->open($_POST['hdIdAct']);
-        }
-        if ($_POST['txtName']){
-            $newUser->save(1, $_POST['txtName'], $_POST['txtEmail'], $_POST['txtPassword']);
-            header("Location: ". $_SERVER['REQUEST_URI']);
-            exit;
+            if ($_POST['hdIdAct'] == ""){
+                $newUser->save($company->id, $_POST['txtName'], $_POST['txtEmail'], $_POST['txtPassword']);
+                $pay = new payment();
+                $pay->paymentByCompany($company->id);
+                $pay->addUWeb();
+                header("Location: ". $_SERVER['REQUEST_URI']);
+                exit;
+            }else{
+                $newUser->open($_POST['hdIdAct']);
+                $newUser->save($company->id, $_POST['txtName'], $_POST['txtEmail'], $_POST['txtPassword']);
+                header("Location: ". $_SERVER['REQUEST_URI']);
+                exit;
+            }
         }
 }
 if ($_POST['action'] == 'SaveProfiles') {
@@ -29,6 +36,7 @@ if ($_POST['action'] == 'SaveProfiles') {
 <html lang="en">
     <head>
         <meta charset="utf-8" />
+        <link rel="shortcut icon" href="../img/icon.png">
         <title>User | FOMonitor</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="" />
@@ -280,6 +288,7 @@ if ($_POST['action'] == 'SaveProfiles') {
                             data: {id: id, source: src }
                         }).done(function (resp) {
                                 jQuery(this).remove();
+                                location.reload();
                             });
                     });
                     return false;

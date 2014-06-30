@@ -80,6 +80,7 @@ class company
         $dados["idle_time"] = 10;
         $dados["inactive_time"] = 20;
         $dados["status"] = 1;
+        $dados["status_payment"] = 1;
 
         return $this->con->insert($this->table,$dados);
     }

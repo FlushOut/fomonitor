@@ -1,6 +1,4 @@
 <?php
-require_once("../config.php");
-
 $payment = new payment();
 $payment->paymentByCompany($company->id);
 //setlocale(LC_MONETARY, 'en_US');
@@ -27,7 +25,7 @@ $totalPrice = number_format((($payment->u_mobile * $priceUserMobile) + ($payment
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="/pages/invoice.php">
+                                    <a href="/pages/invoice-detail.php?id=<?php echo $payment->id; ?>">
                                         <div class="badge-circle grd-orange color-white"></i>$</div>
                                         <div class="action-text color-orange"><?php echo $totalPrice; ?> <span class="helper-font-small color-silver-dark">Invoice</span></div>
                                     </a>

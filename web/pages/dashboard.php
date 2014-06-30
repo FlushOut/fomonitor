@@ -11,6 +11,7 @@ $category = $dashboard->get_category_count($company->id);
 <html lang="en">
     <head>
         <meta charset="utf-8" />
+        <link rel="shortcut icon" href="../img/icon.png">
         <title>Dashboard | FOMonitor</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="" />
@@ -29,10 +30,15 @@ $category = $dashboard->get_category_count($company->id);
         <link href="../css/font-awesome.css" rel="stylesheet" />
         <link href="../css/animate.css" rel="stylesheet" />
         <link href="../css/uniform.default.css" rel="stylesheet" />
+        <link href="../css/elusive-webfont.css" rel="stylesheet" />
 
+        <link href="../css/datepicker.css" rel="stylesheet" />
         <link href="../css/select2.css" rel="stylesheet" />
         <link href="../css/fullcalendar.css" rel="stylesheet" />
         <link href="../css/bootstrap-wysihtml5.css" rel="stylesheet" />
+
+        <link href="../css/DT_bootstrap.css" rel="stylesheet" />
+        <link href="../css/responsive-tables.css" rel="stylesheet" />
 
         <script src="../js/jquery.js"></script>
         <script src="../js/jquery-ui.min.js"></script>

@@ -1,4 +1,3 @@
-<?php require_once("../config.php"); ?>
 <!-- span side-left -->
                 <div class="span1">
                     <!--side bar-->

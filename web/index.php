@@ -54,6 +54,7 @@ if (isset($_POST['name'])) {
 <html lang="en">
     <head>  
         <meta charset="utf-8" />
+        <link rel="shortcut icon" href="../img/icon.png">
         <title>Logn In | FOMonitor</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="" />
@@ -92,7 +93,7 @@ if (isset($_POST['name'])) {
                     <!--panel site-name-->
                     <div class="span2">
                         <div class="panel-sitename">
-                            <h2><a href="index.html"><span class="color-teal">fo</span>Monitor</a></h2>
+                            <h2><a href="#"><span class="color-teal">fo</span>Monitor</a></h2>
                         </div>
                     </div>
                     <!--/panel name-->

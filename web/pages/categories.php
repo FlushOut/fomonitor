@@ -22,6 +22,7 @@ if ($_POST['action'] == 'Save') {
 <html lang="en">
     <head>
         <meta charset="utf-8" />
+        <link rel="shortcut icon" href="../img/icon.png">
         <title>Categories | FOMonitor</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="" />

@@ -105,7 +105,7 @@ class user
         $dadosS["status"] = 1;
 
         if ($this->id > 0) {
-            $dados["id"] = $this->id;
+            $dadosS["id"] = $this->id;
             return $this->con->update($this->table,$dadosS);
         } else {
             return $this->con->insert($this->table,$dadosS);

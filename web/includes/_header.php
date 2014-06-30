@@ -24,7 +24,7 @@ if ($_POST['action'] == 'SaveCompany') {
                     <!--panel site-name-->
                     <div class="span2">
                         <div class="panel-sitename">
-                            <h2><a href="index.html"><span class="color-teal">fo</span>Monitor</a></h2>
+                            <h2><a href="<?php echo $url; ?>"><span class="color-teal">fo</span>Monitor</a></h2>
                         </div>
                     </div>
                     <!--/panel name-->
@@ -61,7 +61,6 @@ if ($_POST['action'] == 'SaveCompany') {
                                                 <?php
                                                 }
                                                 ?>
-                                                <a class="btn btn-primary btn-small btn-block">View Profile</a>
                                             </div>
                                         </div>
                                     </li>
