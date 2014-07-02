@@ -226,4 +226,14 @@ class user
         }   
     }
 
+    function verifExistsEmail($email)
+    {
+        $query = $this->con->genericQuery("select 1 from " . $this->table . " where email = '$email'");
+        if (count($query) == 0){
+            return 0;
+        }else{
+           return 1;
+        }
+    }
+
 }

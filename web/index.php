@@ -168,7 +168,7 @@ if (isset($_POST['name'])) {
                                     <div class="control-group">
                                         <label class="control-label">Email</label>
                                         <div class="controls">
-                                            <input type="text" class="input-block-level" data-validate="{required: true, email:true, messages:{required:'Please enter field email', email:'Please enter a valid email address'}}" name="email" id="email" autocomplete="off" />
+                                            <input type="text" class="input-block-level" data-validate="{required: true, email:true, remote:'/ajax/validateemail.php', messages:{required:'Please enter field email', email:'Please enter valid email address', remote:'This email is already in use'}}" name="email" id="email" autocomplete="off" />
                                             <p class="help-block muted helper-font-small"><strong>Type carefully.</strong> You will be sent a confirmation email.</p>
                                         </div>
                                     </div>
@@ -182,7 +182,7 @@ if (isset($_POST['name'])) {
                                     <div class="control-group">
                                         <label class="control-label">Password</label>
                                         <div class="controls">
-                                            <input type="password" class="input-block-level" data-validate="{required: true, minlength: 6, messages:{required:'Please enter field password', minlength:'Please enter at least 6 characters.'}}" name="password" id="password" autocomplete="off" />
+                                            <input type="password" class="input-block-level" data-validate="{required: true, minlength: 6, messages:{required:'Please enter field password', minlength:'Please enter at least 6 characters'}}" name="password" id="password" autocomplete="off" />
                                             <p class="help-block muted helper-font-small">The longer the better. Include numbers for protein.</p>
                                         </div>
                                     </div>

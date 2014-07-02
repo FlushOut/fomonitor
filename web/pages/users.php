@@ -133,7 +133,7 @@ if ($_POST['action'] == 'SaveProfiles') {
                                                                         <tr>
                                                                             <td>Email</td>
                                                                             <td>
-                                                                                <input type="text" id="txtEmail" name="txtEmail" class="grd-white" data-validate="{required: true, email:true, messages:{required:'Please enter field email', email:'Please enter a valid email address'}}" name="email" id="email" />
+                                                                                <input type="text" id="txtEmail" name="txtEmail" class="grd-white" data-validate="{required: true, email:true, remote:'/ajax/validateemail.php', messages:{required:'Please enter field email', email:'Please enter valid email address', remote:'This email is already in use'}}" name="email" id="email" />
                                                                             </td>
                                                                         </tr>
                                                                         <tr>

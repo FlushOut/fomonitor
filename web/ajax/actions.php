@@ -61,6 +61,7 @@ switch ($_POST['action']) {
         break;
 
 }
+
 function getProfiles($idUser){
 		$user = new user();
 		$html = "";
@@ -466,6 +467,7 @@ function showInvoices($fk_company,$dtStart,$dtEnd){
     echo $html;
                 
 }
+
 
 
 

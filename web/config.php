@@ -11,7 +11,7 @@ $priceUserWeb = 9.9;
 $priceUserMobile = 6.9;
 
 if ($_SERVER['SCRIPT_NAME'] != "/index.php") {
-     if (!isset($_SESSION['loginsession']) && (!$ve)) redirect("/index.php");
+     if (!isset($_SESSION['loginsession']) && (!$ve) && (!$vee)) redirect("/index.php");
 }
 
 function curPageURL()
