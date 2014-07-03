@@ -7,7 +7,7 @@ $list_users = $newUser->list_users($company->id);
 if ($_POST['action'] == 'Save') {
         if (isset($_POST['hdIdAct'])) {
             if ($_POST['hdIdAct'] == ""){
-                $newUser->save($company->id, $_POST['txtName'], $_POST['txtEmail'], $_POST['txtPassword']);
+                $newUser->save($company->id, $_POST['txtName'], $_POST['email'], $_POST['txtPassword']);
                 $pay = new payment();
                 $pay->paymentByCompany($company->id);
                 $pay->addUWeb();
@@ -15,7 +15,7 @@ if ($_POST['action'] == 'Save') {
                 exit;
             }else{
                 $newUser->open($_POST['hdIdAct']);
-                $newUser->save($company->id, $_POST['txtName'], $_POST['txtEmail'], $_POST['txtPassword']);
+                $newUser->save($company->id, $_POST['txtName'], $_POST['email'], $_POST['txtPassword']);
                 header("Location: ". $_SERVER['REQUEST_URI']);
                 exit;
             }
@@ -121,7 +121,7 @@ if ($_POST['action'] == 'SaveProfiles') {
                                                             <h3 id="myModalLabel">Information</h3>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form class="form-horizontal" id="form-validate" action="" method="post" />
+                                                            <form class="form-horizontal" id="form-validate-new-user" action="" method="post" />
                                                                     <table>
                                                                         <tr>
                                                                             <td>Name</td>
@@ -133,7 +133,7 @@ if ($_POST['action'] == 'SaveProfiles') {
                                                                         <tr>
                                                                             <td>Email</td>
                                                                             <td>
-                                                                                <input type="text" id="txtEmail" name="txtEmail" class="grd-white" data-validate="{required: true, email:true, remote:'/ajax/validateemail.php', messages:{required:'Please enter field email', email:'Please enter valid email address', remote:'This email is already in use'}}" name="email" id="email" />
+                                                                                <input type="text" class="grd-white" data-validate="{required: true, email:true, remote:'/ajax/validateemail.php', messages:{required:'Please enter field email', email:'Please enter valid email address', remote:'This email is already in use'}}" name="email" id="email" />
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
@@ -304,7 +304,7 @@ if ($_POST['action'] == 'SaveProfiles') {
                         
                         $("#hdIdAct").val(id);
                         $("#txtName").val(name);                       
-                        $("#txtEmail").val(email);
+                        $("#email").val(email);
                         
                     });
                     return true;
@@ -314,14 +314,15 @@ if ($_POST['action'] == 'SaveProfiles') {
                 $("a#aAdd").bind('click', function () {
                     $("#hdIdAct").val('');
                     $("#txtName").val('');
-                    $("#txtEmail").val('');
+                    $("#email").val('');
                     $("#txtPassword").val('');
                     
-                    var validator = $( "#form-validate" ).validate();
+                    var validator = $( "#form-validate-new-user" ).validate();
                     validator.resetForm();
                     
                 });
 
+                $('#form-validate-new-user').validate();
                 $('#form-validate').validate();
                 
                 // uniform

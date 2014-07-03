@@ -3,6 +3,7 @@ $vee = true;
 require_once("../config.php");
 
 $email = $_GET['email'];
+
 $user = new user();
 $qtd = $user->verifExistsEmail($email);
 
