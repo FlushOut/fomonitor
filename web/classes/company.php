@@ -15,7 +15,8 @@ class company
     public $logo;
     public $logo_type;
     public $status;
-
+    public $status_payment;
+    
     public $create_date;
     public $create_user;
     public $update_date;
@@ -43,6 +44,7 @@ class company
             $this->logo = $query[0]['logo'];
             $this->logo_type = $query[0]['logo_type'];
             $this->status = $query[0]['status'];
+            $this->status_payment = $query[0]['status_payment'];
             
             return true;
         }

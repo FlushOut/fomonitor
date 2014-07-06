@@ -110,7 +110,7 @@ function getSettings($id){
 
     	$html.= '<label class="checkbox">';
     	$html.= '<input type="checkbox" data-form="uniform" name="appschk" value="t"'; 
-    	if ($list_settings[0]['wifi'] == 1)
+    	if ($list_settings[0]['apps'] == 1)
     		$html.= ' checked ';
     	$html.=' />Apps';
     	$html.= '</label>';
@@ -407,6 +407,9 @@ function getDashboardAccountStat($fk_company){
 function showStaysByDate($fk_company,$dtStart,$dtEnd){
 
     $stay = new stay();
+    $data = array();
+    $i = 0;
+
     $list_stays = $stay->getByDate($fk_company,$dtStart,$dtEnd);
     $html.= '<table id="datatables" class="table table-bordered table-striped responsive">';
     $html.= '   <thead>';
@@ -420,6 +423,7 @@ function showStaysByDate($fk_company,$dtStart,$dtEnd){
     $html.= '   </thead>';
     $html.= '   <tbody>';
                 foreach($list_stays as $value){
+                    $i = $i + 1;
     $html.= '       <tr src="stays">';
     $html.= '           <td>'.$value->user.'</td>';
     $html.= '           <td>'.$value->point.'</td>';
@@ -431,13 +435,19 @@ function showStaysByDate($fk_company,$dtStart,$dtEnd){
     $html.= '   </tbody>';
     $html.= '</table>';
 
-    echo $html;
+    $data['html'] = $html;
+    $data['count'] = $i;
+
+    echo json_encode($data);
                 
 }
 
 function showInvoices($fk_company,$dtStart,$dtEnd){
 
     $pay = new payment();
+    $data = array();
+    $i = 0;
+
     $list_invoices = $pay->getByDate($fk_company,$dtStart,$dtEnd);
     $html.= '<table id="datatables" class="table table-bordered table-striped responsive">';
     $html.= '   <thead>';
@@ -452,6 +462,7 @@ function showInvoices($fk_company,$dtStart,$dtEnd){
     $html.= '   </thead>';
     $html.= '   <tbody>';
                 foreach($list_invoices as $value){
+                    $i = $i + 1;
     $html.= '       <tr src="stays">';
     $html.= '           <td>'.$value->sequence.'</td>';
     $html.= '           <td>'.date('Y-m-d', strtotime($value->date_start)).'</td>';
@@ -464,7 +475,10 @@ function showInvoices($fk_company,$dtStart,$dtEnd){
     $html.= '   </tbody>';
     $html.= '</table>';
 
-    echo $html;
+    $data['html'] = $html;
+    $data['count'] = $i;
+
+    echo json_encode($data);
                 
 }
 

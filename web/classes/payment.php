@@ -49,9 +49,9 @@ class payment
         }
     }
 
-    function paymentByCompany($fkcompany)
+    function byCompany($fkcompany)
     {
-        $result = $this->con->genericQuery("select * from " . $this->table . " where fk_company = '$fkcompany' and status = 1");
+        $result = $this->con->genericQuery("select * from " . $this->table . " where fk_company = '$fkcompany' order by sequence DESC limit 1");
         $query = $result[0];
 
         if (count($query) == 0){

@@ -17,7 +17,7 @@ switch ($_POST['source']) {
         $obj->open($id);
         $obj->del();
         $pay = new payment();
-        $pay->paymentByCompany($company->id);
+        $pay->byCompany($company->id);
         $pay->delUWeb();
         break;
     default:

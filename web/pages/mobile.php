@@ -3,35 +3,36 @@ require_once("../config.php");
 
 $mobile = new mobile();
 
-$list_mobile = $mobile->getLastData($company->id);
+$mobUpd = false;
+$setUpd = false;
+$appUpd = false;
+
 
 if ($_POST['action'] == 'Update') {
-        if (isset($_POST['hdIdAct'])) {
-            $mobile->open($_POST['hdIdAct']);
-            $mobile->update($_POST['cboStatus'], $_POST['cboCategory'], 
-            				$_POST['txtWarranty'], $_POST['txtName'],
-            				$_POST['txtContact'], $_POST['txtEmail'], $_POST['txtPassword']);
-            header("Location: ". $_SERVER['REQUEST_URI']);
-            exit;
-        }
+    if (isset($_POST['hdIdAct'])) {
+        $mobile->open($_POST['hdIdAct']);
+        $mobile->update($_POST['cboStatus'], $_POST['cboCategory'], 
+        				$_POST['txtWarranty'], $_POST['txtName'],
+        				$_POST['txtContact'], $_POST['txtEmail'], $_POST['txtPassword']);
+        $mobUpd = true;    
+    }
 }
 if ($_POST['action'] == 'SaveSettings') {
-        if (isset($_POST['hdIdSet'])) {
-        	$mobile->open($_POST['hdIdSet']);
-        	$mobile->setSettings($_POST);	
-        	header("Location: ". $_SERVER['REQUEST_URI']);
-        	exit;
+    if (isset($_POST['hdIdSet'])) {
+    	$mobile->open($_POST['hdIdSet']);
+    	$mobile->setSettings($_POST);
+        $setUpd = true;	
     }
 }
 if ($_POST['action'] == 'SaveApps') {
-        if (isset($_POST['hdIdApp'])) {
-        	$mobile->open($_POST['hdIdApp']);
-        	$mobile->setApps($_POST['app']);	
-        	header("Location: ". $_SERVER['REQUEST_URI']);
-        	exit;
+    if (isset($_POST['hdIdApp'])) {
+    	$mobile->open($_POST['hdIdApp']);
+    	$mobile->setApps($_POST['app']);
+        $appUpd = true;	
     }
 }
 
+$list_mobile = $mobile->getLastData($company->id);
 ?>
 
 <!DOCTYPE html>
@@ -74,7 +75,49 @@ if ($_POST['action'] == 'SaveApps') {
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+<?php
+if($mobUpd){
+    echo '<style type="text/css">
+        div[name=mobUpdated] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=mobUpdated] {
+            display: none !important;
+        }
+        </style>';
+}
 
+if($setUpd){
+    echo '<style type="text/css">
+        div[name=setUpdated] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=setUpdated] {
+            display: none !important;
+        }
+        </style>';
+}
+
+if($appUpd){
+    echo '<style type="text/css">
+        div[name=appUpdated] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=appUpdated] {
+            display: none !important;
+        }
+        </style>';
+}
+?>
     <body>
         <!-- start header -->
         <?php include("../includes/_header.php"); ?>
@@ -110,6 +153,18 @@ if ($_POST['action'] == 'SaveApps') {
                         <div class="content-body">
                             <!-- tables -->
                             <!--datatables-->
+                            <div name="mobUpdated" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> Your mobile was updated
+                            </div>
+                            <div name="setUpdated" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> Your setting's configuration was updated
+                            </div>
+                            <div name="appUpdated" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> Your application's configuration was updated
+                            </div>
                             <div class="row-fluid">
                                 <div class="span12">
                                     <div class="box corner-all">
@@ -363,6 +418,19 @@ if ($_POST['action'] == 'SaveApps') {
                 jQuery(".sidebar-right-content *").prop('disabled',true); 
                 jQuery(".sidebar-right-content").css({ opacity: 0.5 });
                 */
+
+                window.setTimeout(function() {
+                    $("div[name=mobUpdated]").fadeTo(200, 0).slideUp(200, function(){
+                        $(this).remove(); 
+                    });
+                    $("div[name=setUpdated]").fadeTo(200, 0).slideUp(200, function(){
+                        $(this).remove(); 
+                    });
+                    $("div[name=appUpdated]").fadeTo(200, 0).slideUp(200, function(){
+                        $(this).remove(); 
+                    });
+                }, 2000);
+
                 jQuery("label.checkbox").each(function () {
                 if (jQuery("input", this).attr("checked") == 'checked') jQuery(this).addClass("checked");
                 });

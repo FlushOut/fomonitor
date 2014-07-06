@@ -98,9 +98,9 @@ class user
     {
         $now = new DateTime();
         $dadosS["fk_company"] = $fk_company;
-        $dadosS["name"] = addslashes($name);
-        $dadosS["email"] = addslashes($email);
-        $dadosS["password"] = md5($password);
+        if(strlen(rtrim($name))>0) $dadosS["name"] = addslashes($name);
+        if(strlen(rtrim($email))>0) $dadosS["email"] = addslashes($email);
+        if(strlen(rtrim($password))>0) $dadosS["password"] = md5($password);
         $dadosS["create_date"] = addslashes($now->format('Y-m-d H:i:s'));
         $dadosS["status"] = 1;
 
@@ -236,4 +236,17 @@ class user
         }
     }
 
+    function verifExistsEmailUp($emailold,$emailnew)
+    {
+        if (rtrim($emailold) == rtrim($emailnew)) {
+            return 0;
+        }else{
+            $query = $this->con->genericQuery("select 1 from " . $this->table . " where email = '$emailnew' and email <> '$emailold'");
+            if (count($query) == 0){
+                return 0;
+            }else{
+               return 1;
+            }
+        }
+    }
 }

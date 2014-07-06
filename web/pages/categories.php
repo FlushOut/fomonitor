@@ -1,21 +1,34 @@
 <?php
 require_once("../config.php");
 
-$category = new category();
-$cat = new category();
-$list_categories = $category->list_categories($company->id);
+$catAdd = false;
+$catUpd = false;
+$catDel = false;
 
+$category = new category();
 
 if ($_POST['action'] == 'Save') {
-        if (isset($_POST['hdIdAct'])) {
-            $cat->open($_POST['hdIdAct']);
+    if (isset($_POST['hdIdAct'])) {
+        if ($_POST['hdIdAct'] == ""){
+            $category->save($company->id, $_POST['txtDescription']);
+            $catAdd = true;
+        }else{
+            $category->open($_POST['hdIdAct']);
+            $category->save($company->id, $_POST['txtDescription']);
+            $catUpd = true;
         }
-        if ($_POST['txtDescription']){
-            $cat->save(1, $_POST['txtDescription']);
-            header("Location: ". $_SERVER['REQUEST_URI']);
-            exit;
-        }
+    }
 }
+
+if ($_POST['action'] == 'Delete') {
+    if (isset($_POST['hdIdDE'])) {
+        $category->open($_POST['hdIdDE']);
+        $category->del();
+        $catDel = true;
+    }
+}
+
+$list_categories = $category->list_categories($company->id);
 ?>
 
 <!DOCTYPE html>
@@ -42,18 +55,62 @@ if ($_POST['action'] == 'Save') {
         <link href="../css/animate.css" rel="stylesheet" />
         <link href="../css/uniform.default.css" rel="stylesheet" />
         
+        <link href="../css/jquery.pnotify.default.css" rel="stylesheet" />
         <link href="../css/DT_bootstrap.css" rel="stylesheet" />
         <link href="../css/responsive-tables.css" rel="stylesheet" />
         
         <script src="../js/jquery.js"></script>
-        <script src="../js/jquery-ui.min.js"></script> <!-- this for sliders-->        
+        <script src="../js/jquery-ui.min.js"></script> <!-- this for sliders-->     
         
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+<?php
+if($catAdd){
+    echo '<style type="text/css">
+        div[name=catAdded] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=catAdded] {
+            display: none !important;
+        }
+        </style>';
+}
 
+if($catUpd){
+    echo '<style type="text/css">
+        div[name=catUpdated] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=catUpdated] {
+            display: none !important;
+        }
+        </style>';
+}
+
+if($catDel){
+    echo '<style type="text/css">
+        div[name=catDeleted] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=catDeleted] {
+            display: none !important;
+        }
+        </style>';
+}
+
+?>
     <body>
         <!-- start header -->
         <?php include("../includes/_header.php"); ?>
@@ -89,6 +146,18 @@ if ($_POST['action'] == 'Save') {
                         <div class="content-body">
                             <!-- tables -->
                             <!--datatables-->
+                            <div name="catAdded" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> Your category was created
+                            </div>
+                            <div name="catUpdated" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> Your category was updated
+                            </div>
+                            <div name="catDeleted" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> Your category was deleted
+                            </div>
                             <div class="row-fluid">
                                 <div class="span12">
                                     <div class="box corner-all">
@@ -99,31 +168,50 @@ if ($_POST['action'] == 'Save') {
                                             </div>
                                             <span>Categories&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                             <a href="#myModal" role="button" class="btn" data-toggle="modal" id="aAdd">Add</a>
-                                                    <!-- Modal-->
-                                                    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                            <h3 id="myModalLabel">Information</h3>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <form class="form-horizontal" id="form-validate" action="" method="post" />
-                                                                    <table>
-                                                                        <tr>
-                                                                            <td>Description</td>
-                                                                            <td>
-                                                                                <input name="hdIdAct" id="hdIdAct" type="hidden"/>
-                                                                                <input type="text" id="txtDescription" name="txtDescription" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
-                                                                            </td>    
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td></td>
-                                                                            <td><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                                                                            <button class="btn btn-primary" id="btnSave" name="action" value="Save">Save</button></td>
-                                                                        </tr>
-                                                                    </table>
-                                                            </form>
-                                                        </div>
+                                                <!-- Modal-->
+                                                <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        <h3 id="myModalLabel">Information</h3>
                                                     </div>
+                                                    <div class="modal-body">
+                                                        <form class="form-horizontal" id="form-validate" action="" method="post" />
+                                                                <table>
+                                                                    <tr>
+                                                                        <td>Description</td>
+                                                                        <td>
+                                                                            <input name="hdIdAct" id="hdIdAct" type="hidden"/>
+                                                                            <input type="text" id="txtDescription" name="txtDescription" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
+                                                                        </td>    
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                                        <button class="btn btn-primary" id="btnSave" name="action" value="Save">Save</button></td>
+                                                                    </tr>
+                                                                </table>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- Modal Delete-->
+                                                <div id="myModalDelete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        <h3 id="myModalLabel">Delete Category</h3>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form class="form-horizontal" id="form-validate" action="" method="post" />
+                                                            <input name="hdIdDE" id="hdIdDE" type="hidden"/>
+                                                            <div class="control-group">
+                                                                <label class="control-label">Are you sure?</label>
+                                                            </div>
+                                                            <p align="center">
+                                                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                            <button class="btn btn-primary" id="btnDelete" name="action" value="Delete">Delete</button>
+                                                            </p>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                         </div>
                                         <div class="box-body">
                                             <table id="datatables" class="table table-bordered table-striped responsive">
@@ -143,8 +231,7 @@ if ($_POST['action'] == 'Save') {
                                                             <td><?php echo $item->code; ?></td>
                                                             <td>
                                                                 <a href="#myModal" role="button" class="btn btn-link" data-toggle="modal" id="aEdit">Edit</a>
-                                                                <!-- <button name="btnUpdate" type="button" class="btn btn-link">Edit</button> -->
-                                                                <button name="btnDelete" type="button" class="btn btn-link">Delete</button>
+                                                                <a href="#myModalDelete" role="button" class="btn btn-link" data-toggle="modal" id="aDelete">Delete</a>
                                                             </td>
                                                         </tr>
                                                     <?php } ?>
@@ -177,6 +264,9 @@ if ($_POST['action'] == 'Save') {
         <script src="../js/bootstrap.js"></script>
         <script src="../js/uniform/jquery.uniform.js"></script>
 
+        <script src="../js/pnotify/jquery.pnotify.js"></script>
+        <script src="../js/pnotify/jquery.pnotify.demo.js"></script>
+
         <script src="../js/validate/jquery.validate.js"></script>
         <script src="../js/validate/jquery.metadata.js"></script>
         
@@ -194,26 +284,20 @@ if ($_POST['action'] == 'Save') {
             $(document).ready(function() {
                 // try your js
 
+                window.setTimeout(function() {
+                    $("div[name=catAdded]").fadeTo(200, 0).slideUp(200, function(){
+                        $(this).remove(); 
+                    });
+                    $("div[name=catUpdated]").fadeTo(200, 0).slideUp(200, function(){
+                        $(this).remove(); 
+                    });
+                    $("div[name=catDeleted]").fadeTo(200, 0).slideUp(200, function(){
+                        $(this).remove(); 
+                    });
+                }, 2000);
+
                 $('#myModal').on('shown', function () {
                     $('#txtDescription').focus();
-                });
-               
-                //delete individual row
-                $('button[name="btnDelete"]').click(function(){
-                    var c = confirm('Continue delete?');
-                    if (c) jQuery(this).parents('tr').fadeOut(function () {
-                        var id = jQuery('input[name="hdId"]', this).val();
-                        var src = jQuery(this).attr("src");
-
-                        jQuery.ajax({
-                            url: "/ajax/delete.php",
-                            type: "POST",
-                            data: {id: id, source: src }
-                        }).done(function (resp) {
-                                jQuery(this).remove();
-                            });
-                    });
-                    return false;
                 });
 
                 //update individual row
@@ -223,6 +307,18 @@ if ($_POST['action'] == 'Save') {
                         var desc = jQuery('input[name="hdDesc"]', this).val();
                         $("#hdIdAct").val(id);
                         $("#txtDescription").val(desc);                       
+                    });
+                    var validator = $( "#form-validate" ).validate();
+                    validator.resetForm();
+
+                    return true;
+                });
+
+                //delete individual row
+                $('a#aDelete').bind('click',function(){
+                    jQuery(this).parents('tr').map(function () {
+                       var id = jQuery('input[name="hdId"]', this).val();
+                        $("#hdIdDE").val(id);
                     });
                     return true;
                 });

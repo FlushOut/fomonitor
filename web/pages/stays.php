@@ -29,6 +29,7 @@ require_once("../config.php");
         
         <link href="../css/datepicker.css" rel="stylesheet" />
 
+        <link href="../css/jquery.pnotify.default.css" rel="stylesheet" />
         <link href="../css/DT_bootstrap.css" rel="stylesheet" />
         <link href="../css/responsive-tables.css" rel="stylesheet" />
         
@@ -76,6 +77,10 @@ require_once("../config.php");
                         <div class="content-body">
                             <!-- tables -->
                             <!--datatables-->
+                            <div name="noInfo" class="alert" style="display:none">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Info!</strong> You no have information
+                            </div>
                             <div class="row-fluid">
                                 <div class="span12">
                                     <div class="box corner-all">
@@ -147,6 +152,9 @@ require_once("../config.php");
         <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
         <script src="../js/bootstrap.js"></script>
         <script src="../js/uniform/jquery.uniform.js"></script>
+
+        <script src="../js/pnotify/jquery.pnotify.js"></script>
+        <script src="../js/pnotify/jquery.pnotify.demo.js"></script>
 
         <script src="../js/validate/jquery.validate.js"></script>
         <script src="../js/validate/jquery.metadata.js"></script>
@@ -224,13 +232,24 @@ require_once("../config.php");
                     var dtStart = $("#dvFrom").find("input").val();
                     var dtEnd = $("#dvTo").find("input").val();
                     var action = "showStaysByDate";
+                    var countStays = 0;
 
                     jQuery.ajax({
                         url: "/ajax/actions.php",
                         type: "POST",
                         data: {dtStart: dtStart, dtEnd: dtEnd, action: action}
                     }).done(function (resp) {
-                        $("#datatables").html(resp);
+                        var data = jQuery.parseJSON(resp);
+                        $("#datatables").html(data.html);
+                        if(data.count <= 0){
+                            $("[name=noInfo]").css("display","block");
+                            window.setTimeout(function() {
+                                $("div[name=noInfo]").fadeTo(200, 0).slideUp(200, function(){
+                                    $("[name=noInfo]").css("display","none");
+                                    $("[name=noInfo]").css("opacity","1");
+                                });
+                            }, 2000);
+                        }
                     });
                 });
 

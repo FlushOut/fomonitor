@@ -1,37 +1,52 @@
 <?php
 require_once("../config.php");
 
+$userAdd = false;
+$userUpd = false;
+$userDel = false;
+$userPro = false;
+
 $newUser = new user();
-$list_users = $newUser->list_users($company->id);
 
 if ($_POST['action'] == 'Save') {
-        if (isset($_POST['hdIdAct'])) {
-            if ($_POST['hdIdAct'] == ""){
-                $newUser->save($company->id, $_POST['txtName'], $_POST['email'], $_POST['txtPassword']);
-                $pay = new payment();
-                $pay->paymentByCompany($company->id);
-                $pay->addUWeb();
-                header("Location: ". $_SERVER['REQUEST_URI']);
-                exit;
-            }else{
-                $newUser->open($_POST['hdIdAct']);
-                $newUser->save($company->id, $_POST['txtName'], $_POST['email'], $_POST['txtPassword']);
-                header("Location: ". $_SERVER['REQUEST_URI']);
-                exit;
-            }
+    if (isset($_POST['hdIdAct'])) {
+        if ($_POST['hdIdAct'] == ""){
+            $newUser->save($company->id, $_POST['txtName'], $_POST['email'], $_POST['txtPassword']);
+            $pay = new payment();
+            $pay->byCompany($company->id);
+            $pay->addUWeb();
+            $userAdd = true;
+        }else{
+            $newUser->open($_POST['hdIdAct']);
+            $newUser->save($company->id, $_POST['txtName'], $_POST['email'], $_POST['txtPassword']);
+            $userUpd = true;
         }
+    }
 }
 if ($_POST['action'] == 'SaveProfiles') {
-        if (isset($_POST['hdIdUP'])) {
+    if (isset($_POST['hdIdUP'])) {
         $newUser->saveProfiles($_POST['hdIdUP'],$_POST['prof']);
-        header("Location: ". $_SERVER['REQUEST_URI']);
-        exit;
+        $userPro = true;
     }
 
 }
 
-?>
+if ($_POST['action'] == 'Delete') {
+    if (isset($_POST['hdIdDE'])) {
+        $newUser->open($_POST['hdIdDE']);
+        $newUser->del();
+        $pay = new payment();
+        $pay->byCompany($company->id);
+        $pay->delUWeb();
+        $userDel = true;
 
+    }
+
+}
+
+$list_users = $newUser->list_users($company->id);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -55,7 +70,8 @@ if ($_POST['action'] == 'SaveProfiles') {
         <link href="../css/font-awesome.css" rel="stylesheet" />
         <link href="../css/animate.css" rel="stylesheet" />
         <link href="../css/uniform.default.css" rel="stylesheet" />
-        
+
+        <link href="../css/jquery.pnotify.default.css" rel="stylesheet" />
         <link href="../css/DT_bootstrap.css" rel="stylesheet" />
         <link href="../css/responsive-tables.css" rel="stylesheet" />
 
@@ -68,6 +84,63 @@ if ($_POST['action'] == 'SaveProfiles') {
         <![endif]-->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
 
+<?php
+if($userAdd){
+    echo '<style type="text/css">
+        div[name=userAdded] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=userAdded] {
+            display: none !important;
+        }
+        </style>';
+}
+
+if($userUpd){
+    echo '<style type="text/css">
+        div[name=userUpdated] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=userUpdated] {
+            display: none !important;
+        }
+        </style>';
+}
+
+if($userDel){
+    echo '<style type="text/css">
+        div[name=userDeleted] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=userDeleted] {
+            display: none !important;
+        }
+        </style>';
+}
+
+if($userPro){
+    echo '<style type="text/css">
+        div[name=userProfile] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=userProfile] {
+            display: none !important;
+        }
+        </style>';
+}
+?>
     <body>
         <!-- start header -->
         <?php include("../includes/_header.php"); ?>
@@ -90,7 +163,6 @@ if ($_POST['action'] == 'SaveProfiles') {
                         <!-- start left_menu -->
                         <?php include("../includes/_header_users.php"); ?>
                         <!-- end left_menu -->
-                
                         <!-- content-breadcrumb -->
                         <div class="content-breadcrumb">
                             <!--breadcrumb-->
@@ -99,11 +171,26 @@ if ($_POST['action'] == 'SaveProfiles') {
                                 <li class="active">List</li>
                             </ul><!--/breadcrumb-->
                         </div><!-- /content-breadcrumb -->
-                        
                         <!-- content-body -->
                         <div class="content-body">
                             <!-- tables -->
                             <!--datatables-->
+                            <div name="userAdded" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> Your user was created
+                            </div>
+                            <div name="userUpdated" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> Your user was updated
+                            </div>
+                            <div name="userDeleted" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> Your user was deleted
+                            </div>
+                            <div name="userProfile" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> The profile of your user was updated
+                            </div>
                             <div class="row-fluid">
                                 <div class="span12">
                                     <div class="box corner-all">
@@ -114,7 +201,7 @@ if ($_POST['action'] == 'SaveProfiles') {
                                             </div>
                                             <span>Users&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                             <a href="#myModal" role="button" class="btn" data-toggle="modal" id="aAdd">Add</a>
-                                                    <!-- Modal-->
+                                                    <!-- Modal Save/Edit-->
                                                     <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -127,19 +214,19 @@ if ($_POST['action'] == 'SaveProfiles') {
                                                                             <td>Name</td>
                                                                             <td>
                                                                                 <input name="hdIdAct" id="hdIdAct" type="hidden"/>
-                                                                                <input type="text" id="txtName" name="txtName" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
+                                                                                <input type="text" id="txtName" name="txtName" class="grd-white" name="required" id="required" />
                                                                             </td>    
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Email</td>
                                                                             <td>
-                                                                                <input type="text" class="grd-white" data-validate="{required: true, email:true, remote:'/ajax/validateemail.php', messages:{required:'Please enter field email', email:'Please enter valid email address', remote:'This email is already in use'}}" name="email" id="email" />
+                                                                                <input type="text" class="grd-white" name="email" id="email" />
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Password</td>
                                                                             <td>
-                                                                                <input type="password" id="txtPassword" name="txtPassword" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field password'}}" name="password" id="password" />
+                                                                                <input type="password" id="txtPassword" name="txtPassword" class="grd-white" name="password" id="password" />
                                                                             </td>    
                                                                         </tr>
                                                                         <tr>
@@ -151,7 +238,7 @@ if ($_POST['action'] == 'SaveProfiles') {
                                                             </form>
                                                         </div>
                                                     </div>
-                                                    <!-- Modal-->
+                                                    <!-- Modal Profile-->
                                                     <div id="myModalProfiles" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -168,7 +255,25 @@ if ($_POST['action'] == 'SaveProfiles') {
                                                                 <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                                                                 <button class="btn btn-primary" id="btnSaveProfiles" name="action" value="SaveProfiles">Save</button>
                                                                 </p>
-
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Modal Delete-->
+                                                    <div id="myModalDelete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                            <h3 id="myModalLabel">Delete User</h3>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form class="form-horizontal" id="form-validate" action="" method="post" />
+                                                                <input name="hdIdDE" id="hdIdDE" type="hidden"/>
+                                                                <div class="control-group">
+                                                                    <label class="control-label">Are you sure?</label>
+                                                                </div>
+                                                                <p align="center">
+                                                                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                                <button class="btn btn-primary" id="btnDelete" name="action" value="Delete">Delete</button>
+                                                                </p>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -194,7 +299,7 @@ if ($_POST['action'] == 'SaveProfiles') {
                                                             </td>
                                                             <td>
                                                                 <a href="#myModal" role="button" class="btn btn-link" data-toggle="modal" id="aEdit">Edit</a>
-                                                                <button name="btnDelete" type="button" class="btn btn-link">Delete</button>
+                                                                <a href="#myModalDelete" role="button" class="btn btn-link" data-toggle="modal" id="aDelete">Delete</a>
                                                                 <a href="#myModalProfiles" role="button" class="btn btn-link" data-toggle="modal" id="aProfiles">Profiles</a>
                                                             </td>
                                                         </tr>
@@ -228,6 +333,9 @@ if ($_POST['action'] == 'SaveProfiles') {
         <script src="../js/bootstrap.js"></script>
         <script src="../js/uniform/jquery.uniform.js"></script>
 
+        <script src="../js/pnotify/jquery.pnotify.js"></script>
+        <script src="../js/pnotify/jquery.pnotify.demo.js"></script>
+
         <script src="../js/validate/jquery.validate.js"></script>
         <script src="../js/validate/jquery.metadata.js"></script>
         
@@ -244,16 +352,33 @@ if ($_POST['action'] == 'SaveProfiles') {
         <script type="text/javascript">
             $(document).ready(function() {
                 // try your js
+
+                window.setTimeout(function() {
+                    $("div[name=userAdded]").fadeTo(200, 0).slideUp(200, function(){
+                        $(this).remove(); 
+                    });
+                    $("div[name=userUpdated]").fadeTo(200, 0).slideUp(200, function(){
+                        $(this).remove(); 
+                    });
+                    $("div[name=userDeleted]").fadeTo(200, 0).slideUp(200, function(){
+                        $(this).remove(); 
+                    });
+                }, 2000);
+
                 /*
                 jQuery(".sidebar-right-content *").prop('disabled',true); 
                 jQuery(".sidebar-right-content").css({ opacity: 0.5 });
-                */    
+                */   
+
                 jQuery("label.checkbox").each(function () {
                 if (jQuery("input", this).attr("checked") == 'checked') jQuery(this).addClass("checked");
                 });
 
                 $('#myModal').on('shown', function () {
                     $('#txtName').focus();
+                });
+                $("#txtName").focusout(function(){
+                  $('#email').focusout();
                 });
                
                 //Edit Profile users
@@ -275,39 +400,67 @@ if ($_POST['action'] == 'SaveProfiles') {
                     return true;
                 });
 
-                //delete individual row
-                $('button[name="btnDelete"]').click(function(){
-                    var c = confirm('Continue delete?');
-                    if (c) jQuery(this).parents('tr').fadeOut(function () {
+                //delete Profile users
+                $('a#aDelete').bind('click',function(){
+                    jQuery(this).parents('tr').map(function () {
                         var id = jQuery('input[name="hdId"]', this).val();
-                        var src = jQuery(this).attr("src");
-
-                        jQuery.ajax({
-                            url: "/ajax/delete.php",
-                            type: "POST",
-                            data: {id: id, source: src }
-                        }).done(function (resp) {
-                                jQuery(this).remove();
-                                location.reload();
-                            });
+                        $("#hdIdDE").val(id);
                     });
-                    return false;
+                    return true;
                 });
-
 
                 //update individual row
                 $('a#aEdit').bind('click',function(){
+                    var id;
+                    var name;
+                    var emailAnt;
+
+                    $('#form-validate-new-user').removeData('validator');
+
                     jQuery(this).parents('tr').map(function () {
-                        var id = jQuery('input[name="hdId"]', this).val();
-                        var name = jQuery('input[name="hdName"]', this).val();
-                        var email = jQuery('input[name="hdEmail"]', this).val();
-                        
-                        $("#hdIdAct").val(id);
-                        $("#txtName").val(name);                       
-                        $("#email").val(email);
-                        
+                        id = jQuery('input[name="hdId"]', this).val();
+                        name = jQuery('input[name="hdName"]', this).val();
+                        emailAnt = jQuery('input[name="hdEmail"]', this).val();
+                    });   
+
+                    $("#hdIdAct").val(id);
+                    $("#txtName").val(name);                       
+                    $("#email").val(emailAnt);
+                    $("#btnSave").text('Update');
+
+                    $("#form-validate-new-user").validate({
+                        rules: {    
+                            email: {
+                                required:false,
+                                email:true,
+                                remote: {
+                                    url:'/ajax/validateemailup.php',
+                                    data: {
+                                        emailnew: function(){
+                                            return $("#email").val();
+                                        },
+                                        emailold: emailAnt
+                                    }    
+                                }
+                            },
+                            txtPassword: {
+                                required:false,
+                                minlength:6
+                            }
+                        },
+                        messages: {
+                            email: {
+                                email: 'Please enter valid email address',
+                                remote: 'this new email is already in use'
+                            },
+                            txtPassword: {
+                                minlength: 'Please enter at least 6 characters'
+                            }
+                        }
                     });
-                    return true;
+
+                    var validator = $( "#form-validate-new-user" ).validate();
+                    validator.resetForm();
                 });
 
                 // validate form
@@ -316,13 +469,45 @@ if ($_POST['action'] == 'SaveProfiles') {
                     $("#txtName").val('');
                     $("#email").val('');
                     $("#txtPassword").val('');
-                    
+                    $("#btnSave").text('Save');
+
+                    $('#form-validate-new-user').removeData('validator');
+
+                    $("#form-validate-new-user").validate({
+                        rules: {
+                            txtName: {
+                                required:true
+                            },
+                            email: {
+                                required:true,
+                                email:true,
+                                remote:'/ajax/validateemail.php'
+                            },
+                            txtPassword: {
+                                required:true,
+                                minlength:6
+                            }
+                        },
+                        messages: {
+                            txtName: {
+                                required:'Please enter field name'
+                            },
+                            email: {
+                                required: 'Please enter field email',
+                                email: 'Please enter valid email address',
+                                remote: 'This email is already in use'
+                            },
+                            txtPassword: {
+                                required: 'Please enter field password',
+                                minlength: 'Please enter at least 6 characters'
+                            }
+                        }
+                    });
+
                     var validator = $( "#form-validate-new-user" ).validate();
                     validator.resetForm();
-                    
                 });
-
-                $('#form-validate-new-user').validate();
+     
                 $('#form-validate').validate();
                 
                 // uniform

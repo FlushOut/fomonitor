@@ -1,19 +1,36 @@
 <?php
 require_once("../config.php");
 
+$pointAdd = false;
+$pointUpd = false;
+$pointDel = false;
+
 $point = new point();
-$list_points = $point->list_points($company->id);
+
 
 if ($_POST['action'] == 'Save') {
-
     if (isset($_POST['hdIdAct'])) {
-        $point->open($_POST['hdIdAct']);
-    }
-     if ($_POST['txtName']){
-        $point->save($company->id, $_POST['txtName'], $_POST['txtAddr_street'], $_POST['txtAddr_number'], $_POST['txtAddr_district'], $_POST['txtAddr_city'], $_POST['txtAddr_state'], $_POST['txtAddr_postalcode'], $_POST['latitude'], $_POST['longitude'], $_POST['txtRadius']);
-        $list_points = $point->list_points($company->id);
+        if ($_POST['hdIdAct'] == ""){
+            $point->save($company->id, $_POST['txtName'], $_POST['txtAddr_street'], $_POST['txtAddr_number'], $_POST['txtAddr_district'], $_POST['txtAddr_city'], $_POST['txtAddr_state'], $_POST['txtAddr_postalcode'], $_POST['latitude'], $_POST['longitude'], $_POST['txtRadius']);
+            $pointAdd = true;
+        }else{
+            $point->open($_POST['hdIdAct']);
+            $point->save($company->id, $_POST['txtName'], $_POST['txtAddr_street'], $_POST['txtAddr_number'], $_POST['txtAddr_district'], $_POST['txtAddr_city'], $_POST['txtAddr_state'], $_POST['txtAddr_postalcode'], $_POST['latitude'], $_POST['longitude'], $_POST['txtRadius']);
+            $pointUpd = true;
+        }
     }
 }
+
+if ($_POST['action'] == 'Delete') {
+    if (isset($_POST['hdIdDE'])) {
+        $point->open($_POST['hdIdDE']);
+        $point->del();
+        $pointDel = true;
+
+    }
+}
+
+$list_points = $point->list_points($company->id);
 
 ?>
 
@@ -41,7 +58,8 @@ if ($_POST['action'] == 'Save') {
         <link href="../css/font-awesome.css" rel="stylesheet" />
         <link href="../css/animate.css" rel="stylesheet" />
         <link href="../css/uniform.default.css" rel="stylesheet" />
-        
+
+        <link href="../css/jquery.pnotify.default.css" rel="stylesheet" />
         <link href="../css/DT_bootstrap.css" rel="stylesheet" />
         <link href="../css/responsive-tables.css" rel="stylesheet" />
 
@@ -53,6 +71,50 @@ if ($_POST['action'] == 'Save') {
         <![endif]-->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
 
+<?php
+if($pointAdd){
+    echo '<style type="text/css">
+        div[name=pointAdded] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=pointAdded] {
+            display: none !important;
+        }
+        </style>';
+}
+
+if($pointUpd){
+    echo '<style type="text/css">
+        div[name=pointUpdated] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=pointUpdated] {
+            display: none !important;
+        }
+        </style>';
+}
+
+if($pointDel){
+    echo '<style type="text/css">
+        div[name=pointDeleted] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=pointDeleted] {
+            display: none !important;
+        }
+        </style>';
+}
+
+?>
     <body>
         <!-- start header -->
         <?php include("../includes/_header.php"); ?>
@@ -88,6 +150,18 @@ if ($_POST['action'] == 'Save') {
                         <div class="content-body">
                             <!-- tables -->
                             <!--datatables-->
+                            <div name="pointAdded" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> Your point was created
+                            </div>
+                            <div name="pointUpdated" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> Your point was updated
+                            </div>
+                            <div name="pointDeleted" class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Done!</strong> Your point was deleted
+                            </div>
                             <div class="row-fluid">
                                 <div class="span12">
                                     <div class="box corner-all">
@@ -98,63 +172,81 @@ if ($_POST['action'] == 'Save') {
                                             </div>
                                             <span>Points&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                             <a href="#myModal" role="button" class="btn" data-toggle="modal" id="aAdd">Add</a>
-                                                
-                                                    <!-- Modal -->
-                                                    <div id="myModal" class="modal hide fade" style="width:900px !important;height:550px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                            <h3 id="myModalLabel">Information</h3>
-                                                        </div>
-                                                        <div style="position: relative;overflow-y: auto;padding: 15px;" class="content-modal">
-                                                            <form class="form-horizontal" id="form-validate" action="" method="post" />
-                                                                <table>
-                                                                    <tr>
-                                                                        <td>Name</td>
-                                                                        <td><input type="text" id="txtName" name="txtName" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" value="<?php echo $point->name ?>" /></td>
-                                                                        <td rowspan="8" style="width:55% !important;"><div class="mapa" id="mapa"  style="height:400px; width: 100%; float: right"></div></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Street</td>
-                                                                        <td><input type="text" id="txtAddr_street" value="<?php echo $point->addr_street ?>" name="txtAddr_street" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Número</td>
-                                                                        <td><input type="text" id="txtAddr_number" value="<?php echo $point->addr_number ?>" name="txtAddr_number" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>District</td>
-                                                                        <td><input type="text" id="txtAddr_district" value="<?php echo $point->addr_district ?>" name="txtAddr_district" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>City</td>
-                                                                        <td><input type="text" id="txtAddr_city" value="<?php echo $point->addr_city ?>" name="txtAddr_city" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>State</td>
-                                                                        <td><input type="text" id="txtAddr_state" value="<?php echo $point->addr_state ?>" name="txtAddr_state" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Postal code</td>
-                                                                        <td><input type="text" id="txtAddr_postalcode" value="<?php echo $point->addr_postalcode ?>" name="txtAddr_postalcode" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
-                                                                            <input type="hidden" id="latitude" name="latitude" value="<?php echo $poi->latitude ?>" />
-                                                                            <input type="hidden" id="longitude" name="longitude" value="<?php echo $poi->longitude ?>" />
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Radius (meters)</td>
-                                                                        <td><input type="text" id="txtRadius" value="<?php echo $point->addr_radius ?>" name="txtRadius" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td></td>
-                                                                        <td><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                                                                            <button class="btn btn-primary" id="btnSave" name="action" value="Save">Save</button>
-                                                                        </td>
-                                                                    </tr>
-                                                                </table>
-                                                                <input name="hdIdAct" id="hdIdAct" type="hidden"/>
-                                                            </form>
-                                                        </div>
+                                                <!-- Modal -->
+                                                <div id="myModal" class="modal hide fade" style="width:900px !important;height:550px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        <h3 id="myModalLabel">Information</h3>
                                                     </div>
+                                                    <div style="position: relative;overflow-y: auto;padding: 15px;" class="content-modal">
+                                                        <form class="form-horizontal" id="form-validate" action="" method="post" />
+                                                            <table>
+                                                                <tr>
+                                                                    <td>Name</td>
+                                                                    <td><input type="text" id="txtName" name="txtName" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" value="<?php echo $point->name ?>" /></td>
+                                                                    <td rowspan="8" style="width:55% !important;"><div class="mapa" id="mapa"  style="height:400px; width: 100%; float: right"></div></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Street</td>
+                                                                    <td><input type="text" id="txtAddr_street" value="<?php echo $point->addr_street ?>" name="txtAddr_street" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Número</td>
+                                                                    <td><input type="text" id="txtAddr_number" value="<?php echo $point->addr_number ?>" name="txtAddr_number" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>District</td>
+                                                                    <td><input type="text" id="txtAddr_district" value="<?php echo $point->addr_district ?>" name="txtAddr_district" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>City</td>
+                                                                    <td><input type="text" id="txtAddr_city" value="<?php echo $point->addr_city ?>" name="txtAddr_city" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>State</td>
+                                                                    <td><input type="text" id="txtAddr_state" value="<?php echo $point->addr_state ?>" name="txtAddr_state" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Postal code</td>
+                                                                    <td><input type="text" id="txtAddr_postalcode" value="<?php echo $point->addr_postalcode ?>" name="txtAddr_postalcode" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" />
+                                                                        <input type="hidden" id="latitude" name="latitude" value="<?php echo $poi->latitude ?>" />
+                                                                        <input type="hidden" id="longitude" name="longitude" value="<?php echo $poi->longitude ?>" />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Radius (meters)</td>
+                                                                    <td><input type="text" id="txtRadius" value="<?php echo $point->addr_radius ?>" name="txtRadius" class="grd-white" data-validate="{required: true, messages:{required:'Please enter field required'}}" name="required" id="required" /></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                                        <button class="btn btn-primary" id="btnSave" name="action" value="Save">Save</button>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <input name="hdIdAct" id="hdIdAct" type="hidden"/>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- Modal Delete-->
+                                                <div id="myModalDelete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        <h3 id="myModalLabel">Delete Point</h3>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form class="form-horizontal" id="form-validate" action="" method="post" />
+                                                            <input name="hdIdDE" id="hdIdDE" type="hidden"/>
+                                                            <div class="control-group">
+                                                                <label class="control-label">Are you sure?</label>
+                                                            </div>
+                                                            <p align="center">
+                                                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                            <button class="btn btn-primary" id="btnDelete" name="action" value="Delete">Delete</button>
+                                                            </p>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                         </div>
                                         <div class="box-body">
                                             <table id="datatables" class="table table-bordered table-striped responsive">
@@ -188,7 +280,7 @@ if ($_POST['action'] == 'Save') {
                                                             </td>
                                                             <td>
                                                                 <a href="#myModal" role="button" class="btn btn-link" data-toggle="modal" id="aEdit" >Edit</a>
-                                                                <button name="btnDelete" type="button" class="btn btn-link">Delete</button>
+                                                                <a href="#myModalDelete" role="button" class="btn btn-link" data-toggle="modal" id="aDelete" >Delete</a>
                                                             </td>
                                                         </tr>
                                                     <?php } ?>
@@ -223,6 +315,9 @@ if ($_POST['action'] == 'Save') {
         <script src="../js/bootstrap.js"></script>
         <script src="../js/uniform/jquery.uniform.js"></script>
 
+        <script src="../js/pnotify/jquery.pnotify.js"></script>
+        <script src="../js/pnotify/jquery.pnotify.demo.js"></script>
+
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 
         <script src="../js/validate/jquery.validate.js"></script>
@@ -242,23 +337,18 @@ if ($_POST['action'] == 'Save') {
             $(document).ready(function() {
 
                 // try your js
-                //delete individual row
-                $('button[name="btnDelete"]').click(function(){
-                    var c = confirm('Continue delete?');
-                    if (c) jQuery(this).parents('tr').fadeOut(function () {
-                        var id = jQuery("input", this).val();
-                        var src = jQuery(this).attr("src");
 
-                        jQuery.ajax({
-                            url: "/ajax/delete.php",
-                            type: "POST",
-                            data: {id: id, source: src }
-                        }).done(function (resp) {
-                                jQuery(this).remove();
-                            });
+                window.setTimeout(function() {
+                    $("div[name=pointAdded]").fadeTo(200, 0).slideUp(200, function(){
+                        $(this).remove(); 
                     });
-                    return false;
-                });
+                    $("div[name=pointUpdated]").fadeTo(200, 0).slideUp(200, function(){
+                        $(this).remove(); 
+                    });
+                    $("div[name=pointDeleted]").fadeTo(200, 0).slideUp(200, function(){
+                        $(this).remove(); 
+                    });
+                }, 2000);
 
                 //update individual row
                 $('a#aEdit').bind('click',function(){
@@ -275,11 +365,37 @@ if ($_POST['action'] == 'Save') {
                         $("#longitude").val(jQuery('input[name="hddLongitude"]', this).val());
                         $("#txtRadius").val(jQuery('input[name="hddRadius"]', this).val());
                     });
+                    
+                    var validator = $( "#form-validate" ).validate();
+                    validator.resetForm();
+                    
+                    return true;
+                });
+
+                //delete individual row
+                $('a#aDelete').bind('click',function(){
+                    jQuery(this).parents('tr').map(function () {
+                       var id = jQuery('input[name="hddId"]', this).val();
+                        $("#hdIdDE").val(id);
+                    });
+
                     return true;
                 });
 
                 // validate form
                 $("a#aAdd").bind('click', function () {
+                    $("#hdIdAct").val('');
+                    $("#txtName").val('');
+                    $("#txtAddr_street").val('');
+                    $("#txtAddr_number").val('');
+                    $("#txtAddr_district").val('');
+                    $("#txtAddr_city").val('');
+                    $("#txtAddr_state").val('');
+                    $("#txtAddr_postalcode").val('');
+                    $("#latitude").val('');
+                    $("#longitude").val('');
+                    $("#txtRadius").val('');
+
                     var validator = $( "#form-validate" ).validate();
                     validator.resetForm();
                 });

@@ -7,46 +7,85 @@ if (isset($_SESSION['loginsession'])) redirect("/pages/menu.php");
 $country = new country();
 $list_countries = $country->list_countries();
 
-$error = false;
+$errorUserPass = false;
+$errorInternal = false;
+$errorPayment = false;
+
 if (isset($_POST['login_username'])) {
-    $user = new user();
-
-    $returnLogin = $user->login($_POST['login_username'], $_POST['login_password']);
-
-    if ($returnLogin) {
-        $status_conf = $returnLogin->status_conf;
-        $id = $returnLogin->id;
-        if ($status_conf == 1) {
-            $_SESSION['emailsession'] = $_POST['login_username'];
-            $_SESSION['loginsession'] = $id;
-            redirect("/pages/menu.php");    
-        }else{
-            redirect("/pages/verifyemail.php?user=".$id);    
+    if (count($_POST['login_username']) > 0) {
+        $user = new user();
+        $returnLogin = $user->login($_POST['login_username'], $_POST['login_password']);
+        if ($returnLogin) {
+            $company = new company();
+            $company->open($returnLogin->fk_company);
+            if($company->status_payment == 0) {
+                $errorPayment = true;                
+            } else {
+                $status_conf = $returnLogin->status_conf;
+                $id = $returnLogin->id;
+                if ($status_conf == 1) {
+                    $_SESSION['emailsession'] = $_POST['login_username'];
+                    $_SESSION['loginsession'] = $id;
+                    redirect("/pages/menu.php");    
+                }else{
+                    redirect("/pages/verifyemail.php?user=".$id);    
+                }
+            }
+        } else {
+            $errorUserPass = true;
         }
-    } else {
-        $error = true;
     }
 }
 
 if (isset($_POST['name'])) {
-    $company = new company();
-    $idCompany = $company->create($_POST['company'], $_POST['country']);
-    if ($idCompany) {
-        $user = new user();
-        $idUser = $user->createAdmin($idCompany,$_POST['name'], $_POST['email'], $_POST['password']);
-        if($idUser){
-            $response = $user->sendCode($idUser, $_POST['email']);
-            if($response > 0){
-                redirect("/pages/verifyemail.php?user=".$idUser);        
+    if (count($_POST['name']) > 0) {
+        $company = new company();
+        $idCompany = $company->create($_POST['company'], $_POST['country']);
+        if ($idCompany) {
+            $user = new user();
+            $idUser = $user->createAdmin($idCompany,$_POST['name'], $_POST['email'], $_POST['password']);
+            if($idUser){
+                $response = $user->sendCode($idUser, $_POST['email']);
+                if($response > 0){
+                    redirect("/pages/verifyemail.php?user=".$idUser);        
+                }else{
+                    $errorInternal = true;        
+                }
             }else{
-                $error = true;        
-            }
+                $errorInternal = true;    
+            }        
         }else{
-            $error = true;    
-        }        
-    }else{
-        $error = true;
+            $errorInternal = true;
+        }
     }
+}
+
+if($errorUserPass){
+    echo '<style type="text/css">
+        div[name=errorUserPass] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=errorUserPass] {
+            display: none !important;
+        }
+        </style>';
+}
+
+if($errorPayment){
+    echo '<style type="text/css">
+        div[name=errorPayment] {
+            display: block !important;
+        }
+        </style>';
+}else{
+    echo '<style type="text/css">
+        div[name=errorPayment] {
+            display: none !important;
+        }
+        </style>';
 }
 
 ?>
@@ -83,7 +122,6 @@ if (isset($_POST['name'])) {
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
-
     <body>
         <!-- section header -->
         <header class="header" data-spy="affix" data-offset-top="0">
@@ -116,7 +154,7 @@ if (isset($_POST['name'])) {
                                     <div class="control-group">
                                         <label class="control-label">Email</label>
                                         <div class="controls">
-                                            <input type="text" class="input-block-level" data-validate="{required: true, messages:{required:'Please enter field email'}}" name="login_username" id="login_username" autocomplete="on" />
+                                            <input type="text" class="input-block-level" data-validate="{required: true, email:true, messages:{required:'Please enter field email',email:'Please enter valid email address'}}" name="login_username" id="login_username" autocomplete="on" />
                                         </div>
                                     </div>
                                     <div class="control-group">
@@ -131,6 +169,14 @@ if (isset($_POST['name'])) {
                                             <input type="checkbox" data-form="uniform" name="remember_me" id="remember_me_yes" value="yes" /> Remember me
                                         </label>
                                         <p class="recover-account">Not have an account yet? <a href="#modal-pricing" class="link" data-toggle="modal">See our plan!</a></p>
+                                    </div>
+                                    <div name="errorUserPass" class="alert alert-error">
+                                        <button type="button" class="close" data-dismiss="alert">×</button>
+                                        <strong>Error!</strong> Incorrect email or password 
+                                    </div>
+                                    <div name="errorPayment" class="alert alert-error">
+                                        <button type="button" class="close" data-dismiss="alert">×</button>
+                                        <strong>Error!</strong> Your company is disabled due payment
                                     </div>
                                     <div class="form-actions">
                                         <input type="submit" class="btn btn-block btn-large btn-primary" value="Sign into account" />

@@ -76,6 +76,10 @@ require_once("../config.php");
                         <div class="content-body">
                             <!-- tables -->
                             <!--datatables-->
+                            <div name="noInfo" class="alert" style="display:none">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Info!</strong> You no have information
+                            </div>
                             <div class="row-fluid">
                                 <div class="span12">
                                     <div class="box corner-all">
@@ -235,7 +239,17 @@ require_once("../config.php");
                         type: "POST",
                         data: {dtStart: dtStart, dtEnd: dtEnd, action: action}
                     }).done(function (resp) {
-                        $("#datatables").html(resp);
+                        var data = jQuery.parseJSON(resp);
+                        $("#datatables").html(data.html);
+                        if(data.count <= 0){
+                            $("[name=noInfo]").css("display","block");
+                            window.setTimeout(function() {
+                                $("div[name=noInfo]").fadeTo(200, 0).slideUp(200, function(){
+                                    $("[name=noInfo]").css("display","none");
+                                    $("[name=noInfo]").css("opacity","1");
+                                });
+                            }, 2000);
+                        }
                     });
                 });
 

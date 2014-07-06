@@ -83,6 +83,10 @@ $list_points = $point->list_points($company->id);
                         <div class="content-body">
                             <!-- tables -->
                             <!--datatables-->
+                            <div name="noInfoRoutes" class="alert" style="display:none">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Info!</strong> You no have routes for this date range
+                            </div>
                             <div class="row-fluid">
                                 <div class="span12">
                                     <div class="box corner-all">
@@ -445,6 +449,14 @@ $list_points = $point->list_points($company->id);
                             for (var i = 0;i < data.routes.length; i += 1) {
                                 addRoutes(data.routes[i]);
                             }
+                        }else{
+                            $("[name=noInfoRoutes]").css("display","block");
+                            window.setTimeout(function() {
+                                $("div[name=noInfoRoutes]").fadeTo(200, 0).slideUp(200, function(){
+                                    $("[name=noInfoRoutes]").css("display","none");
+                                    $("[name=noInfoRoutes]").css("opacity","1");
+                                });
+                            }, 2000);
                         }
                         infowindow = new google.maps.InfoWindow({
                             content: 'loading...',
@@ -647,7 +659,7 @@ $list_points = $point->list_points($company->id);
 
                 function updateElevation() {
                     if (markersRoute.length > 1) {
-                        var travelMode = "driving";
+                        var travelMode = "walking";
                         if (travelMode != 'direct') {
                             calcRoute(travelMode);
                         } else {
