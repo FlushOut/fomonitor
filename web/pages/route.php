@@ -659,7 +659,7 @@ $list_points = $point->list_points($company->id);
 
                 function updateElevation() {
                     if (markersRoute.length > 1) {
-                        var travelMode = "walking";
+                        var travelMode = "direct";
                         if (travelMode != 'direct') {
                             calcRoute(travelMode);
                         } else {
