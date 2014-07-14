@@ -447,7 +447,7 @@ $list_points = $point->list_points($company->id);
                         }
                         if(data.routes.length > 0){
                             for (var i = 0;i < data.routes.length; i += 1) {
-                                addRoutes(data.routes[i]);
+                                addRoutes(data.routes[i]);  
                             }
                         }else{
                             $("[name=noInfoRoutes]").css("display","block");
@@ -543,7 +543,7 @@ $list_points = $point->list_points($company->id);
                 function calcRoute(travelMode) {
                     var origin = markersRoute[0].getPosition();
                     var destination = markersRoute[markersRoute.length - 1].getPosition();
-                    
+
                     var waypoints = [];
                     for (var i = 1; i < markersRoute.length - 1; i++) {
                       waypoints.push({
@@ -600,7 +600,7 @@ $list_points = $point->list_points($company->id);
                             '</div>'+
                             '<h2 id="firstHeading" class="firstHeading">'+ name +'</h2>'+
                             '<div id="bodyContent">'+
-                                '<p><b>Date : </b>'+ date +'</p>'+
+                                '<p><b>Date : </b>'+ date +'&nbsp;&nbsp;</p>'+
                             '</div>'+
                         '</div>';
 
@@ -613,25 +613,16 @@ $list_points = $point->list_points($company->id);
                     }else {
                         marker.setVisible(false);
                     }
-                    
-                      //Evento para mover los markers y pintar la alteracion de la ruta
-                      /*google.maps.event.addListener(marker, 'dragend', function(e) {
-                        updateElevation();
-                      });*/
-                      
                     markersRoute.push(marker);
-                    if (doQuery) {
-                        updateElevation(doQuery);
-                    }
-
                 }
 
                 function addRoutes(data) {
 
                     map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
                     var bounds = new google.maps.LatLngBounds();
-                    var routeLength = data.points.length-2;
+                    var routeLength = data.points.length-1;
                     var isSE;
+
                     for (var i = 0; i < data.points.length; i++) {
                         if (data.points[i]){
                             var latlng = new google.maps.LatLng(
@@ -659,7 +650,7 @@ $list_points = $point->list_points($company->id);
 
                 function updateElevation() {
                     if (markersRoute.length > 1) {
-                        var travelMode = "direct";
+                        var travelMode = "walking";
                         if (travelMode != 'direct') {
                             calcRoute(travelMode);
                         } else {
@@ -679,6 +670,7 @@ $list_points = $point->list_points($company->id);
 
                 function plotElevation(results) {
                     elevations = results;
+                    var randomColor = makeColor();
                     
                     var path = [];
                     for (var i = 0; i < results.length; i++) {
@@ -691,7 +683,7 @@ $list_points = $point->list_points($company->id);
                     
                     polyline = new google.maps.Polyline({
                         path: path,
-                        strokeColor: "#2E9AFE",
+                        strokeColor: randomColor,
                         strokeOpacity: 0.5,
                         strokeWeight: 5,
                         map: map
@@ -715,6 +707,19 @@ $list_points = $point->list_points($company->id);
                       titleY: 'Elevation (m)',
                       focusBorderColor: '#00ff00'
                     });*/
+                }
+
+                 function makeColor(){
+                    var hexVal = "0123456789ABCDEF".split("");
+                    /**
+                     * Otra forma de crear un color aleatoriamente:
+                     *
+                     * for(var color = Math.floor(Math.random()*0xffffff).toString(16); color.length < 6; color = '0'+color);
+                     * return '#' + color;
+                     */
+                    return '#' + hexVal.sort(function(){
+                        return (Math.round(Math.random())-0.5);
+                    }).slice(0,6).join('');
                 }
 
                 function getUrlParameters(parameter, staticURL, decode){
