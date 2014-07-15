@@ -122,7 +122,7 @@ $list_points = $point->list_points($company->id);
                                                     &nbsp;
                                                     <button type="button" id="btnClearPoints" name="btnClearPoints" class="btn">Clear</button>
                                                     &nbsp;&nbsp;
-                                                    <button type="button" class="btn btn-primary" id="bntShow">Show</button>
+                                                    <button type="button" class="btn btn-primary" id="btnShow">Show</button>
                                                 </div>
                                             </div>
                                             <div class="divider-content" id="dvDivConUsers" style="display:none;"><span></span></div>
@@ -212,12 +212,7 @@ $list_points = $point->list_points($company->id);
 
         <script type="text/javascript">
             $(document).ready(function() {
-
-                var myLatlng;
-                var mapOptions;
-                var map;
                 var markersPoint = [];
-                var markersRoute = [];
                 var infowindow = null;
                 var iconBase = '../img/';
                 var icons = {
@@ -243,24 +238,14 @@ $list_points = $point->list_points($company->id);
                     div.innerHTML = '<img src="' + icon + '"> ' + name;
                     legend.appendChild(div);
                 }
-
-                myLatlng = new google.maps.LatLng('-23.565262', '-46.683653');
-                        mapOptions = {
-                            zoom: 8,
-                            center: myLatlng
-                        };
-                var directionsService = null;
-                var elevationService = null;
-                var SAMPLES = 256;
-                var polyline = null;
-                var elevations = null;
-
-                map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
-                map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
-
-                elevationService = new google.maps.ElevationService();
-                directionsService = new google.maps.DirectionsService();
                 
+                /**/
+                var my = {directionsSVC:new google.maps.DirectionsService(),
+                        maps:{},
+                        routes:{}};
+                var iniMarker;
+                var endMarker;
+                /**/
 
                 // Validar si estoy viendo la ruta por mobile enviado desde Map
                 var idMobile = getUrlParameters('user','',true);
@@ -275,8 +260,7 @@ $list_points = $point->list_points($company->id);
                         data: {id: id, dt: dt, action: action }
                     }).done(function (resp) {
                         var data = jQuery.parseJSON(resp);
-                        deleteMarkersPoints();
-                        deleteMarkersUserRoute();
+                        initialize();
                         $("#isCategories").select2("val", data.mobile.fk_category);
                         $("#ismUsers").val('').trigger("change");
                         $("#ismUsers").select2({
@@ -401,7 +385,6 @@ $list_points = $point->list_points($company->id);
                         $("#chkAllUsers").parent().removeAttr( "checked" );
                         $("#chkAllUsers").parent().removeClass( "checked" );
                     }
-                    deleteMarkersUserRoute();
                 });
 
                 $("#chkAllPoints").click(function(){
@@ -422,10 +405,9 @@ $list_points = $point->list_points($company->id);
                         $("#chkAllPoints").parent().removeAttr( "checked" );
                         $("#chkAllPoints").parent().removeClass( "checked" );
                     }
-                    deleteMarkersPoints();
                 });
 
-                $("#bntShow").click(function(){
+                $("#btnShow").click(function(){
                     var idUsers = $("#ismUsers").val();
                     var idPoints = $("#ismPoints").val();
                     var dtStart = $("#dvFrom").find("input").val();
@@ -438,8 +420,7 @@ $list_points = $point->list_points($company->id);
                         data: {idUsers: idUsers, idPoints: idPoints, dtStart: dtStart, dtEnd: dtEnd, action: action}
                     }).done(function (resp) {
                         var data = jQuery.parseJSON(resp);
-                        deleteMarkersPoints();
-                        deleteMarkersUserRoute();
+                        initialize();
                         if(data.points.length > 0){
                             for (var i = 0;i < data.points.length; i += 1) {
                                 addMarkerPoints(data.points[i]);
@@ -447,7 +428,7 @@ $list_points = $point->list_points($company->id);
                         }
                         if(data.routes.length > 0){
                             for (var i = 0;i < data.routes.length; i += 1) {
-                                addRoutes(data.routes[i]);  
+                                addRoutes(data.routes[i]); 
                             }
                         }else{
                             $("[name=noInfoRoutes]").css("display","block");
@@ -479,55 +460,40 @@ $list_points = $point->list_points($company->id);
                                 '<p><b>Number : </b>'+data.addr_number+'</p>'+
                                 '<p><b>District : </b>'+data.addr_district+'</p>'+
                                 '<p><b>City : </b>'+data.addr_city+'</p>'+
-                                '<p><b>state : </b>'+data.addr_state+'</p>'+
+                                '<p><b>State : </b>'+data.addr_state+'</p>'+
                                 '<p><b>Postal Code : </b>'+data.addr_postalcode+'</p>'+
                             '</div>'+
                         '</div>';
                     var marker = new google.maps.Marker({
                     position: latlng,
-                    map: map,
+                    map: my.maps.map1,
                     icon: image,
                     html: contentString,
                     animation: google.maps.Animation.DROP
                     });
                     google.maps.event.addListener(marker, "click", function () {
                         infowindow.setContent(this.html);
-                        infowindow.open(map, this);
+                        infowindow.open(my.maps.map1, this);
                     });
+
+                    var rad = parseFloat(data.radius);
+                    if (rad!="" && rad != NaN)
+                    {
+                        var circle = new google.maps.Circle({
+                            center: latlng,
+                            radius: 1*rad,
+                            strokeColor: "#0000FF",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 2,
+                            fillColor: "#0000FF",
+                            fillOpacity: 0.4
+                        });     
+
+                        circle.setMap(my.maps.map1);
+                    }
 
                     markersPoint.push(marker);
                 }
-
-                function setAllMapPoints(map) {
-                  for (var i = 0; i < markersPoint.length; i++) {
-                    markersPoint[i].setMap(map);
-                  }
-                }
-                function clearMarkersPoints() {
-                  setAllMapPoints(null);
-                }
-                function deleteMarkersPoints() {
-                  clearMarkersPoints();
-                  markersPoint = [];
-                }
-
-                function setAllMapRoutes(map) {
-                  for (var i = 0; i < markersRoute.length; i++) {
-                    markersRoute[i].setMap(map);
-                  }
-                }
-                function clearMarkersRoutes() {
-                  setAllMapRoutes(null);
-                  if(polyline){
-                    polyline.setMap(null);
-                  }
-                }
-                function deleteMarkersUserRoute() {
-                  clearMarkersRoutes();
-                  markersRoute = [];
-                }
-
-
 
                 var d = new Date();
                 var year = d.getFullYear();
@@ -540,196 +506,205 @@ $list_points = $point->list_points($company->id);
                 $('#dvFrom').data({date: startDate}).datepicker('update').children("input").val(startDate);
                 $('#dvTo').data({date: startDate}).datepicker('update').children("input").val(startDate);
 
-                function calcRoute(travelMode) {
-                    var origin = markersRoute[0].getPosition();
-                    var destination = markersRoute[markersRoute.length - 1].getPosition();
+                /**/
 
-                    var waypoints = [];
-                    for (var i = 1; i < markersRoute.length - 1; i++) {
-                      waypoints.push({
-                        location: markersRoute[i].getPosition(),
-                        stopover: true
-                      });
-                    }
-                    
-                    var request = {
-                      origin: origin,
-                      destination: destination,
-                      waypoints: waypoints
-                    };
-                   
-                    switch (travelMode) {
-                      case "bicycling":
-                        request.travelMode = google.maps.DirectionsTravelMode.BICYCLING;
-                        break;
-                      case "driving":
-                        request.travelMode = google.maps.DirectionsTravelMode.DRIVING;
-                        break;
-                      case "walking":
-                        request.travelMode = google.maps.DirectionsTravelMode.WALKING;
-                        break;
-                    }
-                    
-                    directionsService.route(request, function(response, status) {
-                      if (status == google.maps.DirectionsStatus.OK) {
-                        elevationService.getElevationAlongPath({
-                          path: response.routes[0].overview_path,
-                          samples: SAMPLES
-                        }, plotElevation);
-                      } else if (status == google.maps.DirectionsStatus.ZERO_RESULTS) {
-                        alert("Could not find a route between these points");
-                      } else {
-                        alert("Directions request failed");
-                      }
-                    });
-                }
-
-
-                function addMarkerRoutes(name, date, latlng, imgMarker, isSE, doQuery) {
-                    var marker = new google.maps.Marker({
-                        position: latlng,
-                        map: map,
-                        icon: imgMarker,
-                        draggable: false
-                      });
-
-                    if (isSE == 1){
-                        var contentString = 
-                        '<div style="line-height:1.35;overflow:hidden !important;white-space:nowrap;" id="content">'+
-                            '<div id="siteNotice">'+
-                            '</div>'+
-                            '<h2 id="firstHeading" class="firstHeading">'+ name +'</h2>'+
-                            '<div id="bodyContent">'+
-                                '<p><b>Date : </b>'+ date +'&nbsp;&nbsp;</p>'+
-                            '</div>'+
-                        '</div>';
-
-                        marker.info = new google.maps.InfoWindow({
-                        content: contentString
-                        });
-                        google.maps.event.addListener(marker, "click", function () {
-                            marker.info.open(map, marker);
-                        });    
-                    }else {
-                        marker.setVisible(false);
-                    }
-                    markersRoute.push(marker);
+                function initialize() {
+                    var myOptions = {
+                        zoom: 6,
+                        center: new google.maps.LatLng(-23.565262,-46.683653),
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                      };
+                    my.maps.map1 = new google.maps.Map(document.getElementById('mapa'),myOptions);
+                    my.maps.map1.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
                 }
 
                 function addRoutes(data) {
-
-                    map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
-                    var bounds = new google.maps.LatLngBounds();
-                    var routeLength = data.points.length-1;
-                    var isSE;
-
+                    var arrPoints = [];
+                    var routeColor = makeColor();
                     for (var i = 0; i < data.points.length; i++) {
-                        if (data.points[i]){
-                            var latlng = new google.maps.LatLng(
-                            parseFloat(data.points[i].substr(0, data.points[i].indexOf(','))),
-                            parseFloat(data.points[i].split(",").pop())
-                            );
-                            var imgMarker = iconBase;
-                            if(i == 0){
-                                imgMarker = imgMarker + "start-route.png";
-                                isSE = 1;
-                            }else if (i == routeLength){
-                                imgMarker = imgMarker + "finish-route.png";
-                                isSE = 1;
-                            } else{
-                                imgMarker = imgMarker + "marker-point.png";
-                                isSE = 0;
-                            }
-                            addMarkerRoutes(data.name,data.date,latlng,imgMarker,isSE,false);   
-                            bounds.extend(latlng);
-                        }
+                        arrPoints.push([parseFloat(data.points[i].substr(0, data.points[i].indexOf(','))),
+                            parseFloat(data.points[i].split(",").pop())])
                     }
-                    map.fitBounds(bounds);
-                    updateElevation();
+                    doRoute(data.name,data.date,arrPoints,routeColor);
                 }
 
-                function updateElevation() {
-                    if (markersRoute.length > 1) {
-                        var travelMode = "walking";
-                        if (travelMode != 'direct') {
-                            calcRoute(travelMode);
-                        } else {
-                            var latlngs = [];
-                            for (var i in markersRoute) {
-                                latlngs.push(markersRoute[i].getPosition())
-                            }
-                            elevationService.getElevationAlongPath(
-                            {
-                                path: latlngs,
-                                samples: SAMPLES
-                            }, 
-                            plotElevation);
+                function doRoute(name,date,points,routeColor) {
+                    iniMarker = new google.maps.LatLng(points[0][0],points[0][1]);            
+                    endMarker = new google.maps.LatLng(points[points.length-1][0],points[points.length-1][1]); 
+                    var i = 0;
+                    while (points.length > 0){
+                      var routePoints = [];
+                      for ( j = 0; j < 10; j++) {
+                        if (points[0]) {
+                          if ( j == 9) {
+                            routePoints.push([points[0][0],points[0][1]]);
+                          } else {
+                            routePoints.push([points[0][0],points[0][1]]);
+                            points.splice(0,1);
+                          }
                         }
+                      }
+                      my.routes[i] = new Route(routePoints).drawRoute(my.maps.map1, routeColor);
+                      i++;  
                     }
+                    setIconMarkers(name, date);
                 }
 
-                function plotElevation(results) {
-                    elevations = results;
-                    var randomColor = makeColor();
-                    
-                    var path = [];
-                    for (var i = 0; i < results.length; i++) {
-                      path.push(elevations[i].location);
+                function Route(points) {
+                    this.origin       = null;
+                    this.destination  = null;
+                    this.waypoints    = [];
+                    if(points && points.length>1)
+                    {
+                      this.setPoints(points);
                     }
-                    
-                    if (polyline) {
-                      polyline.setMap(null);
+                    return this; 
+                };
+
+                Route.prototype.drawRoute = function(map, routeColor) {
+                    var _this=this;
+                    my.directionsSVC.route(
+                      {'origin': this.origin,
+                       'destination': this.destination,
+                       'waypoints': this.waypoints,
+                       'travelMode': google.maps.DirectionsTravelMode.WALKING
+                      },
+                      function(res,sts) 
+                      {
+                          if(sts==google.maps.DirectionsStatus.OK){
+                          if(!_this.directionsRenderer)
+                          {
+                            _this.directionsRenderer 
+                             = new google.maps.DirectionsRenderer({ 'draggable':false, 'suppressMarkers': true, 'polylineOptions': { 'strokeColor' : routeColor, 'strokeOpacity': 0.5,
+                        'strokeWeight': 5 } } ); 
+                                          }
+                            _this.directionsRenderer.setMap(map);
+                            _this.directionsRenderer.setDirections(res);
+                            google.maps.event.addListener(_this.directionsRenderer,
+                                                          'directions_changed',
+                                                          function()
+                                                          {
+                                                            _this.setPoints();
+                                                          }
+                                                          );
+                                      }   
+                      });
+                    return _this;
+                };
+
+                Route.prototype.setGMap = function(map) {
+                    this.directionsRenderer.setMap(map);
+                };
+
+                Route.prototype.setPoints = function(points) {
+                    this.origin = null;
+                    this.destination = null;
+                    this.waypoints = [];
+
+                    if(points)
+                    {
+                      for(var p=0;p<points.length;++p)
+                      {
+                        this.waypoints.push({location:new google.maps.LatLng(points[p][0],
+                                                                             points[p][1]),
+                                             stopover:false});
+                      }
+                      this.origin=this.waypoints.shift().location;
+                      this.destination=this.waypoints.pop().location;
                     }
-                    
-                    polyline = new google.maps.Polyline({
-                        path: path,
-                        strokeColor: randomColor,
-                        strokeOpacity: 0.5,
-                        strokeWeight: 5,
-                        map: map
+                    else
+                    {
+                      var route=this.directionsRenderer.getDirections().routes[0];
+                      
+                      for(var l=0;l<route.legs.length;++l)
+                      {
+                        if(!this.origin)this.origin=route.legs[l].start_location;
+                        this.destination = route.legs[l].end_location;
+                        
+                        for(var w=0;w<route.legs[l].via_waypoints.length;++w)
+                        {
+                          this.waypoints.push({location:route.legs[l].via_waypoints[w],
+                                               stopover:false});
+                        }
+                      }
+                      //the route has been modified by the user when you're here
+                      //you may call now this.getPoints() and work with the result
+                    }
+
+                    return this;
+                };
+
+                Route.prototype.getPoints = function() {
+                  var points=[[this.origin.lat(),this.origin.lng()]];
+                  
+                  for(var w=0;w<this.waypoints.length;++w)
+                  {
+                    points.push([this.waypoints[w].location.lat(),
+                                 this.waypoints[w].location.lng()]);
+                  }
+                  
+                  points.push([this.destination.lat(),
+                               this.destination.lng()]);
+                  return points;
+                };
+
+                function makeMarker( position, icon, title, name, date ) {
+                    var marker = new google.maps.Marker({
+                    position: position,
+                    map: my.maps.map1,
+                    icon: icon,
+                    title: title,
+                    draggable: false
                     });
-                    // Calculo de distancia total
-                    //document.getElementById("Distance").innerHTML = (polyline.Distance()/1000).toFixed(2)+" km";
-                    
-                    /* 
-                    var data = new google.visualization.DataTable();
-                    data.addColumn('string', 'Sample');
-                    data.addColumn('number', 'Elevation');
-                    for (var i = 0; i < results.length; i++) {
-                        data.addRow(['', elevations[i].elevation]);
-                    }
 
-                    document.getElementById('chart_div').style.display = 'block';
-                    chart.draw(data, {
-                      width: 512,
-                      height: 200,
-                      legend: 'none',
-                      titleY: 'Elevation (m)',
-                      focusBorderColor: '#00ff00'
-                    });*/
+                    var contentString = 
+                      '<div style="line-height:1.35;overflow:hidden !important;white-space:nowrap;" id="content">'+
+                          '<div id="siteNotice">'+
+                          '</div>'+
+                          '<h2 id="firstHeading" class="firstHeading">'+ name +'</h2>'+
+                          '<div id="bodyContent">'+
+                              '<p><b>Date : </b>'+ date +'&nbsp;&nbsp;</p>'+
+                          '</div>'+
+                      '</div>';
+                    marker.info = new google.maps.InfoWindow({
+                                    content: contentString
+                                    });
+                                    google.maps.event.addListener(marker, "click", function () {
+                                        marker.info.open(my.maps.map1, marker);
+                                    });  
                 }
 
-                 function makeColor(){
+                function setIconMarkers(name,date) {
+                    var icons = {
+                    start: new google.maps.MarkerImage(
+                     '../img/start-route.png',
+                     new google.maps.Size( 44, 32 ),
+                     new google.maps.Point( 0, 0 ),
+                     new google.maps.Point( 22, 32 )
+                    ),
+                    end: new google.maps.MarkerImage(
+                     '../img/finish-route.png',
+                     new google.maps.Size( 44, 32 ),
+                     new google.maps.Point( 0, 0 ),
+                     new google.maps.Point( 22, 32 )
+                    )
+                    };
+                    makeMarker( iniMarker, icons.start, 'Start Route', name, date );
+                    makeMarker( endMarker, icons.end, 'End Route', name, date );
+                }
+
+                google.maps.event.addDomListener(window, 'load', initialize);
+
+                /**/
+
+                function makeColor(){
                     var hexVal = "0123456789ABCDEF".split("");
-                    /**
-                     * Otra forma de crear un color aleatoriamente:
-                     *
-                     * for(var color = Math.floor(Math.random()*0xffffff).toString(16); color.length < 6; color = '0'+color);
-                     * return '#' + color;
-                     */
                     return '#' + hexVal.sort(function(){
                         return (Math.round(Math.random())-0.5);
                     }).slice(0,6).join('');
                 }
 
                 function getUrlParameters(parameter, staticURL, decode){
-                   /*
-                    Function: getUrlParameters
-                    Description: Get the value of URL parameters either from 
-                                 current URL or static URL
-                    Author: Tirumal
-                    URL: www.code-tricks.com
-                   */
                     if(window.location.search){
                         var currLocation = (staticURL.length)? staticURL : window.location.search;
                         var parArr = currLocation.split("?")[1].split("&");
@@ -749,7 +724,6 @@ $list_points = $point->list_points($company->id);
                     }
                 }
             });
-      
         </script>
     </body>
 </html>

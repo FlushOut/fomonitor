@@ -509,8 +509,12 @@ if($pointDel){
         if(address) {
             geocoder.geocode({'address': address}, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
+                    var image = {
+                        url: '../img/point.png'
+                    };
                     var marker = new google.maps.Marker({
                         title: address,
+                        icon: image,
                         /* icon: WEBROOT + 'img/permissoes-unidades.png',*/
                         position: results[0].geometry.location
                     });
