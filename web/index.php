@@ -303,7 +303,7 @@ if($errorPayment){
                                 </div>
                                 <p>(*) We have special discounts for companies.</p>
                                 <div class="footer grd-teal">
-                                    <a href="#" class="btn btn-block btn-info">Get Started</a>
+                                    <a href="#" class="btn btn-block btn-info" data-dismiss="modal" aria-hidden="true">Get Started</a>
                                 </div>
                             </li>
                         </ul>

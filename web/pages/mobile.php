@@ -447,7 +447,7 @@ if($appUpd){
                     '<div style="line-height:1.35;overflow:hidden !important;white-space:nowrap;" id="content">'+
                         '<div id="siteNotice">'+
                         '</div>'+
-                        '<h2 id="firstHeading" class="firstHeading">'+ mapName +'</h2>'+
+                        '<h3 id="firstHeading" class="firstHeading">'+ mapName +'</h3>'+
                         '<div id="bodyContent">'+
                         '<p><b>Battery : </b>'+mapBatLev+' %</p>'+
                         '<p><b>Signal : </b>&nbsp;&nbsp;<img src="../img/signal-'+mapGsmStr+'.png"></p>'+

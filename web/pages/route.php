@@ -454,7 +454,7 @@ $list_points = $point->list_points($company->id);
                         '<div style="line-height:1.35;overflow:hidden !important;white-space:nowrap;" id="content">'+
                             '<div id="siteNotice">'+
                             '</div>'+
-                            '<h2 id="firstHeading" class="firstHeading">'+ data.name +'</h2>'+
+                            '<h3 id="firstHeading" class="firstHeading">'+ data.name +'</h3>'+
                             '<div id="bodyContent">'+
                                 '<p><b>Street : </b>'+data.addr_street+'</p>'+
                                 '<p><b>Number : </b>'+data.addr_number+'</p>'+
@@ -661,7 +661,7 @@ $list_points = $point->list_points($company->id);
                       '<div style="line-height:1.35;overflow:hidden !important;white-space:nowrap;" id="content">'+
                           '<div id="siteNotice">'+
                           '</div>'+
-                          '<h2 id="firstHeading" class="firstHeading">'+ name +'</h2>'+
+                          '<h3 id="firstHeading" class="firstHeading">'+ name +'</h3>'+
                           '<div id="bodyContent">'+
                               '<p><b>Date : </b>'+ date +'&nbsp;&nbsp;</p>'+
                           '</div>'+
