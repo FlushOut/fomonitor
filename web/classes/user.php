@@ -211,7 +211,48 @@ class user
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
          
         $subject = "Code Confirmation";
-        $body = "<strong>Code:</strong> ".$code."<br>";
+        $body = "<div marginheight='0' marginwidth='0' style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;line-height:21px;color:#404040'>";
+        $body .= "<div style='max-width:650px;margin:0 auto;padding:20px 0'>";
+        $body .= "<table width='100%' cellpadding='0' cellspacing='0' border='0' style='font-family:Helvetica,Arial;font-size:12px;color:#404040'>";
+        $body .= "  <tbody>";
+        $body .= "   <tr>";
+        $body .=    "  <td width=100%'>";   
+        $body .= "<table bgcolor='#FFFFFF' width='97%' cellpadding='0' cellspacing='0' border='0' align='center' style='border-radius:4px;font-family:Helvetica,Arial;font-size:12px;color:#404040;border:1px solid #ddd'>";
+        $body .= "    <tbody>";
+        $body .= "       <tr>";
+        $body .= "                    <td width='100%''>";
+        $body .= "                        <table width='100%' cellpadding='0' cellspacing='0' border='0' style='font-family:Helvetica,Arial;font-size:12px;color:#404040'>";
+        $body .= "                            <tbody>";
+        $body .= "                                <tr>";
+        $body .= "                                    <td bgcolor='#f2f2f2' width='100%'' style='border-radius:3px 3px 0px 0px;font-size:34px;font-weight:700;letter-spacing:-1px;border-bottom-style:solid;border-bottom-color:#ddd;border-bottom-width:1px;padding:20px 20px 20px'>";
+        $body .= "                                        <img src='http://monitor.flushoutsolutions.com/img/flushout-logo.png' width='120' height='76' alt='FlushOut' style='display:block;border:0'>";
+        $body .= "                                    </td>";
+        $body .= "                                </tr>";
+        $body .= "                                <tr>";
+        $body .= "                                    <td width='100%' style='padding:30px 30px 20px'>";           
+        $body .= "                                       <h1 style='font-size:24px;font-weight:700;margin:0 0 5px;padding:0 0 6px;border:0;color:#404040 !important'>Welcome! Please validate your email</h1>";
+        $body .= "                                        <div>Thanks for signing up with FOMonitor! Your Code is: <strong>".$code."</strong>.</div>";  
+        $body .= "                                        <div style='text-align:center;padding:0' align='center'>";
+        $body .= "                                            <div style='vertical-align:top;text-align:center;display:inline-block;font-size:14px;color:#ffffff;background-color:#00a5d5;border-radius:3px;margin:20px 0;padding:6px 12px' align='center'>";
+        $body .= "                                                <a href='http://monitor.flushoutsolutions.com/pages/verifyemail.php?user=".$idUser."' style='color:#fff!important;text-decoration:none!important;display:inline-block;background-color:#00a5d5;border:0' target='_blank'>";
+        $body .= "                                                Validate Account";
+        $body .= "                                                </a>"; 
+        $body .= "                                            </div>";
+        $body .= "                                        </div>";
+        $body .= "                                    </td>";
+        $body .= "                                </tr>";
+        $body .= "                            </tbody>";
+        $body .= "                        </table>";
+        $body .= "                    </td>";
+        $body .= "                </tr>";
+        $body .= "            </tbody>";
+        $body .= "        </table>";
+        $body .= "        </td>";
+        $body .= "        </tr>";
+        $body .= "        </tbody>";
+        $body .= "        </table>";
+        $body .= "        </div>";
+        $body .= "        </div>";
 
         if ($email != '' && $code > 999){
             if (mail($email,$subject,$body,$headers)){
