@@ -4,50 +4,126 @@ class mobile extends superModel {
 	protected $table = 'mobiles';
 	
 	
-	public function getPassword($imei) {
+	public function getPassword($email) {
 		
-		return $this->select("password",array("imei='".addslashes($imei)."'","status=1"));
+		return $this->select("password",array("email='".addslashes($email)."'","status=1"));
 	}
 
-	public function getIdCompany($imei) {
+	public function getIdCompany($email) {
 		
-		return $this->select("fk_company",array("imei='".addslashes($imei)."'","status=1"));
+		return $this->select("fk_company",array("email='".addslashes($email)."'","status=1"));
 	}
 
-	public function getByImei($imei) {
+	public function getByEmail($email) {
 		
-		return $this->select("*",array("imei='".addslashes($imei)."'","status=1"));
-	}	
+		return $this->select("*",array("email='".addslashes($email)."'","status=1"));
+	}
+
+	public function getIdByEmail($email) {
+		
+		return $this->select("id",array("email='".addslashes($email)."'","status=1"));
+	}
 	
-	public function registrar($imei,$model,$manufacturer,$fk_company,$name,$password,$create_date) 
-	{
+	public function activateMobile($email,$code){
+			$dataSet = $this->select("id,code_conf",array("email='".$email."'","status=1"));
+			if($dataSet[0]['code_conf'] == $code){
+				$this->genericQuery("UPDATE mobiles SET status_conf='1' where id =".$dataSet[0]['id'].";");
+				return true;
+			}else{
+				return false;
+			}
+	}
 
-		$dados["imei"] = "'".addslashes($imei)."'";
+	public function registrar($email,$model,$manufacturer,$fk_company,$name,$password,$create_date,$category_id)
+	{
+		$dados["email"] = "'".addslashes($email)."'";
 		$dados["model"] = "'".addslashes($model)."'";
 		$dados["manufacturer"] = "'".addslashes($manufacturer)."'";
-		$dados["fk_company"] = "'".addslashes($fk_ompany)."'";
+		$dados["fk_company"] = "'".addslashes($fk_company)."'";
 		$dados["name"] = "'".addslashes($name)."'";
 		$dados["password"] = "'".addslashes($password)."'";
 		$dados["status"] = 1;
+		$dados["fk_category"] = "'".addslashes($category_id)."'";
 		$dt = $create_date;
 		$dados["create_date"] ="'". addslashes(substr($dt,0,4)."-".substr($dt,4,2)."-".substr($dt,6,2)." ".substr($dt,8,2).":".substr($dt,10,2).":".substr($dt,12,2))."'";
 
-		$reg = $this->genericQuery("select * from mobiles where imei = '".$imei."'");
+		$reg = $this->genericQuery("select * from mobiles where email = '".$email."'");
+
+		$code = rand(1000,9999);
+
+		$dados["code_conf"] = $code;
+
+		$dados["status_conf"] = 0;
+
+		$this->sendEmail($email,$dados["code_conf"]);
+
 		if ($reg[0]['id'])
 		{
-			$this->genericQuery("UPDATE mobiles SET imei=".$reg[0]['imei'].", manufacturer=".$dados["manufacturer"]." ,model=".$dados["model"]." ,fk_company=".$dados["fk_company"]." ,name=".$dados["name"]." ,contact=".$dados["contact"]." ,email=".$dados["email"]." ,password=".$dados["password"]." ,status=".$dados["status"]." ,create_date=".$dados["create_date"]." where id =".$reg[0]['id'].";");
+			$this->genericQuery("UPDATE mobiles SET email='".$reg[0]['email']."', manufacturer=".$dados["manufacturer"]." ,model=".$dados["model"]." ,fk_company=".$dados["fk_company"]." ,name=".$dados["name"]." ,contact='".$dados["contact"]."' ,password=".$dados["password"]." ,status=".$dados["status"]." ,last_update=".$dados["create_date"]." ,fk_category=".$dados["fk_category"]." ,code_conf=".$dados["code_conf"]." ,status_conf=".$dados["status_conf"]." where id =".$reg[0]['id'].";");
 			return $reg[0]['id'];
 		}
 		else
 		{
+			$payment = new payment();
+			$payment->incrementUserMobile($fk_company);
 			return $this->insert($dados);
 		}
 	}
 
-	public function setData($imei,$date,$phoneNumber,$lat,$lon,$speed,$bearing,$accuracy,$batteryLevel,$gsmstrength,$carrier,$bytes_rx,$bytes_tx) 
+	public function sendEmail($dest,$code){		 
+		// Estas son cabeceras que se usan para evitar que el correo llegue a SPAM:
+		$headers = "From: contact@flushoutsolutions.com\r\n";
+		$headers .= "X-Mailer: PHP5\n";
+		$headers .= 'MIME-Version: 1.0' . "\n";
+		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+		// Aqui definimos el asunto y armamos el cuerpo del mensaje
+		$asunto = "Confirmation Code";
+
+		$body = "<div marginheight='0' marginwidth='0' style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;line-height:21px;color:#404040'>";
+        $body .= "<div style='max-width:650px;margin:0 auto;padding:20px 0'>";
+        $body .= "<table width='100%' cellpadding='0' cellspacing='0' border='0' style='font-family:Helvetica,Arial;font-size:12px;color:#404040'>";
+        $body .= "  <tbody>";
+        $body .= "   <tr>";
+        $body .=    "  <td width=100%'>";   
+        $body .= "<table bgcolor='#FFFFFF' width='97%' cellpadding='0' cellspacing='0' border='0' align='center' style='border-radius:4px;font-family:Helvetica,Arial;font-size:12px;color:#404040;border:1px solid #ddd'>";
+        $body .= "    <tbody>";
+        $body .= "       <tr>";
+        $body .= "                    <td width='100%''>";
+        $body .= "                        <table width='100%' cellpadding='0' cellspacing='0' border='0' style='font-family:Helvetica,Arial;font-size:12px;color:#404040'>";
+        $body .= "                            <tbody>";
+        $body .= "                                <tr>";
+        $body .= "                                    <td bgcolor='#f2f2f2' width='100%'' style='border-radius:3px 3px 0px 0px;font-size:34px;font-weight:700;letter-spacing:-1px;border-bottom-style:solid;border-bottom-color:#ddd;border-bottom-width:1px;padding:20px 20px 20px'>";
+        $body .= "                                        <img src='http://monitor.flushoutsolutions.com/img/flushout-logo.png' width='120' height='76' alt='FlushOut' style='display:block;border:0'>";
+        $body .= "                                    </td>";
+        $body .= "                                </tr>";
+        $body .= "                                <tr>";
+        $body .= "                                    <td width='100%' style='padding:30px 30px 20px'>";           
+        $body .= "                                       <h1 style='font-size:24px;font-weight:700;margin:0 0 5px;padding:0 0 6px;border:0;color:#404040 !important'>Welcome! Please validate your email</h1>";
+        $body .= "                                        <div>Thanks for signing up with FOMonitor! Your Code is: <strong>".$code."</strong>.</div>";  
+        $body .= "                                    </td>";
+        $body .= "                                </tr>";
+        $body .= "                            </tbody>";
+        $body .= "                        </table>";
+        $body .= "                    </td>";
+        $body .= "                </tr>";
+        $body .= "            </tbody>";
+        $body .= "        </table>";
+        $body .= "        </td>";
+        $body .= "        </tr>";
+        $body .= "        </tbody>";
+        $body .= "        </table>";
+        $body .= "        </div>";
+        $body .= "        </div>";
+
+		// Esta es una pequena validación, que solo envie el correo si todas las variables tiene algo de contenido:
+		mail($dest,$asunto,$body,$headers); //ENVIAR!
+	}
+
+	public function setData($email,$date,$phoneNumber,$lat,$lon,$speed,$bearing,$accuracy,$batteryLevel,$gsmstrength,$carrier,$bytes_rx,$bytes_tx) 
 	{
 
-		$dados["imei"] = "'".addslashes($pImei)."'";
+		$dataset = $this->getIdByEmail($email);
+		$dados["fk_mobile"] = $dataset[0]['id'];
 		$dt = $date;
 		$dados["date"] ="'". addslashes(substr($dt,0,4)."-".substr($dt,4,2)."-".substr($dt,6,2)." ".
 								  substr($dt,8,2).":".substr($dt,10,2).":".substr($dt,12,2))."'";
@@ -65,7 +141,7 @@ class mobile extends superModel {
 		
 		
 		
-		$exists = $this->genericQuery("select * from mobile_data where imei='".$dados['imei']."' and date = '".$dados['date']."'");
+		$exists = $this->genericQuery("select * from mobile_data where fk_mobile='".$dados['fk_mobile']."' and date = '".$dados['date']."'");
 
 		if ($exists[0]['id'])
 		{
@@ -73,12 +149,14 @@ class mobile extends superModel {
 		}
 		else
 		{
-			return $this->insert($dados);
+			return $this->insertTable($dados,'mobile_data');
 		}
 	}
 
-	public function getData($imei)
+	public function getData($email)
 	{
+		$dataset = $this->getIdByEmail($email);
+		$fk_mobile = $dataset[0]['id'];
 		return $this->genericQuery("select date, 
 									phonenumber, 
 									   latitude, 
@@ -92,19 +170,22 @@ class mobile extends superModel {
 								       bytes_rx,
 								       bytes_tx,
 								        from mobile_data 
-								        where imei = '".$imei."' order by date_time desc limit 1");
+								        where fk_mobile = '".$fk_mobile."' order by date_time desc limit 1");
 	}
 
-	public function getSettings($imei) {
+	public function getSettings($email) {
 		
-		return $this->genericQuery(" select imei, wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, datetime, about from mobile_settings where imei=".$imei);
+		$dataset = $this->getIdByEmail($email);
+		$fk_mobile = $dataset[0]['id'];
+		return $this->genericQuery(" select wifi, screen, localsafety, apps, accounts, privacy, storage, keyboard, voice, accessibility, datetime, about from mobile_settings where fk_mobile=".$fk_mobile);
 	}
 
-	public function setSettings($imei, $wifi, $screen, $localsafety, $apps, $accounts, $privacy, 
-								$storage, $keyboard, $voice, $accessibility, $about) 
+	public function setSettings($email, $wifi, $screen, $localsafety, $apps, $accounts, $privacy, 
+								$storage, $keyboard, $voice, $accessibility, $about, $datetime) 
 	{
-		
-		$dados["imei"] = "'".addslashes($imei)."'";
+		$dataset = $this->getIdByEmail($email);
+
+		$dados["fk_mobile"] = $dataset[0]['id'];
 		$dados["wifi"] = "'".addslashes($wifi)."'";
 		$dados["screen"] = "'".addslashes($screen)."'";
 		$dados["localsafety"] = "'".addslashes($localsafety)."'";
@@ -116,8 +197,9 @@ class mobile extends superModel {
 		$dados["voice"] = "'".addslashes($voice)."'";
 		$dados["accessibility"] = "'".addslashes($accessibility)."'";
 		$dados["about"] = "'".addslashes($about)."'";
-		
-		$reg = $this->genericQuery("select * from mobile_settings where imei = '".$imei."'");
+		$dados["datetime"] = "'".addslashes($datetime)."'";
+
+		$reg = $this->genericQuery("select * from mobile_settings where fk_mobile = '".$dados["fk_mobile"]."'");
 		if ($reg[0]['id'])
 		{
 			$this->genericQuery("update mobile_settings SET 
@@ -130,7 +212,8 @@ class mobile extends superModel {
 								 storage=1, 
 								 keyboard=1, 
 								 voice=1, 
-								 accessibility=1 , 
+								 accessibility=1,
+								 datetime=1,
 								 about=1 where id=".$reg[0]['id'].";");
 			return $reg[0]['id'];
 		}else{
@@ -138,30 +221,33 @@ class mobile extends superModel {
 		}		
 	}
 
-	public function setApps($imei,$package,$name) 
+	public function setApps($email,$package,$name) 
 	{
-		$dados["imei"] = "'".addslashes($imei)."'";
+		$dataset = $this->getIdByEmail($email);
+		$dados["fk_mobile"] = $dataset[0]['id'];
 		$dados["name"] = "'".addslashes($name)."'";
 		$dados["package"] = "'".addslashes($package)."'";
 		$dados["allowed"] = 1;
 		$dados["installed"] = 1;
 		
-		$reg = $this->genericQuery("select * from mobile_applications where imei = ".$imei." and package = '".$package."'");
+		$reg = $this->genericQuery("select * from mobile_applications where fk_mobile = ".$dados["fk_mobile"]." and package = '".$package."'");
 
 		if ($reg[0]['id'])
 		{
-			$this->genericQuery("replace into mobile_applications (id,imei,package,name,installed,allowed) VALUES ('".$reg[0]['id']."',".$dados["imei"].", ".$dados["package"].", ".$dados["name"].", ".$dados["installed"].", ".$dados["allowed"].")");
+			$this->genericQuery("replace into mobile_applications (id,fk_mobile,package,name,installed,allowed) VALUES ('".$reg[0]['id']."',".$dados["fk_mobile"].", ".$dados["package"].", ".$dados["name"].", ".$dados["installed"].", ".$dados["allowed"].")");
 			return $reg[0]['id'];
 		}
 		else
 		{
-			return $this->insert($dados);
+			return $this->insertTable($dados,'mobile_applications');
 		}
 	}	
 
-	public function getApps($imei)
+	public function getApps($email)
 	{
-		return $this->genericQuery("select distinct package, name from mobile_applications where imei = '".$imei."' and allowed=1 order by id");
+		$dataset = $this->getIdByEmail($email);
+		$fk_mobile = $dataset[0]['id'];
+		return $this->genericQuery("select distinct package, name from mobile_applications where fk_mobile = '".$fk_mobile."' and allowed=1 order by id");
 	}
 
 

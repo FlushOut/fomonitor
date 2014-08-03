@@ -20,7 +20,7 @@ function curPageURL()
 if (strstr(curPageURL(), "d-") != false) {
     $config['bd']['host'] = '127.0.0.1';
     $config['bd']['user'] = 'root';
-    $config['bd']['password'] = 'mysql';
+    $config['bd']['password'] = '';
     $config['bd']['base'] = 'dbmonitor';
     $config['bd']['port'] = '3306';
 }elseif (strstr(curPageURL(), ".com") != false) {
@@ -29,6 +29,5 @@ if (strstr(curPageURL(), "d-") != false) {
     $config['bd']['password'] = 'M0n!t0r220591';
     $config['bd']['base'] = 'dbmonitor';
     $config['bd']['port'] = '3306';
-
 } 
 ?>

@@ -2,7 +2,7 @@
 
 class rest extends superRest {
 
-	protected $permitidos = array('version','validate','send_information','send_apps','get_apps','get_settings','send_data','getcompanysettings','getuserdata');
+	protected $permitidos = array('version','validate','verifyAuthentication','send_information','send_apps','get_apps','get_settings','send_data','getcompanysettings','getuserdata');
 	
 
 	public function version() 
@@ -21,6 +21,7 @@ class rest extends superRest {
 		{
 			$this->retorno["status"] = true;
 			$this->retorno["company"] = $exists[0]['name'];	
+			$this->retorno["categoryId"] = $exists[0]['idCategory'];	
 		}
 		else
 		{
@@ -29,14 +30,37 @@ class rest extends superRest {
 		}
 	}
 
+	public function verifyAuthentication(){
+		if (!$this->vars['email']
+			or !$this->vars['code']
+			) {
+			$this->retorno["status"] = false;
+			$this->retorno["error"] = "103";
+			$this->retorno["message"] = "Please send all the 7 parameters to execute this function.";
+		}
+		else 
+		{
+			$erro = false;
+			if (!$erro) {
+				$mobile = new mobile();
+				$result = $mobile->activateMobile(urldecode($this->vars['email']),$this->vars['code']);
+				$this->retorno['status'] = $result;
+			} 
+			else {
+				$this->retorno['status'] = false;				
+			}
+		}
+	}
+
 	public function send_information() 
 	{
-		if (!$this->vars['imei']
+		if (!$this->vars['email']
 			or !$this->vars['code']
 			or !$this->vars['name']
 			or !$this->vars['password']
 			or !$this->vars['date']
 			or !$this->vars['model']
+			or !$this->vars['category']
 			or !$this->vars['manufacturer']
 			) {
 
@@ -53,12 +77,13 @@ class rest extends superRest {
 			if (!$erro) {
 
 				$mobile = new mobile();
-				$id = $mobile->registrar($this->vars['imei'], urldecode($this->vars['model']),  urldecode($this->vars['manufacturer']), $companyId, urldecode($this->vars['name']), $this->vars['password'], $this->vars['date']);
-				
-				$mobile->setSettings($this->vars['imei'], 1, 1, 1, 1, 1, 1,
-														  1, 1, 1, 1, 1);
+
+				$id = $mobile->registrar(urldecode($this->vars['email']), urldecode($this->vars['model']),  urldecode($this->vars['manufacturer']), $companyId, urldecode($this->vars['name']), $this->vars['password'], $this->vars['date'],$this->vars['category']);
+
+				$mobile->setSettings(urldecode($this->vars['email']), 1, 1, 1, 1, 1, 1,
+														  1, 1, 1, 1, 1, 1);
 				if($id) {
-					$this->retorno['status'] = true;				
+					$this->retorno['status'] = true;
 				} else {
 					$this->retorno['status'] = false;				
 				}	
@@ -71,7 +96,7 @@ class rest extends superRest {
 
 	public function send_apps() 
 	{
-		if (!$this->vars['imei']
+		if (!$this->vars['email']
 			or !$this->vars['package']
 			or !$this->vars['name']
 			) {
@@ -81,19 +106,13 @@ class rest extends superRest {
 		} 
 		else 
 		{
-			$erro = false;
-			if (!$erro) {
-				$mobile = new mobile();
-				$appname = urldecode($this->vars['name']);
-				$appname = str_replace("[\]", "/", $appname);
-				$id = $mobile->setApps($this->vars['imei'], $this->vars['package'], $appname);
-				if($id) {
-					$this->retorno['status'] = true;				
-				} else {
-					$this->retorno['status'] = false;				
-				}
-			} 
-			else {
+			$mobile = new mobile();
+			$appname = urldecode($this->vars['name']);
+			$appname = str_replace("[\]", "/", $appname);
+			$id = $mobile->setApps(urldecode($this->vars['email']), $this->vars['package'], $appname);
+			if($id) {
+				$this->retorno['status'] = true;				
+			} else {
 				$this->retorno['status'] = false;				
 			}
 		}
@@ -101,12 +120,12 @@ class rest extends superRest {
 	public function get_apps() 
 	{
 		// valida se foram enviados todos os dados obrigatórios para a função
-		if (!$this->vars['imei']) {
+		if (!$this->vars['email']) {
 				 
 			// se os dados não foram passados, informe o erro
 			$this->retorno["status"] = false;
 			$this->retorno["error"] = "119";
-			$this->retorno["message"] = "Please send the IMEI parameter to execute this function.";
+			$this->retorno["message"] = "Please send the email parameter to execute this function.";
 		} 
 		else 
 		{
@@ -116,7 +135,7 @@ class rest extends superRest {
 			if (!$erro) {
 					
 				$mobile = new mobile();
-				$this->retorno['apps'] = $mobile->getApps($this->vars['imei']);
+				$this->retorno['apps'] = $mobile->getApps(urldecode($this->vars['email']));
 				$this->retorno['status'] = true;
 			} 
 			else {
@@ -128,28 +147,22 @@ class rest extends superRest {
 
 	public function get_settings()
 	{
-		if (!$this->vars['imei']) {
+		if (!$this->vars['email']) {
 			$this->retorno["status"] = false;
 			$this->retorno["error"] = "106";
-			$this->retorno["message"] = "IMEI missing.";
+			$this->retorno["message"] = "email missing.";
 		} 
 		else 
 		{
-			$erro = false;
-			if (!$erro) {
-				$mobile = new mobile();
-				$dataSet = $mobile->getSettings($this->vars['imei']);
-				if(!count($dataSet)) {
-					$this->retorno['status'] = false;
-				}
-				else
-				{
-					$this->retorno['settings'] = $dataSet;
-					$this->retorno['status'] = true;
-				}
-			} 
-			else {
+			$mobile = new mobile();
+			$dataSet = $mobile->getSettings(urldecode($this->vars['email']));
+			if(!count($dataSet)) {
 				$this->retorno['status'] = false;
+			}
+			else
+			{
+				$this->retorno['settings'] = $dataSet;
+				$this->retorno['status'] = true;
 			}
 		}
 	}
@@ -158,7 +171,7 @@ class rest extends superRest {
 	{
 		// valida se foram enviados todos os dados obrigatórios para a função
 		if (!$this->vars['id']
-			or !$this->vars['imei']
+			or !$this->vars['email']
 			or !$this->vars['date']
 			or !$this->vars['phonenumber']
 			or !$this->vars['lat']
@@ -204,7 +217,7 @@ class rest extends superRest {
 				if (!$this->vars['bytes_tx']) $bytes_tx = 0;
 
 				$mobile = new mobile();
-				$id = $mobile->setData($this->vars['imei'],
+				$id = $mobile->setData(urldecode($this->vars['email']),
 												$this->vars['date'],
 												$this->vars['phonenumber'],
 												$this->vars['lat'],
@@ -217,8 +230,20 @@ class rest extends superRest {
 												$this->vars['carrier'],
 												$bytes_rx,
 												$bytes_tx);
-				if(isset($id)) 
+				if(isset($id) && intval($this->vars['accuracy']) < 30)
 				{
+					$presence = new presence();
+					$idPresence = $presence->algRegPre(urldecode($this->vars['email']),
+						$this->vars['lat'],
+						$this->vars['lon'],
+						$this->vars['date']);
+
+					$route = new route();
+					$idRoute = $route->algRegRou(urldecode($this->vars['email']),
+						$this->vars['lat'],
+						$this->vars['lon'],
+						$this->vars['date']);
+
 					$this->retorno['id'] = $this->vars['id'];	
 					$this->retorno['status'] = true;				
 				} else {
@@ -226,24 +251,24 @@ class rest extends superRest {
 				}		
 			} 
 			else {
-				$this->retorno['status'] = false;				
+				$this->retorno['status'] = false;
 			}
 		}
 	}
 
 	public function get_data() 
 	{
-		if (!$this->vars['imei']) {
+		if (!$this->vars['email']) {
 			$this->retorno["status"] = false;
 			$this->retorno["error"] = "106";
-			$this->retorno["message"] = "IMEI missing.";
+			$this->retorno["message"] = "email missing.";
 		} 
 		else 
 		{
 			$erro = false;
 			if (!$erro) {
 				$mobile = new mobile();
-				$result = $mobile->getData($this->vars['imei']);
+				$result = $mobile->getData(urldecode($this->vars['email']));
 
 				if($result) {
 					$this->retorno['coords'] = $result;	
@@ -264,10 +289,10 @@ class rest extends superRest {
 
 	public function getcompanysettings() 
 	{
-		$imei = $this->vars['imei'];
+		$email = urldecode($this->vars['email']);
 
-		$user = new user();
-		$dataSet = $user->getCompanyId($imei);
+		$mobile = new mobile();
+		$dataSet = $mobile->getIdCompany($email);
 		if(!count($dataSet)) {
 			$this->retorno['status'] = false;
 		}
@@ -291,11 +316,12 @@ class rest extends superRest {
 		$this->retorno["status"] = true;
 		
 		$mobile = new mobile();
-		$resUser = $mobile->getByImei($this->vars['imei']);
+		$resUser = $mobile->getByEmail(urldecode($this->vars['email']));
 
 		$this->retorno["name"] = $resUser[0]['name'];
 		$this->retorno["email"] = $resUser[0]['email'];
 		$this->retorno["contact"] = $resUser[0]['contact'];
+		$this->retorno["password"] = $resUser[0]['password'];
 	}
 }
 	

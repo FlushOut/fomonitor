@@ -42,7 +42,7 @@ class superModel {
 		
 		// monte básico da query
 		$query = "SELECT ".$this->db->real_escape_string($columns)." FROM ".$this->table;
-
+		
 		// Se veio alguma condição, monte no where
 		if(count($where)>0) {
 			$i = 0;
@@ -56,7 +56,7 @@ class superModel {
 				$query.=$item;
 				
 			}
-		}		
+		}
 		//print_r($query);
 		$resultSet = $this->db->query($query);
 		if(is_object($resultSet)) {
@@ -92,8 +92,8 @@ class superModel {
 			
 		}
 		
-
 		$query = "INSERT INTO ".$this->table. " (".$colunasSQL.") VALUES (".$valoresSQL.")";
+
 		$this->db->query($query);
 		return $this->db->insert_id;
 	}
