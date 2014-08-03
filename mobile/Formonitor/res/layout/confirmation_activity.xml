@@ -1,0 +1,91 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_body"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:orientation="vertical"
+    tools:context=".Wizard2Activity" >    
+    
+    <TextView
+        android:id="@+id/txtConfirmation_1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/confirmation_1"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp" />
+
+	<TextView
+        android:id="@+id/txtCompanyName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:gravity="center"
+        android:textSize="22sp" />
+        
+    <TextView
+        android:id="@+id/txtConfirmation_2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/confirmation_2"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+         />
+
+    <EditText
+        android:id="@+id/txtUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Insert your username"
+        android:inputType="textPersonName" />
+            
+    <EditText
+        android:id="@+id/txtUserEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Insert your email" 
+        android:inputType="textEmailAddress"/>
+    
+    <Button
+        android:id="@+id/btnAccept"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white_opaque"
+        style="@style/btnStyleFomonitor"
+        android:text="@string/btnAccept"
+        android:shadowColor="#000"
+		android:shadowRadius="1"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:layout_marginTop="20dp" 
+        android:onClick="goAccept" />
+
+        <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white_opaque"
+        style="@style/btnStyleFomonitor"
+        android:text="@string/btnCancel"
+        android:shadowColor="#000"
+		android:shadowRadius="1"
+        android:shadowDx="1"
+        android:shadowDy="1"
+		android:layout_marginTop="20dp" 
+        android:onClick="goCancel" />
+    
+    
+</LinearLayout>

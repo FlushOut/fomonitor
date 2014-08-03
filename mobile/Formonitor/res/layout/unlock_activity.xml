@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_body"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:orientation="vertical"
+    tools:context=".UnlockActivity" >   
+ 	
+    <TextView
+        android:id="@+id/txvDescription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="@string/unlock1"
+        android:textSize="18sp"
+         />
+    
+ 		<EditText
+        android:id="@+id/txtCodUnlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/txvDescription"
+        android:layout_marginTop="20dp"
+        android:maxLength="6"
+        android:hint="@string/strUnlock"
+        android:inputType="number"
+        android:maxLines="1" />
+ 	
+    <Button
+		android:id="@+id/btnUnlock"
+		style="@style/btnStyleFomonitor"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/txtCodUnlock"
+	    android:layout_centerHorizontal="true"
+	    android:layout_marginTop="20dp"
+	    android:onClick="unlockProcess"
+		android:text="@string/btnUnlock"
+        android:shadowColor="#000"
+		android:shadowRadius="1"
+        android:shadowDx="1"
+        android:shadowDy="1"
+		android:textColor="@color/white_opaque" />
+    
+</RelativeLayout>

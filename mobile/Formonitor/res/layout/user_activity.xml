@@ -1,0 +1,89 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_body"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:orientation="vertical"
+    tools:context=".UserInfoActivity" >
+
+<!--     <ImageView
+	android:id="@+id/imgFomonitor"
+	android:layout_width="fill_parent"
+	android:layout_height="55dp"
+	android:paddingTop="20dp"
+	android:gravity="center"
+	android:src="@drawable/fomonitor" /> -->
+    
+	<TextView
+	android:id="@+id/lblVersion"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:paddingTop="10dp"
+	android:textSize="18sp"
+	android:gravity="center"
+	android:text="@string/version" />
+    
+	<TextView
+	android:id="@+id/lvlCopyright"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:textSize="18sp"
+	android:gravity="center"
+	android:text="@string/copyright" />
+	
+	<TextView
+	android:id="@+id/lblTitUser"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:paddingTop="30dp"
+	android:textSize="18sp"
+	android:gravity="center"
+	android:text="@string/user" />
+	
+	<TextView
+	android:id="@+id/lblUser"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:textSize="20sp"
+	android:gravity="center"
+	android:text="@string/user" />
+	
+	<TextView
+	android:id="@+id/lblTitEmail"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:paddingTop="10dp"
+	android:textSize="18sp"
+	android:gravity="center"
+	android:text="@string/email" />
+	
+	<TextView
+	android:id="@+id/lblEmail"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:textSize="20sp"
+	android:gravity="center"
+	android:text="@string/email" />
+	
+	<TextView
+	android:id="@+id/lblTitPark"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:paddingTop="10dp"
+	android:textSize="18sp"
+	android:gravity="center"
+	android:text="@string/park" />
+	
+	<TextView
+	android:id="@+id/lblPark"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:textSize="20sp"
+	android:gravity="center"
+	android:text="@string/park" />
+
+</LinearLayout>

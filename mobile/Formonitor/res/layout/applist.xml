@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_body"
+    android:padding="5dp" >
+ 
+    <ImageView
+        android:id="@+id/grid_item_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="10dp" >
+    </ImageView>
+ 
+    <TextView
+        android:id="@+id/grid_item_label"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:maxLines = "2"
+        android:ellipsize="end"
+        android:gravity="center|left"
+        android:textColor="#2E2E2E"
+        android:textSize="15sp" >
+    </TextView>
+ 
+</LinearLayout>

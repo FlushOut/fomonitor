@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_body"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:orientation="vertical"
+    tools:context=".Wizard1Activity" >
+
+    <TextView
+        android:id="@+id/txvDescription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="21dp"
+        android:textSize="18sp"
+        android:text="@string/wiz1AuthenticationCode"
+         />
+
+	<EditText
+        android:id="@+id/txtCodAuthentication"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/txvDescription"
+        android:layout_marginTop="20dp"
+        android:hint="Authentication code"
+        android:inputType="textVisiblePassword"
+        android:maxLines="1" />
+
+	<Button
+	    android:id="@+id/btnNext"
+	    style="@style/btnStyleFomonitor"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/txtCodAuthentication"
+	    android:layout_centerHorizontal="true"
+	    android:layout_marginTop="20dp"
+	    android:onClick="goAccept"
+	    android:text="@string/btnNext"
+        android:shadowColor="#000"
+		android:shadowRadius="1"
+        android:shadowDx="1"
+        android:shadowDy="1"
+	    android:textColor="@color/white_opaque" />
+
+</RelativeLayout>
