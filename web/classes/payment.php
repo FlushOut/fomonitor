@@ -10,7 +10,7 @@
 class payment
 {
 
-    protected $table = "payment";
+    protected $table = "payments";
 
     public $id = 0;
     public $sequence;
